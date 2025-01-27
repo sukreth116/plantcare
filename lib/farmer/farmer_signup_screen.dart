@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserSignupScreen extends StatefulWidget {
-  const UserSignupScreen({Key? key}) : super(key: key);
+class FarmerSignupScreen extends StatefulWidget {
+  const FarmerSignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<UserSignupScreen> createState() => _UserSignupScreenState();
+  State<FarmerSignupScreen> createState() => _FarmerSignupScreenState();
 }
 
-class _UserSignupScreenState extends State<UserSignupScreen> {
+class _FarmerSignupScreenState extends State<FarmerSignupScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance; // Initialize Firestore
   final _formKey = GlobalKey<FormState>();
@@ -20,10 +20,10 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
   String _name = '';
   String _address = '';
   String _phoneNumber = '';
+  String _farmerIdProof = '';
   String _errorMessage = '';
 
-  void _registerUser() async {
-    print('hia');
+  void _registerFarmer() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
@@ -33,14 +33,17 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
           email: _email,
           password: _password,
         );
-        print(userCredential.user?.uid);
 
-        // Store user details in Firestore
-        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        // Store farmer details in Firestore
+        await _firestore
+            .collection('farmers')
+            .doc(userCredential.user!.uid)
+            .set({
           'name': _name,
           'email': _email,
           'address': _address,
           'phone': _phoneNumber,
+          'farmerIdProof': _farmerIdProof,
           'createdAt': FieldValue.serverTimestamp(),
         });
 
@@ -65,11 +68,11 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text(
-          'GREENIFY',
+          'GREENIFY - Farmer Signup',
           style: TextStyle(
-              fontFamily: 'poppins',
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontFamily: 'poppins',
+          ),
         ),
         centerTitle: true,
       ),
@@ -82,7 +85,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
             children: [
               Center(
                 child: Text(
-                  'Create Account For User',
+                  'Create Account For Farmer',
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                         color: Colors.green.shade700,
                         fontWeight: FontWeight.bold,
@@ -90,6 +93,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                 ),
               ),
               const SizedBox(height: 16),
+
               // Name Field
               const Text("Full Name"),
               const SizedBox(height: 8),
@@ -112,6 +116,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
               const SizedBox(height: 16),
 
               // Email Field
+
               const Text("Email Address"),
               const SizedBox(height: 8),
               TextFormField(
@@ -125,7 +130,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null ||
-                      !RegExp(r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
+                      !RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
                           .hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -191,12 +196,33 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                 ),
                 keyboardType: TextInputType.phone,
                 validator: (value) {
-                  if (value == null || value.length == 10) {
+                  if (value == null || value.length < 10) {
                     return 'Enter a valid 10-digit phone number';
                   }
                   return null;
                 },
                 onSaved: (value) => _phoneNumber = value!,
+              ),
+              const SizedBox(height: 16),
+
+              // Farmer ID Proof Field
+              const Text("Farmer ID Proof"),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.badge),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  hintText: "Enter your farmer ID proof",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Farmer ID proof is required';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _farmerIdProof = value!,
               ),
               const SizedBox(height: 24),
 
@@ -219,7 +245,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  onPressed: _registerUser,
+                  onPressed: _registerFarmer,
                   child: const Text(
                     "Signup",
                     style: TextStyle(fontSize: 16),
