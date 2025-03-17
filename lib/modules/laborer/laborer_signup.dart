@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserSignupScreen extends StatefulWidget {
-  const UserSignupScreen({Key? key}) : super(key: key);
+class LaborerSignupScreen extends StatefulWidget {
+  const LaborerSignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<UserSignupScreen> createState() => _UserSignupScreenState();
+  State<LaborerSignupScreen> createState() => _LaborerSignupScreenState();
 }
 
-class _UserSignupScreenState extends State<UserSignupScreen> {
+class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
   final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance; // Initialize Firestore
+  final _firestore = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
 
   // Input fields
@@ -20,27 +20,32 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
   String _name = '';
   String _address = '';
   String _phoneNumber = '';
+  String _skillOrRole = '';
+  String _idProof = '';
   String _errorMessage = '';
 
-  void _registerUser() async {
-    print('hia');
+  void _registerLaborer() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
-        // Register with Firebase Authentication
-        UserCredential userCredential =
+        // Register laborer with Firebase Authentication
+        UserCredential laborerCredential =
             await _auth.createUserWithEmailAndPassword(
           email: _email,
           password: _password,
         );
-        print(userCredential.user?.uid);
 
-        // Store user details in Firestore
-        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        // Store laborer details in Firestore
+        await _firestore
+            .collection('laborers')
+            .doc(laborerCredential.user!.uid)
+            .set({
           'name': _name,
           'email': _email,
           'address': _address,
           'phone': _phoneNumber,
+          'skillOrRole': _skillOrRole,
+          'idProof': _idProof,
           'createdAt': FieldValue.serverTimestamp(),
         });
 
@@ -65,16 +70,13 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text(
-          'GREENIFY',
-          style: TextStyle(
-              fontFamily: 'poppins',
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
+          'Greenify',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -82,14 +84,20 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
             children: [
               Center(
                 child: Text(
-                  'Create Account For User',
+                  'Welcome, Laborer Signup',
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                        color: Colors.green.shade700,
+                        color: Colors.green,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
+              Center(
+                child: Text('Register As Laborer'),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
               // Name Field
               const Text("Full Name"),
               const SizedBox(height: 8),
@@ -125,7 +133,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null ||
-                      !RegExp(r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$")
+                      !RegExp(r"^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
                           .hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -191,12 +199,54 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                 ),
                 keyboardType: TextInputType.phone,
                 validator: (value) {
-                  if (value == null || value.length == 10) {
+                  if (value == null || !RegExp(r"^\d{10}$").hasMatch(value)) {
                     return 'Enter a valid 10-digit phone number';
                   }
                   return null;
                 },
                 onSaved: (value) => _phoneNumber = value!,
+              ),
+              const SizedBox(height: 16),
+
+              // Skill or Role Field
+              const Text("Skill or Role"),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.work),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  hintText: "Enter your skill or role",
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Skill or Role is required';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _skillOrRole = value!,
+              ),
+              const SizedBox(height: 16),
+
+              // ID Proof Field
+              const Text("ID Proof"),
+              const SizedBox(height: 8),
+              TextFormField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.badge),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  hintText: "Enter your ID proof",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'ID proof is required';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _idProof = value!,
               ),
               const SizedBox(height: 24),
 
@@ -219,7 +269,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  onPressed: _registerUser,
+                  onPressed: _registerLaborer,
                   child: const Text(
                     "Signup",
                     style: TextStyle(fontSize: 16),

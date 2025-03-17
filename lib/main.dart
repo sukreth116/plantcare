@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/farmer/farmer_signup_screen.dart';
+import 'package:plantcare/login.dart';
+import 'package:plantcare/modules/choose_screen.dart';
+import 'package:plantcare/modules/user/product_details.dart';
+import 'package:plantcare/modules/user/user_home_page.dart';
+import 'package:plantcare/splash_screen.dart';
 import 'package:plantcare/firebase_options.dart';
-import 'package:plantcare/user/UserSignupScreen.dart';
-import 'package:plantcare/user/user_home_page.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -20,28 +23,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Greenify',
         theme: ThemeData(
-          fontFamily: 'poppins',
-
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const UserHomePage());
+            fontFamily: 'Montserrat',
+            primaryColor: Colors.green,
+            useMaterial3: true,
+            textTheme: const TextTheme(
+              bodyLarge: TextStyle(fontWeight: FontWeight.w400),
+              bodyMedium: TextStyle(fontWeight: FontWeight.w400),
+            )),
+        home: SplashScreen());
   }
 }

@@ -1,0 +1,2 @@
+C:/Users/sukre/Documents/Flutter_project/plantcare/android/app/.cxx/Debug/6a2g142l/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/sukre/Documents/Flutter_project/plantcare/android/app/.cxx/Debug/6a2g142l/armeabi-v7a/CMakeFiles/rebuild_cache.dir
