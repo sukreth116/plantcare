@@ -218,7 +218,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:plantcare/about_page.dart';
 import 'package:plantcare/modules/farmer/cart_screen_farmer.dart';
+import 'package:plantcare/modules/farmer/farmer_add_prduct_list.dart';
+import 'package:plantcare/modules/farmer/farmer_add_product_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_profile.dart';
 import 'package:plantcare/modules/farmer/farmer_search_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_wishlist_screen.dart';
@@ -276,20 +279,13 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.home_outlined)),
             IconButton(
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FarmerWishlistScreen()));
-                },
-                icon: Icon(Icons.home_outlined)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FarmerWishlistScreen()));
+                          builder: (context) => AddProductScreen()));
                 },
                 icon: Icon(
                   Icons.add_circle_outline_rounded,
@@ -443,12 +439,40 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
             ListTile(
               leading: Icon(Icons.add_circle_outline_rounded),
               title: Text("Add Product"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddProductScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.add_circle_outline_rounded),
+              title: Text("Your Products"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ViewProductsScreen()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.party_mode_outlined),
               title: Text("AI Detection"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AIDetectionScreen()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text("About Us"),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AboutPage()));
+              },
             ),
           ],
         ),

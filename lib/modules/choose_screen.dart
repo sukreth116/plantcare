@@ -138,6 +138,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/farmer_login_screen.dart';
+import 'package:plantcare/modules/nursery/nursery_login.dart';
 import 'package:plantcare/modules/user/user_home_page.dart';
 import 'package:plantcare/modules/user/user_login.dart';
 import 'package:plantcare/modules/user/user_signup.dart';
@@ -261,6 +262,12 @@ class ChooseRoleScreen extends StatelessWidget {
             case 'Farmers':
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => FarmerLoginScreen()));
+              break;
+            case 'Nursery':
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NurseryLoginScreen()));
               break;
           }
         },
