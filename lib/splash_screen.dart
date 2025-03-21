@@ -167,7 +167,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:plantcare/modules/choose_screen.dart';
+import 'package:plantcare/choose_role_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
