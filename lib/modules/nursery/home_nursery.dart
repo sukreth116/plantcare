@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +5,7 @@ import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NurseryHomeScreen extends StatefulWidget {
   @override
@@ -16,7 +16,37 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   int _currentIndex = 0;
 
-  
+  String? nurseryName;
+  String? companyLogoUrl;
+  String? email;
+
+  @override
+  void initState() {
+    super.initState();
+    if (user != null) {
+      fetchNurseryDetails();
+    }
+  }
+
+  void fetchNurseryDetails() async {
+    try {
+      DocumentSnapshot nurseryDoc = await FirebaseFirestore.instance
+          .collection('nurseries')
+          .doc(user!.uid)
+          .get();
+
+      if (nurseryDoc.exists) {
+        setState(() {
+          nurseryName =
+              nurseryDoc['nurseryName']; // Ensure field names match Firestore
+          companyLogoUrl = nurseryDoc['companyLogoUrl'];
+          email = nurseryDoc['email'];
+        });
+      }
+    } catch (e) {
+      print("Error fetching nursery details: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +66,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: Text(
-          "Greenify",
+          "GREENIFY",
           style: TextStyle(
             color: Colors.green[800],
           ),
@@ -58,23 +88,21 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
             children: [
               UserAccountsDrawerHeader(
                 decoration: BoxDecoration(color: Colors.green[200]),
-                accountName: Text("farmerName"),
-                accountEmail: Text(user?.email ?? ""),
+                accountName: Text(nurseryName ?? "Nursery Name"),
+                accountEmail: Text(user?.email ?? "Email not available"),
                 currentAccountPicture: GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) =>
-                    //           FarmerProfilePage(farmerId: user!.uid)),
-                    // );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NurseryProfilePage(
+                                  nurseryId: user!.uid,
+                                )));
                   },
                   child: CircleAvatar(
-                    backgroundImage:
-                        // farmerImage.isNotEmpty
-                        //     ? NetworkImage(farmerImage)
-                        // :
-                        AssetImage('asset/image/profile_placeholder.jpg')
+                    backgroundImage: companyLogoUrl != null
+                        ? NetworkImage(companyLogoUrl!)
+                        : AssetImage('asset/image/profile_placeholder.jpg')
                             as ImageProvider,
                   ),
                 ),
@@ -83,115 +111,63 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 leading: Icon(CupertinoIcons.person),
                 title: Text("Profile"),
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => FarmerProfilePage(
-                  //             farmerId: user!.uid,
-                  //           )),
-                  // );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NurseryProfilePage(
+                                nurseryId: user!.uid,
+                              )));
                 },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.rectangle_3_offgrid),
-                title: Text("All Products"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => FarmerSearchScreen()),
-                  // );
-                },
-              ),
-              ListTile(
-                leading: Icon(CupertinoIcons.heart),
-                title: Text("Wishlist"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => FarmerWishlistScreen()),
-                  // );
-                },
-              ),
-              ListTile(
-                leading: Icon(CupertinoIcons.cart),
-                title: Text("Cart"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => FarmerCartScreen()),
-                  // );
-                },
+                title: Text("Your Products"),
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.bag),
                 title: Text("Orders"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => FarmerOrdersScreen()),
-                  // );
-                },
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.bag_badge_plus),
                 title: Text("Rental Orders"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => RentalOrdersScreen()),
-                  // );
-                },
+                onTap: () {},
+              ),
+              ListTile(
+                leading: Icon(CupertinoIcons.bag),
+                title: Text("Sale Report"),
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(Icons.add_circle_outline_rounded),
                 title: Text("Add Product"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => AddProductScreen()),
-                  // );
-                },
+                onTap: () {},
+              ),
+              ListTile(
+                leading: Icon(Icons.add_circle_outline_rounded),
+                title: Text("Add Machinery"),
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
-                title: Text("Your Products"),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => ViewProductsScreen()),
-                  // );
-                },
+                title: Text("Add Banner"),
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(Icons.party_mode_outlined),
                 title: Text("AI Detection"),
-                onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => AIDetectionScreen()));
-                },
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(Icons.newspaper),
                 title: Text("News"),
-                onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => NewsPage()));
-                },
+                onTap: () {},
               ),
               ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text("About Us"),
-                onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => AboutPage()));
-                },
+                onTap: () {},
               ),
             ],
           ),

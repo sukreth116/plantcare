@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:plantcare/modules/nursery/profile_edit.dart';
 
 class NurseryProfilePage extends StatelessWidget {
   final String nurseryId;
+  
 
-  const NurseryProfilePage({Key? key, required this.nurseryId})
-      : super(key: key);
+  const NurseryProfilePage({Key? key, required this.nurseryId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
             .collection('nurseries')
             .doc(nurseryId)
-            .get(),
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -23,10 +24,10 @@ class NurseryProfilePage extends StatelessWidget {
             return const Center(child: Text("Nursery not found"));
           }
 
-          var nurseryData = snapshot.data!.data() as Map<String, dynamic>;
+          var nurseryData = snapshot.data!.data() as Map<String, dynamic>? ?? {};
           String? logoUrl = nurseryData['companyLogoUrl'];
 
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,10 +35,11 @@ class NurseryProfilePage extends StatelessWidget {
                 const SizedBox(height: 20),
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: logoUrl != null && logoUrl.isNotEmpty
+                  backgroundImage: (logoUrl != null && logoUrl.isNotEmpty)
                       ? NetworkImage(logoUrl)
-                      : const AssetImage('asset/image/profile_placeholder.jpg')
+                      : const AssetImage('assets/image/profile_placeholder.jpg')
                           as ImageProvider,
+                  onBackgroundImageError: (_, __) => const Icon(Icons.error),
                 ),
                 const SizedBox(height: 16),
 
@@ -50,15 +52,16 @@ class NurseryProfilePage extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(width: 8), // Space between name and icon
+                    const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => EditNurseryProfilePage(nurseryId: nurseryId),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                NurseryProfileEditScreen(nurseryId: nurseryId),
+                          ),
+                        );
                       },
                       child: const Icon(
                         Icons.edit,
