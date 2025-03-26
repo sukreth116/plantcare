@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/nursery/nursery_home.dart';
-import 'package:plantcare/modules/nursery/nursery_signup.dart';
+import 'package:plantcare/modules/nursery/home_nursery.dart';
+import 'package:plantcare/modules/nursery/signup_nursery.dart';
 
 class NurseryLoginScreen extends StatefulWidget {
   const NurseryLoginScreen({super.key});

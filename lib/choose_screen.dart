@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/farmer_login_screen.dart';
-import 'package:plantcare/modules/nursery/nursery_login.dart';
+import 'package:plantcare/modules/nursery/login_nursery.dart';
 import 'package:plantcare/modules/user/user_login.dart';
 
 class ChooseScreen extends StatelessWidget {

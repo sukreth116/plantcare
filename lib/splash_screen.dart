@@ -167,7 +167,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:plantcare/choose_role_screen.dart';
+import 'package:plantcare/choose_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -204,7 +204,7 @@ class _SplashScreenState extends State<SplashScreen>
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ChooseRoleScreen()), // Replace with your target screen
+                        ChooseScreen()), // Replace with your target screen
               );
             }
           });
