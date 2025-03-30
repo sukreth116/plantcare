@@ -220,23 +220,6 @@ class _NurseryProfileEditScreenState extends State<NurseryProfileEditScreen> {
     _loadNurseryData();
   }
 
-  // Future<void> _loadNurseryData() async {
-  //   User? user = _auth.currentUser;
-  //   if (user != null) {
-  //     DocumentSnapshot doc =
-  //         await _firestore.collection('nurseries').doc(widget.nurseryId).get();
-  //     if (doc.exists) {
-  //       setState(() {
-  //         _name = doc['nurseryName'] ?? '';
-  //         _address = doc['address'] ?? '';
-  //         _phone = doc['phone'] ?? '';
-
-  //         _logoUrl = doc['companyLogoUrl'];
-  //         _licenseUrl = doc['companyLicenseUrl'];
-  //       });
-  //     }
-  //   }
-  // }
   Future<void> _loadNurseryData() async {
     try {
       User? user = _auth.currentUser;
@@ -261,59 +244,29 @@ class _NurseryProfileEditScreenState extends State<NurseryProfileEditScreen> {
     }
   }
 
-  // Future<String> uploadToCloudinary(File image) async {
-  //   final url =
-  //       Uri.parse("https://api.cloudinary.com/v1_1/ds0psaxoc/image/upload");
-  //   final request = http.MultipartRequest("POST", url)
-  //     ..fields["upload_preset"] = "products"
-  //     ..files.add(await http.MultipartFile.fromPath("file", image.path));
-
-  //   final response = await request.send();
-  //   if (response.statusCode == 200) {
-  //     final responseData = await response.stream.bytesToString();
-  //     final jsonData = json.decode(responseData);
-  //     return jsonData["secure_url"];
-  //   } else {
-  //     throw Exception("Failed to upload image");
-  //   }
-  // }
-  // Future<String> uploadToCloudinary(File image) async {
-  //   try {
-  //     final url =
-  //         Uri.parse("https://api.cloudinary.com/v1_1/ds0psaxoc/image/upload");
-
-  //     var request = http.MultipartRequest("POST", url)
-  //       ..fields["upload_preset"] = "products"
-  //       ..files.add(await http.MultipartFile.fromPath("file", image.path));
-
-  //     var response = await request.send();
-
-  //     if (response.statusCode == 200) {
-  //       final responseData = await response.stream.bytesToString();
-  //       final jsonData = json.decode(responseData);
-  //       return jsonData["secure_url"];
-  //     } else {
-  //       throw Exception("Failed to upload: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Upload Error: $e");
-  //     throw Exception("Image upload failed. Please try again.");
-  //   }
-  // }
   Future<String> uploadToCloudinary(File image) async {
-    final url =
-        Uri.parse("https://api.cloudinary.com/v1_1/ds0psaxoc/image/upload");
-    final request = http.MultipartRequest("POST", url)
-      ..fields["upload_preset"] = "products"
-      ..files.add(await http.MultipartFile.fromPath("file", image.path));
+    try {
+      final url =
+          Uri.parse("https://api.cloudinary.com/v1_1/ds0psaxoc/image/upload");
 
-    final response = await request.send();
-    if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
-      final jsonData = json.decode(responseData);
-      return jsonData["secure_url"];
-    } else {
-      throw Exception("Failed to upload image");
+      var request = http.MultipartRequest("POST", url)
+        ..fields["upload_preset"] = "products"
+        ..files.add(await http.MultipartFile.fromPath("file", image.path));
+
+      var response = await request.send();
+
+      final responseBody = await response.stream.bytesToString();
+      print("Cloudinary Response: $responseBody");
+
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(responseBody);
+        return jsonData["secure_url"];
+      } else {
+        throw Exception("Upload failed: ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      print("Upload Error: $e");
+      throw Exception("Image upload failed. Please try again.");
     }
   }
 
@@ -331,6 +284,40 @@ class _NurseryProfileEditScreenState extends State<NurseryProfileEditScreen> {
     }
   }
 
+  void _updateNurseryProfile() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      try {
+        User? user = _auth.currentUser;
+        if (user == null) return;
+
+        String logoUrl = _companyLogo != null
+            ? await uploadToCloudinary(_companyLogo!)
+            : _logoUrl ?? '';
+        String licenseUrl = _companyLicense != null
+            ? await uploadToCloudinary(_companyLicense!)
+            : _licenseUrl ?? '';
+
+        await _firestore.collection('nurseries').doc(widget.nurseryId).update({
+          'nurseryName': _name,
+          'address': _address,
+          'phone': _phone,
+          'companyLogoUrl': logoUrl,
+          'companyLicenseUrl': licenseUrl,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile Updated Successfully')),
+        );
+
+        Navigator.pop(context);
+      } catch (e) {
+        setState(() {
+          _errorMessage = e.toString();
+        });
+      }
+    }
+  }
   // void _updateNurseryProfile() async {
   //   if (_formKey.currentState!.validate()) {
   //     _formKey.currentState!.save();
@@ -338,17 +325,80 @@ class _NurseryProfileEditScreenState extends State<NurseryProfileEditScreen> {
   //       User? user = _auth.currentUser;
   //       if (user == null) return;
 
+  //       print("Uploading images...");
+
   //       String logoUrl = _companyLogo != null
   //           ? await uploadToCloudinary(_companyLogo!)
   //           : _logoUrl ?? '';
+  //       print("Logo URL: $logoUrl");
+
   //       String licenseUrl = _companyLicense != null
   //           ? await uploadToCloudinary(_companyLicense!)
   //           : _licenseUrl ?? '';
+  //       print("License URL: $licenseUrl");
 
+  //       print("Updating Firestore...");
   //       await _firestore.collection('nurseries').doc(widget.nurseryId).update({
   //         'nurseryName': _name,
   //         'address': _address,
   //         'phone': _phone,
+  //         'companyLogoUrl': logoUrl,
+  //         'companyLicenseUrl': licenseUrl,
+  //       });
+
+  //       print("Firestore updated successfully.");
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Profile Updated Successfully')),
+  //       );
+
+  //       Navigator.pop(context);
+  //     } catch (e) {
+  //       print("Error updating profile: $e");
+  //       setState(() {
+  //         _errorMessage = e.toString();
+  //       });
+  //     }
+  //   }
+  // }
+  
+  // void _updateNurseryProfile() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     try {
+  //       User? user = _auth.currentUser;
+  //       if (user == null) return;
+
+  //       String logoUrl = _logoUrl ?? '';
+  //       String licenseUrl = _licenseUrl ?? '';
+
+  //       if (_companyLogo != null) {
+  //         try {
+  //           logoUrl = await uploadToCloudinary(_companyLogo!);
+  //         } catch (e) {
+  //           print("Logo upload failed: $e");
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             const SnackBar(content: Text('Failed to upload logo')),
+  //           );
+  //           return; // Stop execution if upload fails
+  //         }
+  //       }
+
+  //       if (_companyLicense != null) {
+  //         try {
+  //           licenseUrl = await uploadToCloudinary(_companyLicense!);
+  //         } catch (e) {
+  //           print("License upload failed: $e");
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             const SnackBar(content: Text('Failed to upload license')),
+  //           );
+  //           return;
+  //         }
+  //       }
+
+  //       await _firestore.collection('nurseries').doc(widget.nurseryId).update({
+  //         'nurseryName': _nameController.text,
+  //         'address': _addressController.text,
+  //         'phone': _phoneController.text,
   //         'companyLogoUrl': logoUrl,
   //         'companyLicenseUrl': licenseUrl,
   //       });
@@ -359,55 +409,13 @@ class _NurseryProfileEditScreenState extends State<NurseryProfileEditScreen> {
 
   //       Navigator.pop(context);
   //     } catch (e) {
+  //       print("Error updating profile: $e");
   //       setState(() {
   //         _errorMessage = e.toString();
   //       });
   //     }
   //   }
   // }
-  void _updateNurseryProfile() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      try {
-        User? user = _auth.currentUser;
-        if (user == null) return;
-
-        print("Uploading images...");
-
-        String logoUrl = _companyLogo != null
-            ? await uploadToCloudinary(_companyLogo!)
-            : _logoUrl ?? '';
-        print("Logo URL: $logoUrl");
-
-        String licenseUrl = _companyLicense != null
-            ? await uploadToCloudinary(_companyLicense!)
-            : _licenseUrl ?? '';
-        print("License URL: $licenseUrl");
-
-        print("Updating Firestore...");
-        await _firestore.collection('nurseries').doc(widget.nurseryId).update({
-          'nurseryName': _name,
-          'address': _address,
-          'phone': _phone,
-          'companyLogoUrl': logoUrl,
-          'companyLicenseUrl': licenseUrl,
-        });
-
-        print("Firestore updated successfully.");
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile Updated Successfully')),
-        );
-
-        Navigator.pop(context);
-      } catch (e) {
-        print("Error updating profile: $e");
-        setState(() {
-          _errorMessage = e.toString();
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,13 +4,14 @@ import 'package:plantcare/modules/nursery/profile_edit.dart';
 
 class NurseryProfilePage extends StatelessWidget {
   final String nurseryId;
-  
 
-  const NurseryProfilePage({Key? key, required this.nurseryId}) : super(key: key);
+  const NurseryProfilePage({Key? key, required this.nurseryId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
             .collection('nurseries')
@@ -24,7 +25,8 @@ class NurseryProfilePage extends StatelessWidget {
             return const Center(child: Text("Nursery not found"));
           }
 
-          var nurseryData = snapshot.data!.data() as Map<String, dynamic>? ?? {};
+          var nurseryData =
+              snapshot.data!.data() as Map<String, dynamic>? ?? {};
           String? logoUrl = nurseryData['companyLogoUrl'];
 
           return SingleChildScrollView(

@@ -1,9 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plantcare/AI_detection.dart';
+import 'package:plantcare/about_page.dart';
+import 'package:plantcare/modules/nursery/add_banner.dart';
 import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
+import 'package:plantcare/modules/nursery/nursery_prducts';
+import 'package:plantcare/modules/nursery/orders.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
+import 'package:plantcare/modules/nursery/rental_orders.dart';
+import 'package:plantcare/modules/nursery/sale_report_nursery.dart';
+import 'package:plantcare/modules/nursery/work_schedule_mangement.dart';
+import 'package:plantcare/modules/user/news.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,20 +70,20 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green[200],
         title: Text(
-          "GREENIFY",
-          style: TextStyle(
-            color: Colors.green[800],
-          ),
+          "G R E E N I F Y",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           Builder(
             builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Scaffold.of(context).openEndDrawer();
               },
@@ -122,58 +131,113 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
               ListTile(
                 leading: Icon(CupertinoIcons.rectangle_3_offgrid),
                 title: Text("Your Products"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NurseryProductsScreen()));
+                },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.bag),
                 title: Text("Orders"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SaleOrderScreen()));
+                },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.bag_badge_plus),
                 title: Text("Rental Orders"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NurseryRentalOrderScreen()));
+                },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.bag),
                 title: Text("Sale Report"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NurserySalesReportScreen()));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.add_circle_outline_rounded),
                 title: Text("Add Product"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddNurseryProduct()));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.add_circle_outline_rounded),
                 title: Text("Add Machinery"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddMachinery()));
+                },
               ),
               ListTile(
                 leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
                 title: Text("Add Banner"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddPromoBannerScreen()));
+                },
+              ),
+              ListTile(
+                leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
+                title: Text("Work Schedule"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WorkScheduleScreen()));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.party_mode_outlined),
                 title: Text("AI Detection"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AIDetectionScreen()));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.newspaper),
                 title: Text("News"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NewsPage()));
+                },
               ),
               ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text("About Us"),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AboutPage()));
+                },
               ),
             ],
           ),
         ),
       ),
       body: _screens[_currentIndex],
+      backgroundColor: Colors.white,
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
         onTap: (index) {

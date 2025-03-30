@@ -62,7 +62,7 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
       try {
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: _email,
-          password: _password,
+          password: _password, 
         );
 
         String logoUrl = _companyLogo != null ? await uploadToCloudinary(_companyLogo!) : '';

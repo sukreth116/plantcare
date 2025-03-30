@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/user/AI_detection.dart';
+import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/modules/user/cart_screen_user.dart';
 import 'package:plantcare/modules/user/news.dart';
 import 'package:plantcare/modules/user/orders_screen_user.dart';

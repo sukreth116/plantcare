@@ -25,6 +25,9 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
                   Center(
                     child: Text(
                       'Add Product',

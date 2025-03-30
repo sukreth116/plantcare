@@ -12,7 +12,7 @@ import 'package:plantcare/modules/farmer/farmer_wishlist_screen.dart';
 import 'package:plantcare/modules/farmer/orders_screen_farmer.dart';
 import 'package:plantcare/modules/farmer/product_detail_screen.dart';
 import 'package:plantcare/modules/farmer/rental_orders.dart';
-import 'package:plantcare/modules/user/AI_detection.dart';
+import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/modules/user/news.dart';
 
 class FarmerHomePage extends StatefulWidget {
