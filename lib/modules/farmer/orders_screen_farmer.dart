@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/product_detail_screen.dart';
-import 'package:plantcare/modules/user/product_details.dart';
 
 class FarmerOrdersScreen extends StatefulWidget {
   @override

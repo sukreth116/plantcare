@@ -1,17 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/user/user_home_page.dart';
-import 'package:plantcare/modules/user/user_signup.dart';
+import 'package:plantcare/modules/admin/admin_home.dart';
 
-class UserLoginScreen extends StatefulWidget {
-  const UserLoginScreen({super.key});
-
+class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({super.key});
   @override
-  _UserLoginScreenState createState() => _UserLoginScreenState();
+  _AdminLoginScreenState createState() => _AdminLoginScreenState();
 }
 
-class _UserLoginScreenState extends State<UserLoginScreen> {
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
   bool _obscurePassword = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -26,34 +23,28 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
     });
 
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+      // Fetch Admin Credentials from Firestore
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('admin')
+          .where('email', isEqualTo: _emailController.text.trim())
+          .where('password', isEqualTo: _passwordController.text.trim())
+          .get();
 
-      String uid = userCredential.user!.uid;
-      DocumentSnapshot userDoc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      if (!userDoc.exists) {
+      if (querySnapshot.docs.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User data not found in records.')),
+          const SnackBar(content: Text('Login Successful!')),
         );
-        return;
-      }
 
-      // Navigate to User Home Page
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => UserHomePage(),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Login failed!')),
-      );
+        // Navigate to Admin Dashboard
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AdminHomeScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid Email or Password!')),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
@@ -79,17 +70,17 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 20),
-                const Text(
+                Text(
                   "Login",
                   style: TextStyle(
-                    color: Colors.green,
-                    fontFamily: 'Milky',
-                    fontSize: 50,
-                  ),
+                      color: Colors.orange[300],
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Milky'),
                 ),
                 const SizedBox(height: 20),
                 Image.asset(
-                  'asset/image/personal growth-bro.png',
+                  'asset/image/Computer login-bro red.png', // Update with your asset
                   height: 250,
                 ),
                 const SizedBox(height: 20),
@@ -97,11 +88,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
+                      // Email Field
                       TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email, color: Colors.green),
-                          hintText: 'Email',
+                          hintText: 'Admin Email',
                           hintStyle: TextStyle(color: Colors.grey),
                           filled: true,
                           fillColor: Colors.green[100],
@@ -113,12 +105,14 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Please enter admin email';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 16.0),
+
+                      // Password Field
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
@@ -130,8 +124,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                             borderRadius: BorderRadius.circular(30),
                             borderSide: BorderSide.none,
                           ),
-                          prefixIcon:
-                              const Icon(Icons.lock, color: Colors.green),
+                          prefixIcon: Icon(Icons.lock, color: Colors.green),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
@@ -155,6 +148,8 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                         },
                       ),
                       const SizedBox(height: 16.0),
+
+                      // Login Button
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: 50,
@@ -176,46 +171,6 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "OR",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      backgroundColor: Colors.green[400],
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const UserSignupScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text('SIGN UP',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                ),
-                SizedBox(height: 20),
               ],
             ),
           ),

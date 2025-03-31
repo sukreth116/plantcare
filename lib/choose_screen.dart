@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plantcare/modules/admin/admin_login.dart';
 import 'package:plantcare/modules/farmer/farmer_login_screen.dart';
 import 'package:plantcare/modules/nursery/login_nursery.dart';
 import 'package:plantcare/modules/user/user_login.dart';
@@ -13,7 +14,7 @@ class ChooseScreen extends StatelessWidget {
       {
         "title": "Admin",
         "icon": Icons.admin_panel_settings,
-        "route": const FarmerLoginScreen()
+        "route": const AdminLoginScreen()
       },
       {
         "title": "Farmer",
