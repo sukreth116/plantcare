@@ -1,109 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:plantcare/modules/laborer/laborer_appointment.dart';
+import 'package:plantcare/modules/laborer/laborer_profile.dart';
+import 'package:plantcare/modules/laborer/laborer_work.dart';
 
-class LaborerHomePage extends StatelessWidget {
-  const LaborerHomePage({Key? key}) : super(key: key);
+class LaborerHomeScreen extends StatefulWidget {
+  const LaborerHomeScreen({super.key});
+
+  @override
+  _LaborerHomeScreenState createState() => _LaborerHomeScreenState();
+}
+
+class _LaborerHomeScreenState extends State<LaborerHomeScreen> {
+  int _selectedIndex = 0;
+
+  static final List<Widget> _pages = <Widget>[
+    LaborerWorkScreen(),
+    WorkAppointmentScreen(),
+    LaborerProfileScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.brown,
-        title: const Text(
-          'Laborer Hub',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // Drawer Header
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.brown.shade700,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage:
-                        AssetImage('assets/images/profile_placeholder.png'),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Welcome, Laborer!',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-
-            // Profile
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                // Navigate to Profile Page
-              },
-            ),
-
-            // Scheduled Jobs
-            ListTile(
-              leading: const Icon(Icons.assignment),
-              title: const Text('Scheduled Jobs'),
-              onTap: () {
-                // Navigate to Scheduled Jobs Page
-              },
-            ),
-
-            // Job History
-            ListTile(
-              leading: const Icon(Icons.history),
-              title: const Text('Job History'),
-              onTap: () {
-                // Navigate to Job History Page
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Text(
-            'Explore Laborer Hub Features!',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.brown.shade700,
-            ),
+        backgroundColor: Color.fromARGB(255, 245, 247, 245),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Greenify',
+          style: TextStyle(
+            fontSize: 25,
+            color: Color.fromRGBO(4, 75, 4, 0.961),
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.brown.shade700,
-        unselectedItemColor: Colors.grey,
-        currentIndex: 0, // Active tab
-        onTap: (index) {
-          // Handle Navigation for Footer
-        },
-        items: const [
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.feed),
-            label: 'Job Feed',
+            icon: _selectedIndex == 0
+                ? const Icon(Icons.work, color: Colors.blue, size: 30)
+                : const Icon(Icons.work_outline, color: Colors.grey, size: 25),
+            label: 'Work',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Messages',
+            icon: _selectedIndex == 1
+                ? const Icon(Icons.calendar_today, color: Colors.blue, size: 30)
+                : const Icon(Icons.calendar_today_outlined,
+                    color: Colors.grey, size: 25),
+            label: 'Appointments',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.work),
-            label: 'Available Jobs',
+            icon: _selectedIndex == 2
+                ? const Icon(Icons.person, color: Colors.blue, size: 30)
+                : const Icon(Icons.person_outline,
+                    color: Colors.grey, size: 25),
+            label: 'Profile',
           ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onItemTapped,
       ),
     );
   }
