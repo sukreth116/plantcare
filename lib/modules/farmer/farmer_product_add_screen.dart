@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:plantcare/clodinary_upload.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddProductScreen extends StatefulWidget {
   @override
@@ -36,7 +39,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       if (selectedCategory == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,9 +53,43 @@ class _AddProductScreenState extends State<AddProductScreen> {
         );
         return;
       }
-      // Process form submission
-      print("Product Added: ${nameController.text}");
-      Navigator.pop(context);
+
+      try {
+        // 1. Upload image to Cloudinary
+        String? imageUrl = await getCloudinaryUrl(_image!.path);
+
+        if (imageUrl == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Image upload failed")),
+          );
+          return;
+        }
+
+        String farmerId = FirebaseAuth.instance.currentUser!.uid;
+
+        // 2. Upload product details to Firestore
+        await FirebaseFirestore.instance.collection('farmer_products').add({
+          'name': nameController.text,
+          'category': selectedCategory,
+          'price': double.parse(priceController.text),
+          'quantity': int.parse(quantityController.text),
+          'description': descriptionController.text,
+          'farmerId': farmerId,
+          'imageUrl': imageUrl,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Product Added Successfully!")),
+        );
+
+        Navigator.pop(context);
+      } catch (e) {
+        print('Error uploading product: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to add product")),
+        );
+      }
     }
   }
 

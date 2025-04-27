@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/farmer/farmer_add_product_details_screen.dart';
+import 'package:plantcare/modules/farmer/farmer_product_details_screen.dart';
 
 class ViewProductsScreen extends StatefulWidget {
   @override

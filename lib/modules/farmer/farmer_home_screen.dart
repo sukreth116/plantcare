@@ -4,8 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plantcare/about_page.dart';
 import 'package:plantcare/modules/farmer/cart_screen_farmer.dart';
-import 'package:plantcare/modules/farmer/farmer_add_prduct_list.dart';
-import 'package:plantcare/modules/farmer/farmer_add_product_screen.dart';
+import 'package:plantcare/modules/farmer/farmer_prduct_list.dart';
+import 'package:plantcare/modules/farmer/farmer_product_add_screen.dart';
+import 'package:plantcare/modules/farmer/farmer_book_work.dart';
 import 'package:plantcare/modules/farmer/farmer_profile.dart';
 import 'package:plantcare/modules/farmer/farmer_search_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_wishlist_screen.dart';
@@ -226,6 +227,16 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
                 },
               ),
               ListTile(
+                leading: Icon(Icons.work),
+                title: Text("Book a Work"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FarmerWorkAppointmentScreen()),
+                  );
+                },
+              ),
+              ListTile(
                 leading: Icon(Icons.add_circle_outline_rounded),
                 title: Text("Add Product"),
                 onTap: () {
@@ -256,6 +267,7 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
                           builder: (context) => AIDetectionScreen()));
                 },
               ),
+
               ListTile(
                 leading: Icon(Icons.newspaper),
                 title: Text("News"),

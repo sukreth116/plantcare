@@ -20,7 +20,7 @@ class LaborerWorkScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection('appointments')
             .where('laborerId', isEqualTo: laborerId)
-            .where('status', isEqualTo: 'Pending') // Show only pending jobs
+            .where('status', isEqualTo: 'pending') // Show only pending jobs
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -57,7 +57,6 @@ class LaborerWorkScreen extends StatelessWidget {
                             Text('Location: ${job['location'] ?? 'Unknown'}'),
                             Text('Date: ${job['date'] ?? 'Not specified'}'),
                             Text('Time: ${job['time'] ?? 'Not specified'}'),
-                            Text('Wage: ${job['wage'] ?? 'Not specified'}'),
                           ],
                         ),
                       ),

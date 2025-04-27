@@ -6,7 +6,7 @@ import 'package:plantcare/about_page.dart';
 import 'package:plantcare/modules/nursery/add_banner.dart';
 import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
-import 'package:plantcare/modules/nursery/nursery_prducts';
+import 'package:plantcare/modules/nursery/nursery_prducts.dart';
 import 'package:plantcare/modules/nursery/orders.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:plantcare/modules/nursery/rental_orders.dart';
@@ -62,7 +62,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
     // Ensure user is not null before passing to NurseryProfilePage
     final List<Widget> _screens = [
       HomeScreen(),
-      AddNurseryProduct(),
+      AddNurseryProduct(nurseryId: FirebaseAuth.instance.currentUser!.uid,),
       AddMachinery(),
       user != null
           ? NurseryProfilePage(nurseryId: user!.uid)
@@ -175,7 +175,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddNurseryProduct()));
+                          builder: (context) => AddNurseryProduct(nurseryId: FirebaseAuth.instance.currentUser!.uid,)));
                 },
               ),
               ListTile(

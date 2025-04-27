@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:plantcare/modules/laborer/laborer_appointment.dart';
 import 'package:plantcare/modules/laborer/laborer_profile.dart';
 import 'package:plantcare/modules/laborer/laborer_work.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plantcare/choose_screen.dart';
 
 class LaborerHomeScreen extends StatefulWidget {
   const LaborerHomeScreen({super.key});
@@ -39,6 +41,51 @@ class _LaborerHomeScreenState extends State<LaborerHomeScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              bool confirmLogout = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: Row(
+                      children: [
+                        Icon(Icons.logout, color: Colors.red[600]),
+                        const SizedBox(width: 10),
+                        const Text('Confirm Logout'),
+                      ],
+                    ),
+                    content: const Text('Are you sure you want to log out?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChooseScreen(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                        child: const Text('Logout',
+                            style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.logout, color: Colors.green),
+          ),
+        ],
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

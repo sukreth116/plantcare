@@ -17,7 +17,7 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
-  
+
   String _name = '';
   String _address = '';
   String _phone = '';
@@ -28,11 +28,12 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
   String _errorMessage = '';
 
   Future<String> uploadToCloudinary(File image) async {
-    final url = Uri.parse("https://api.cloudinary.com/v1_1/ds0psaxoc/image/upload");
+    final url =
+        Uri.parse("https://api.cloudinary.com/v1_1/ds0psaxoc/image/upload");
     final request = http.MultipartRequest("POST", url)
       ..fields["upload_preset"] = "products"
       ..files.add(await http.MultipartFile.fromPath("file", image.path));
-    
+
     final response = await request.send();
     if (response.statusCode == 200) {
       final responseData = await response.stream.bytesToString();
@@ -44,7 +45,8 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
   }
 
   Future<void> _pickImage(bool isLogo) async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         if (isLogo) {
@@ -60,15 +62,22 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
           email: _email,
-          password: _password, 
+          password: _password,
         );
 
-        String logoUrl = _companyLogo != null ? await uploadToCloudinary(_companyLogo!) : '';
-        String licenseUrl = _companyLicense != null ? await uploadToCloudinary(_companyLicense!) : '';
+        String logoUrl =
+            _companyLogo != null ? await uploadToCloudinary(_companyLogo!) : '';
+        String licenseUrl = _companyLicense != null
+            ? await uploadToCloudinary(_companyLicense!)
+            : '';
 
-        await _firestore.collection('nurseries').doc(userCredential.user!.uid).set({
+        await _firestore
+            .collection('nurseries')
+            .doc(userCredential.user!.uid)
+            .set({
           'nurseryName': _name,
           'email': _email,
           'address': _address,
@@ -94,7 +103,10 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nursery Signup')),
+      appBar: AppBar(
+        title: const Text('Register Your Nursery'),
+        backgroundColor: Colors.green,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -113,14 +125,16 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone Number'),
-                validator: (value) => value!.length < 10 ? 'Invalid number' : null,
+                validator: (value) =>
+                    value!.length < 10 ? 'Invalid number' : null,
                 onSaved: (value) => _phone = value!,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Email'),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) =>
-                    !RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}").hasMatch(value!)
+                    !RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+                            .hasMatch(value!)
                         ? 'Invalid email'
                         : null,
                 onSaved: (value) => _email = value!,
@@ -134,11 +148,15 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () => _pickImage(true),
-                child: Text(_companyLogo == null ? 'Upload Company Logo' : 'Logo Selected'),
+                child: Text(_companyLogo == null
+                    ? 'Upload Company Logo'
+                    : 'Logo Selected'),
               ),
               ElevatedButton(
                 onPressed: () => _pickImage(false),
-                child: Text(_companyLicense == null ? 'Upload Company License' : 'License Selected'),
+                child: Text(_companyLicense == null
+                    ? 'Upload Company Licence'
+                    : 'Image Selected'),
               ),
               if (_errorMessage.isNotEmpty)
                 Text(_errorMessage, style: const TextStyle(color: Colors.red)),
