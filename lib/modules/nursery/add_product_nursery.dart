@@ -281,9 +281,72 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
     }
   }
 
+  // Future<void> _uploadProduct() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     if (_imageFile == null) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text("Please upload an image")),
+  //       );
+  //       return;
+  //     }
+
+  //     try {
+  //       // Show loading dialog
+  //       showDialog(
+  //         context: context,
+  //         barrierDismissible: false,
+  //         builder: (context) {
+  //           return Center(
+  //             child: CircularProgressIndicator(),
+  //           );
+  //         },
+  //       );
+
+  //       // 1. Upload image to Cloudinary
+  //       String? imageUrl = await getCloudinaryUrl(_imageFile!.path);
+
+  //       if (imageUrl == null) {
+  //         Navigator.pop(context); // Close loading
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(content: Text("Image upload failed")),
+  //         );
+  //         return;
+  //       }
+
+  //       String nurseryId = FirebaseAuth.instance.currentUser!.uid;
+
+  //       // 2. Upload product details to Firestore
+  //       await FirebaseFirestore.instance.collection('nursery_products').add({
+  //         'name': productName,
+  //         'category': selectedCategory,
+  //         'price': productPrice,
+  //         'quantity': productQuantity,
+  //         'description': productDescription,
+  //         'nurseryId': nurseryId,
+  //         'imageUrl': imageUrl,
+  //         'createdAt': FieldValue.serverTimestamp(),
+  //       });
+
+  //       Navigator.pop(context); // Close loading
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text("Product Added Successfully!")),
+  //       );
+
+  //       Navigator.pop(context); // Go back after success
+  //     } catch (e) {
+  //       Navigator.pop(context); // Close loading
+  //       print('Error uploading product: $e');
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text("Failed to add product")),
+  //       );
+  //     }
+  //   }
+  // }
   Future<void> _uploadProduct() async {
     if (_formKey.currentState!.validate()) {
       if (_imageFile == null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Please upload an image")),
         );
@@ -291,7 +354,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
       }
 
       try {
-        // Show loading dialog
+        if (!mounted) return;
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -302,11 +365,13 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
           },
         );
 
-        // 1. Upload image to Cloudinary
         String? imageUrl = await getCloudinaryUrl(_imageFile!.path);
 
+        if (!mounted) return;
+        Navigator.pop(context); // Close loading dialog
+
         if (imageUrl == null) {
-          Navigator.pop(context); // Close loading
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Image upload failed")),
           );
@@ -315,7 +380,6 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
 
         String nurseryId = FirebaseAuth.instance.currentUser!.uid;
 
-        // 2. Upload product details to Firestore
         await FirebaseFirestore.instance.collection('nursery_products').add({
           'name': productName,
           'category': selectedCategory,
@@ -327,19 +391,20 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
           'createdAt': FieldValue.serverTimestamp(),
         });
 
-        Navigator.pop(context); // Close loading
-
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Product Added Successfully!")),
         );
 
         Navigator.pop(context); // Go back after success
       } catch (e) {
-        Navigator.pop(context); // Close loading
+        if (mounted) {
+          Navigator.pop(context); // Close loading
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to add product")),
+          );
+        }
         print('Error uploading product: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to add product")),
-        );
       }
     }
   }

@@ -85,75 +85,75 @@ class _UserSearchScreenState extends State<UserSearchScreen> {
                 itemCount: filteredProducts.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductDetailScreen())),
+                      // onTap: () => Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => ProductDetailScreen())),
                       child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        color: Colors.grey[300],
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20)),
-                                child: Image.asset(
-                                  filteredProducts[index]['image'],
-                                  fit: BoxFit.cover,
-                                  width: 80,
-                                ),
-                              ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: Colors.grey[300],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
+                            child: Image.asset(
+                              filteredProducts[index]['image'],
+                              fit: BoxFit.cover,
+                              width: 80,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(children: [
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  filteredProducts[index]['title'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  filteredProducts[index]['price'],
+                                  style: TextStyle(
+                                      color: Colors.green, fontSize: 14),
+                                ),
+                              ]),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Row(children: [
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      filteredProducts[index]['title'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      filteredProducts[index]['price'],
-                                      style: TextStyle(
-                                          color: Colors.green, fontSize: 14),
-                                    ),
-                                  ]),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        onPressed: () {
-                                          // Add to wishlist functionality
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.shopping_cart),
-                                        onPressed: () {},
-                                      ),
-                                    ],
+                                  IconButton(
+                                    icon: Icon(Icons.favorite_border),
+                                    onPressed: () {
+                                      // Add to wishlist functionality
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.shopping_cart),
+                                    onPressed: () {},
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ));
+                      ],
+                    ),
+                  ));
                 },
               ),
             ),

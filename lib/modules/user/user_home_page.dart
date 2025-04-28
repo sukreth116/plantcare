@@ -801,12 +801,14 @@ class PlantCard extends StatelessWidget {
   final String imageUrl;
   final String productId; // Add productId
   final String nurseryId;
-  PlantCard(
-      {required this.name,
-      required this.price,
-      required this.imageUrl,
-      required this.productId,
-      required this.nurseryId});
+
+  PlantCard({
+    required this.name,
+    required this.price,
+    required this.imageUrl,
+    required this.productId,
+    required this.nurseryId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -815,7 +817,12 @@ class PlantCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProductDetailScreen(),
+              builder: (context) => ProductDetailScreen(
+                name: name,
+                imageUrl: imageUrl,
+                price: price,
+                // description: description,
+              ),
             ),
           );
         },

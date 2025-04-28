@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatelessWidget {
+  final String name;
+  final String imageUrl;
+  final String price;
+  // final String description;
+
+  const ProductDetailScreen({
+    Key? key,
+    required this.name,
+    required this.imageUrl,
+    required this.price,
+    // required this.description,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,19 +28,19 @@ class ProductDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(
-                'asset/image/plant_sample_1.png',
+              child: Image.network(
+                imageUrl,
                 height: 250,
               ),
             ),
             SizedBox(height: 16),
             Text(
-              "Product Name",
+              name,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 2),
             Text(
-              "\$199.99",
+              price,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
