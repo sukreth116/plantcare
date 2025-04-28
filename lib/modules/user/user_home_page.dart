@@ -587,7 +587,6 @@ import 'package:plantcare/modules/user/product_details.dart';
 import 'package:plantcare/modules/user/search_screen.dart';
 import 'package:plantcare/modules/user/user_profile.dart';
 import 'package:plantcare/modules/user/wishlist.dart';
-import 'package:rxdart/rxdart.dart';
 
 class UserHomePage extends StatelessWidget {
   @override
@@ -669,7 +668,7 @@ class UserHomePage extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => OrdersScreen()));
+                                builder: (context) => UserOrderScreen()));
                       },
                       icon: Icon(
                         CupertinoIcons.bag,
@@ -753,45 +752,42 @@ class UserHomePage extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Expanded(
-              child: StreamBuilder<List<QuerySnapshot>>(
-                stream: CombineLatestStream.list([
-                  FirebaseFirestore.instance
-                      .collectionGroup('farmer_products')
-                      .snapshots(),
-                  FirebaseFirestore.instance
-                      .collectionGroup('nursery_products')
-                      .snapshots(),
-                ]),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (!snapshot.hasData ||
-                      snapshot.data!.every((snap) => snap.docs.isEmpty)) {
-                    return Center(child: Text('No Products Found'));
-                  }
+                child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('nursery_products')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
 
-                  // Merge both collections
-                  final allProducts = snapshot.data!
-                      .expand((querySnap) => querySnap.docs)
-                      .toList();
+                final nurseryProducts = snapshot.data!.docs;
 
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: allProducts.length,
-                    itemBuilder: (context, index) {
-                      var product = allProducts[index];
-                      return PlantCard(
-                        name: product['name'] ?? 'Unknown',
-                        price: product['price']?.toString() ?? '0',
-                        imageUrl: product['imageUrl'] ??
-                            'https://via.placeholder.com/150',
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: nurseryProducts.length,
+                  itemBuilder: (context, index) {
+                    var product = nurseryProducts[index];
+
+                    // Fetch document ID from Firestore document
+                    String productId = product.id; // This is the document ID
+                    String nurseryId = product['nurseryId'];
+
+                    return PlantCard(
+                      nurseryId: nurseryId,
+                      productId: productId, // Pass the document ID as productId
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price']?.toString() ?? '0',
+                      imageUrl: product['imageUrl'] ??
+                          'https://via.placeholder.com/150',
+                    );
+                  },
+                );
+              },
+            ))
           ],
         ),
       ),
@@ -803,8 +799,14 @@ class PlantCard extends StatelessWidget {
   final String name;
   final String price;
   final String imageUrl;
-
-  PlantCard({required this.name, required this.price, required this.imageUrl});
+  final String productId; // Add productId
+  final String nurseryId;
+  PlantCard(
+      {required this.name,
+      required this.price,
+      required this.imageUrl,
+      required this.productId,
+      required this.nurseryId});
 
   @override
   Widget build(BuildContext context) {
@@ -819,7 +821,7 @@ class PlantCard extends StatelessWidget {
         },
         child: Container(
           width: 200,
-          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+          margin: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(25),
@@ -844,58 +846,144 @@ class PlantCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       name,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      '\$$price',
+                      '\₹$price',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.green),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 5),
+                    // ElevatedButton(
+                    //   onPressed: () async {
+                    //     final User? user = FirebaseAuth.instance.currentUser;
+
+                    //     if (user != null) {
+                    //       try {
+                    //         // Add product to the user's cart collection
+                    //         await FirebaseFirestore.instance
+                    //             .collection(
+                    //                 'user_cart') // Store in 'cart' collection
+                    //             .add({
+                    //           'productId': productId,
+                    //           'name': name,
+                    //           'price': double.tryParse(price) ?? 0.0,
+                    //           'imageUrl': imageUrl,
+                    //           'nurseryId': nurseryId, // Store nurseryId here
+                    //           'quantity': 1, // Initial quantity set to 1
+                    //           'timestamp': FieldValue.serverTimestamp(),
+                    //           'userId': user.uid // Timestamp for ordering
+                    //         });
+
+                    //         // Show success message
+                    //         ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(content: Text('Added to Cart')),
+                    //         );
+                    //       } catch (e) {
+                    //         // Error handling in case something goes wrong
+                    //         ScaffoldMessenger.of(context).showSnackBar(
+                    //           SnackBar(
+                    //               content: Text('Failed to add to cart: $e')),
+                    //         );
+                    //       }
+                    //     } else {
+                    //       // User is not logged in
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //         SnackBar(
+                    //             content: Text(
+                    //                 'Please log in to add items to your cart')),
+                    //       );
+                    //     }
+                    //   },
+                    //   child: Text('Add to Cart'),
+                    //   style: ElevatedButton.styleFrom(
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(20),
+                    //     ),
+                    //   ),
+                    // ),
                     ElevatedButton(
                       onPressed: () async {
                         final User? user = FirebaseAuth.instance.currentUser;
-                        if (user != null) {
-                          await FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(user.uid)
-                              .collection('cart')
-                              .add({
-                            'name': name,
-                            'price': price,
-                            'imageUrl': imageUrl,
-                            'quantity': 1, // starting with 1
-                            'addedAt': FieldValue.serverTimestamp(),
-                          });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Added to cart!')),
-                          );
+                        if (user != null) {
+                          try {
+                            // Check if the product already exists in the cart
+                            final cartRef = FirebaseFirestore.instance
+                                .collection('user_cart')
+                                .where('productId', isEqualTo: productId)
+                                .where('userId', isEqualTo: user.uid)
+                                .limit(1);
+
+                            final cartSnapshot = await cartRef.get();
+
+                            if (cartSnapshot.docs.isNotEmpty) {
+                              // Product already in cart, increase the quantity
+                              final cartItem = cartSnapshot.docs.first;
+                              final currentQuantity = cartItem['quantity'];
+                              final updatedQuantity = currentQuantity + 1;
+
+                              // Update the quantity of the existing cart item
+                              await cartItem.reference.update({
+                                'quantity': updatedQuantity,
+                              });
+
+                              // Show success message
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Item Again Added to Cart')),
+                              );
+                            } else {
+                              // Product not in cart, add it
+                              await FirebaseFirestore.instance
+                                  .collection('user_cart')
+                                  .add({
+                                'productId': productId,
+                                'name': name,
+                                'price': double.tryParse(price) ?? 0.0,
+                                'imageUrl': imageUrl,
+                                'nurseryId': nurseryId,
+                                'quantity': 1, // Initial quantity set to 1
+                                'timestamp': FieldValue.serverTimestamp(),
+                                'userId': user.uid,
+                              });
+
+                              // Show success message
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Added to Cart')),
+                              );
+                            }
+                          } catch (e) {
+                            // Error handling in case something goes wrong
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Failed to add to cart: $e')),
+                            );
+                          }
                         } else {
+                          // User is not logged in
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                                content: Text('Please log in to add to cart.')),
+                                content: Text(
+                                    'Please log in to add items to your cart')),
                           );
                         }
                       },
+                      child: Text('Add to Cart'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green.shade200,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                      ),
-                      child: Text(
-                        'Add to Cart',
-                        style: TextStyle(color: Colors.black, fontSize: 12),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
                   ],
