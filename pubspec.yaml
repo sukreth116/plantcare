@@ -43,6 +43,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   intl: ^0.20.2
   rxdart: ^0.27.7
+  stylish_bottom_bar: ^1.1.1
 
 
 dev_dependencies:

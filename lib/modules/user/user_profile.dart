@@ -10,14 +10,6 @@ class UserProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text(
-          'User Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
       body: FutureBuilder<DocumentSnapshot>(
         future:
             FirebaseFirestore.instance.collection('users').doc(userId).get(),
@@ -68,7 +60,7 @@ class UserProfilePage extends StatelessWidget {
                       },
                       child: const Icon(
                         Icons.edit,
-                        color: Colors.teal,
+                        color: Colors.green,
                         size: 22,
                       ),
                     ),
@@ -83,12 +75,12 @@ class UserProfilePage extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 ListTile(
-                  leading: const Icon(Icons.phone, color: Colors.teal),
+                  leading: const Icon(Icons.phone, color: Colors.green),
                   title: const Text('Phone'),
                   subtitle: Text(userData['phone'] ?? 'No Phone'),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.location_on, color: Colors.teal),
+                  leading: const Icon(Icons.location_on, color: Colors.green),
                   title: const Text('Address'),
                   subtitle: Text(userData['address'] ?? 'No Address'),
                 ),

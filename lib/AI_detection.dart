@@ -108,11 +108,6 @@ class AIDetectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("AI Detection"),
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-      ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -128,7 +123,6 @@ class AIDetectionScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.teal.shade700,
               ),
               textAlign: TextAlign.center,
             ),
@@ -148,7 +142,7 @@ class AIDetectionScreen extends StatelessWidget {
               label: Text("Open Camera"),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.green.shade300,
                 foregroundColor: Colors.white,
               ),
             ),
@@ -162,7 +156,7 @@ class AIDetectionScreen extends StatelessWidget {
               label: Text("Open Gallery"),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.green.shade300,
                 foregroundColor: Colors.white,
               ),
             ),

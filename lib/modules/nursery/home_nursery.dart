@@ -12,7 +12,7 @@ import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:plantcare/modules/nursery/rental_orders.dart';
 import 'package:plantcare/modules/nursery/sale_report_nursery.dart';
 import 'package:plantcare/modules/nursery/work_schedule_mangement.dart';
-import 'package:plantcare/modules/user/news.dart';
+import 'package:plantcare/news.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -62,8 +62,8 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
     // Ensure user is not null before passing to NurseryProfilePage
     final List<Widget> _screens = [
       HomeScreen(),
-      AddNurseryProduct(nurseryId: FirebaseAuth.instance.currentUser!.uid,),
-      AddMachinery(),
+      AIDetectionScreen(),
+      NewsPage(),
       user != null
           ? NurseryProfilePage(nurseryId: user!.uid)
           : Center(child: CircularProgressIndicator()), // Handle null user case
@@ -72,7 +72,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[300],
         title: Text(
           "G R E E N I F Y",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -175,7 +175,10 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddNurseryProduct(nurseryId: FirebaseAuth.instance.currentUser!.uid,)));
+                          builder: (context) => AddNurseryProduct(
+                                nurseryId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
                 },
               ),
               ListTile(
@@ -207,24 +210,6 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.party_mode_outlined),
-                title: Text("AI Detection"),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AIDetectionScreen()));
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.newspaper),
-                title: Text("News"),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NewsPage()));
-                },
-              ),
-              ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text("About Us"),
                 onTap: () {
@@ -252,13 +237,13 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
             selectedColor: Colors.green,
           ),
           SalomonBottomBarItem(
-            icon: Icon(CupertinoIcons.plus_square_on_square),
-            title: Text("Add Product"),
+            icon: Icon(Icons.party_mode_outlined),
+            title: Text("AI Detection"),
             selectedColor: Colors.green,
           ),
           SalomonBottomBarItem(
-            icon: Icon(CupertinoIcons.wrench),
-            title: Text("Add Machinery"),
+            icon: Icon(Icons.newspaper),
+            title: Text("Latest News"),
             selectedColor: Colors.green,
           ),
           SalomonBottomBarItem(

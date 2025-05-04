@@ -288,217 +288,386 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/modules/user/cart_screen_user.dart';
-import 'package:plantcare/modules/user/news.dart';
+import 'package:plantcare/modules/user/chatbot.dart';
+import 'package:plantcare/news.dart';
 import 'package:plantcare/modules/user/orders_screen_user.dart';
 import 'package:plantcare/modules/user/product_details.dart';
 import 'package:plantcare/modules/user/search_screen.dart';
 import 'package:plantcare/modules/user/user_profile.dart';
 import 'package:plantcare/modules/user/wishlist.dart';
+import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
-class UserHomePage extends StatelessWidget {
+class UserHomePage extends StatefulWidget {
+  const UserHomePage({super.key});
+  @override
+  State<UserHomePage> createState() => _UserHomePageState();
+}
+
+class _UserHomePageState extends State<UserHomePage> {
+  int selected = 0;
+  bool heart = false;
+  final controller = PageController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        toolbarHeight: 80,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.home_outlined, color: Colors.black)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WishlistScreen()));
-                },
-                icon: Icon(Icons.favorite_border, color: Colors.black)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AIDetectionScreen()));
-                },
-                icon: Icon(Icons.party_mode_outlined, color: Colors.black)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => NewsPage()));
-                },
-                icon: Icon(Icons.newspaper, color: Colors.black)),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              UserProfilePage(userId: user!.uid)));
-                },
-                icon: Icon(Icons.person_outline, color: Colors.black)),
+            Text(
+              'Find your\nfavorite plants',
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.shopping_cart_outlined,
+                      size: 22, color: Colors.black),
+                  onPressed: () => Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => CartScreen())),
+                ),
+                IconButton(
+                  icon: Icon(CupertinoIcons.bag, size: 22, color: Colors.black),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => UserOrderScreen())),
+                ),
+                IconButton(
+                  icon: Icon(CupertinoIcons.search,
+                      size: 22, color: Colors.black),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => UserSearchScreen())),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar: StylishBottomBar(
+        option: AnimatedBarOptions(iconStyle: IconStyle.animated),
+        items: [
+          BottomBarItem(
+            icon: Icon(Icons.house_outlined),
+            selectedIcon: Icon(Icons.house_rounded),
+            selectedColor: Colors.green.shade300,
+            title: Text('Home'),
+          ),
+          BottomBarItem(
+            icon: Icon(CupertinoIcons.heart),
+            selectedIcon: Icon(CupertinoIcons.heart_circle_fill),
+            selectedColor: Colors.green.shade300,
+            title: Text('Wishlist'),
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.party_mode_outlined),
+            selectedIcon: Icon(Icons.party_mode),
+            selectedColor: Colors.green.shade300,
+            title: Text('AI Detection'),
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.newspaper_outlined),
+            selectedIcon: Icon(Icons.newspaper),
+            selectedColor: Colors.green.shade300,
+            title: Text('News'),
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            selectedColor: Colors.green.shade300,
+            title: Text('Profile'),
+          ),
+        ],
+        hasNotch: true,
+        fabLocation: StylishBarFabLocation.center,
+        currentIndex: selected,
+        notchStyle: NotchStyle.circle,
+        onTap: (index) {
+          if (index != selected) {
+            controller.jumpToPage(index);
+            setState(() {
+              selected = index;
+            });
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PlantChatBot()));
+        },
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: Icon(heart ? Icons.party_mode : Icons.chat,
+            color: Colors.green.shade300),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: PageView(
+        controller: controller,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          _HomePageContent(user: user),
+          WishlistScreen(),
+          AIDetectionScreen(),
+          NewsPage(),
+          UserProfilePage(userId: user?.uid ?? ''),
+        ],
+      ),
+    );
+  }
+}
+
+class _HomePageContent extends StatefulWidget {
+  final User? user;
+
+  const _HomePageContent({required this.user});
+  @override
+  State<_HomePageContent> createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<_HomePageContent> {
+  String selectedCategory = '';
+
+  final categories = [
+    'Flowering plants',
+    'Non-flowering plants',
+    'Trees',
+    'Shrubs',
+    'Herbs',
+    'Climbers and Creepers',
+    'Succulents',
+    'Aquatic plants',
+    'Indoor plants',
+    'Medicinal plants',
+    'Carnivorous plants',
+    'Ornamental plants',
+  ];
+  Set<String> selectedCategories = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      // Added SingleChildScrollView here
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Column(
               children: [
-                Text(
-                  'Find your\nfavorite plants',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CartScreen()));
-                      },
-                      icon: Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 22,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserOrderScreen()));
-                      },
-                      icon: Icon(
-                        CupertinoIcons.bag,
-                        size: 22,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserSearchScreen()));
-                      },
-                      icon: Icon(
-                        CupertinoIcons.search,
-                        size: 22,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.green.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '30% OFF',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('30% OFF',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text('02 - 23 July'),
+                        ],
                       ),
-                      Text('02 - 23 July'),
+                      Image.asset('asset/image/plant_sample_2.png', width: 60),
                     ],
                   ),
-                  Image.asset('asset/image/plant_sample_2.png', width: 60),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FilterChip(
-                  label: Text('All'),
-                  onSelected: (_) {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+                ),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text("Popular Plants",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                 ),
-                FilterChip(
-                  label: Text('Indoor'),
-                  onSelected: (_) {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                FilterChip(
-                  label: Text('Outdoor'),
-                  onSelected: (_) {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-                FilterChip(
-                  label: Text('Popular'),
-                  onSelected: (_) {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: categories.map((label) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: FilterChip(
+                          label: Text(label),
+                          selected: selectedCategory == label,
+                          onSelected: (bool value) {
+                            setState(() {
+                              selectedCategory = value ? label : '';
+                            });
+                          },
+                          selectedColor: Colors.green.shade200,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Expanded(
-                child: StreamBuilder<QuerySnapshot>(
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 450, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
+              stream: selectedCategory.isEmpty
+                  ? FirebaseFirestore.instance
+                      .collection('nursery_products')
+                      .where('category', isEqualTo: 'Plants')
+                      .snapshots()
+                  : FirebaseFirestore.instance
+                      .collection('nursery_products')
+                      .where('subCategory', isEqualTo: selectedCategory)
+                      .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
+
+                final products = snapshot.data!.docs;
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 10),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return PlantCard(
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Pots",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 400, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('nursery_products')
+                  .where('category', isEqualTo: 'Pots')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
+
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return Center(child: Text('No Products Found'));
                 }
 
-                final nurseryProducts = snapshot.data!.docs;
+                final products = snapshot.data!.docs;
 
                 return ListView.builder(
+                  padding: EdgeInsets.only(left: 10),
                   scrollDirection: Axis.horizontal,
-                  itemCount: nurseryProducts.length,
+                  itemCount: products.length,
                   itemBuilder: (context, index) {
-                    var product = nurseryProducts[index];
-
-                    // Fetch document ID from Firestore document
-                    String productId = product.id; // This is the document ID
-                    String nurseryId = product['nurseryId'];
-                    String description = product['description'];
-
+                    final product = products[index];
                     return PlantCard(
-                      nurseryId: nurseryId,
-                      productId: productId, // Pass the document ID as productId
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
                       name: product['name'] ?? 'Unknown',
-                      price: product['price']?.toString() ?? '0',
-                      imageUrl: product['imageUrl'] ??
-                          'https://via.placeholder.com/150',
-                      description: description,
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
                     );
                   },
                 );
               },
-            ))
-          ],
-        ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Fertilizers",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 400, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('nursery_products')
+                  .where('category', isEqualTo: 'Pots')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
+
+                final products = snapshot.data!.docs;
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 10),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return PlantCard(
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -546,9 +715,12 @@ class _PlantCardState extends State<PlantCard> {
 
       final snapshot = await wishlistRef.get();
 
-      setState(() {
-        isWishlisted = snapshot.docs.isNotEmpty;
-      });
+      if (mounted) {
+        // <--- ADD THIS
+        setState(() {
+          isWishlisted = snapshot.docs.isNotEmpty;
+        });
+      }
     }
   }
 
@@ -570,9 +742,11 @@ class _PlantCardState extends State<PlantCard> {
           await doc.reference.delete();
         }
 
-        setState(() {
-          isWishlisted = false;
-        });
+        if (mounted) {
+          setState(() {
+            isWishlisted = false;
+          });
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Removed from Wishlist')),
@@ -585,9 +759,11 @@ class _PlantCardState extends State<PlantCard> {
           'timestamp': FieldValue.serverTimestamp(),
         });
 
-        setState(() {
-          isWishlisted = true;
-        });
+        if (mounted) {
+          setState(() {
+            isWishlisted = true;
+          });
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Added to Wishlist')),
@@ -608,10 +784,6 @@ class _PlantCardState extends State<PlantCard> {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetailScreen(
-              name: widget.name,
-              imageUrl: widget.imageUrl,
-              price: widget.price,
-              description: widget.description,
               productId: widget.productId,
             ),
           ),
@@ -632,7 +804,7 @@ class _PlantCardState extends State<PlantCard> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                 child: Image.network(
                   widget.imageUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   width: double.infinity,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset(
@@ -708,7 +880,11 @@ class _PlantCardState extends State<PlantCard> {
                                 });
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Added to Cart')),
+                                  SnackBar(
+                                      content: Text(
+                                    'Added to Cart',
+                                    style: TextStyle(color: Colors.white),
+                                  )),
                                 );
                               }
                             } catch (e) {
@@ -725,18 +901,21 @@ class _PlantCardState extends State<PlantCard> {
                             );
                           }
                         },
-                        child: Text('Add to Cart'),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
+                        ),
+                        child: Text(
+                          'Add to Cart',
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                       IconButton(
                         onPressed: toggleWishlist,
                         icon: Icon(
                           isWishlisted ? Icons.favorite : Icons.favorite_border,
-                          color: isWishlisted ? Colors.black : Colors.white,
+                          color: isWishlisted ? Colors.black : Colors.black,
                         ),
                       ),
                       SizedBox(width: 1),

@@ -90,7 +90,7 @@ class _LaborerLoginScreenState extends State<LaborerLoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 Image.asset(
-                  'asset/image/Gardening-cuate.png',
+                  'asset/image/Laborer.png',
                   height: 250,
                 ),
                 const SizedBox(height: 20),

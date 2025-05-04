@@ -58,11 +58,14 @@
 // }
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:plantcare/modules/nursery/nursery_edit_product.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> productData;
+  final String productId; // <-- Add this
 
-  const ProductDetailsScreen({Key? key, required this.productData})
+  const ProductDetailsScreen(
+      {Key? key, required this.productData, required this.productId})
       : super(key: key);
 
   void _deleteProduct(BuildContext context) async {
@@ -97,11 +100,14 @@ class ProductDetailsScreen extends StatelessWidget {
             onPressed: () {
               // Navigate to your Edit Product screen
               // (You can create a separate edit screen and pass productData)
+              // final productId = productData['productId'];
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      EditProductScreen(productData: productData),
+                  builder: (context) => EditNurseryProduct(
+                    productId: productId,
+                    productData: productData,
+                  ),
                 ),
               );
             },
@@ -175,27 +181,6 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// Dummy EditProductScreen (You can modify this properly)
-class EditProductScreen extends StatelessWidget {
-  final Map<String, dynamic> productData;
-
-  const EditProductScreen({Key? key, required this.productData})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Implement your edit UI here
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Product'),
-      ),
-      body: Center(
-        child: Text('Editing: ${productData['name']}'),
       ),
     );
   }

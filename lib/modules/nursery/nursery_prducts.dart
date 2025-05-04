@@ -119,6 +119,7 @@ class NurseryProductsScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final product = products[index];
               final data = product.data() as Map<String, dynamic>;
+              final productId = product.id;
 
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -153,7 +154,10 @@ class NurseryProductsScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProductDetailsScreen(
-                          productData: data,
+                          productId: productId,
+                          productData: {
+                            ...data,
+                          },
                         ),
                       ),
                     );

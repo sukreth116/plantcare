@@ -91,7 +91,7 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 Image.asset(
-                  'asset/image/Gardening-cuate.png',
+                  'asset/image/Nursery.png',
                   height: 250,
                 ),
                 const SizedBox(height: 20),
