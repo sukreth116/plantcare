@@ -391,10 +391,7 @@ class _UserHomePageState extends State<UserHomePage> {
             title: Text('Profile'),
           ),
         ],
-        hasNotch: true,
-        fabLocation: StylishBarFabLocation.center,
         currentIndex: selected,
-        notchStyle: NotchStyle.circle,
         onTap: (index) {
           if (index != selected) {
             controller.jumpToPage(index);

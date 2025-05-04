@@ -1,63 +1,5 @@
-// import 'package:flutter/material.dart';
-
-// class FarmerWishlistScreen extends StatefulWidget {
-//   @override
-//   _FarmerWishlistScreenState createState() => _FarmerWishlistScreenState();
-// }
-
-// class _FarmerWishlistScreenState extends State<FarmerWishlistScreen> {
-//   List<Map<String, String>> wishlistItems = [
-//     {'name': 'Tractor', 'image': 'asset/image/machinery.png'},
-//     {'name': 'Organic Seeds', 'image': 'asset/image/seeds.jpg'},
-//     {'name': 'Fertilizer Pack', 'image': 'asset/image/fertilizer.png'},
-//     {'name': 'Irrigation Pump', 'image': 'asset/image/plant_sample_1.png'},
-//   ];
-
-//   void removeFromWishlist(int index) {
-//     setState(() {
-//       wishlistItems.removeAt(index);
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('My Wishlist'),
-//         centerTitle: true,
-//       ),
-//       body: wishlistItems.isEmpty
-//           ? Center(
-//               child: Text('No items in wishlist!',
-//                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-//             )
-//           : ListView.builder(
-//               itemCount: wishlistItems.length,
-//               itemBuilder: (context, index) {
-//                 return Card(
-//                   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12),
-//                   ),
-//                   child: ListTile(
-//                     leading: Image.asset(
-//                       wishlistItems[index]['image']!,
-//                       width: 50,
-//                       height: 50,
-//                       fit: BoxFit.cover,
-//                     ),
-//                     title: Text(wishlistItems[index]['name']!),
-//                     trailing: IconButton(
-//                       icon: Icon(Icons.delete, color: Colors.red),
-//                       onPressed: () => removeFromWishlist(index),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//     );
-//   }
-// }
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FarmerWishlistScreen extends StatefulWidget {
@@ -66,92 +8,163 @@ class FarmerWishlistScreen extends StatefulWidget {
 }
 
 class _FarmerWishlistScreenState extends State<FarmerWishlistScreen> {
-  List<Map<String, dynamic>> wishlistItems = [
-    {
-      'image': 'asset/image/machinery.png',
-      'name': 'Tractor',
-      'price': 5000.00,
-    },
-    {
-      'image': 'asset/image/plant_sample_1.png',
-      'name': 'Organic Seeds',
-      'price': 25.99,
-    },
-    {
-      'image': 'asset/image/fertilizer.png',
-      'name': 'Fertilizer Pack',
-      'price': 15.50,
-    },
-    {
-      'image': 'asset/image/seeds.jpg',
-      'name': 'Fertilizer Pack',
-      'price': 15.50,
-    },
-  ];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> wishlistItems = [];
+  bool isLoading = true;
 
-  void removeFromWishlist(int index) {
+  @override
+  void initState() {
+    super.initState();
+    fetchWishlist();
+  }
+
+  Future<void> fetchWishlist() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final wishlistSnapshot = await _firestore
+        .collection('farmer_wishlist')
+        .where('farmerId', isEqualTo: user.uid)
+        .get();
+
+    List<Map<String, dynamic>> loadedItems = [];
+
+    for (var doc in wishlistSnapshot.docs) {
+      final productId = doc['productId'];
+
+      final productSnap =
+          await _firestore.collection('nursery_products').doc(productId).get();
+
+      if (productSnap.exists) {
+        final productData = productSnap.data()!;
+        loadedItems.add({
+          'wishlistId': doc.id,
+          'productId': productId,
+          'name': productData['name'],
+          'image': productData['imageUrl'], // image URL
+          'nurseryId': productData['nurseryId'],
+          'price': productData['price'],
+        });
+      }
+    }
+
     setState(() {
-      wishlistItems.removeAt(index);
+      wishlistItems = loadedItems;
+      isLoading = false;
     });
   }
 
-  void moveToCart(int index) {
-    // Implement logic to add item to cart
-    setState(() {
-      wishlistItems.removeAt(index);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Moved to cart')),
-    );
+  Future<void> removeFromWishlist(String wishlistId) async {
+    await _firestore.collection('farmer_wishlist').doc(wishlistId).delete();
+    fetchWishlist();
+  }
+
+  Future<void> moveToCart(Map<String, dynamic> item) async {
+
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        final cartRef = FirebaseFirestore.instance
+            .collection('farmer_cart')
+            .where('productId', isEqualTo: item['productId'])
+            .where('farmerId', isEqualTo: user.uid)
+            .limit(1);
+
+        final cartSnapshot = await cartRef.get();
+
+        if (cartSnapshot.docs.isNotEmpty) {
+          final cartItem = cartSnapshot.docs.first;
+          final currentQuantity = cartItem['quantity'];
+          final updatedQuantity = currentQuantity + 1;
+
+          await cartItem.reference.update({
+            'quantity': updatedQuantity,
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Item Again Added to Cart')),
+          );
+        } else {
+          await FirebaseFirestore.instance.collection('farmer_cart').add({
+            'productId': item['productId'],
+            'name': item['name'],
+            'price': double.tryParse(item['price']) ?? 0.0,
+            'imageUrl': item['imageUrl'],
+            'nurseryId': item['nurseryId'],
+            'quantity': 1,
+            'timestamp': FieldValue.serverTimestamp(),
+            'farmerId': user.uid,
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+              'Added to Cart',
+              style: TextStyle(color: Colors.white),
+            )),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add to cart: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please log in to add items to your cart')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Farmer Wishlist"),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ),
-      body: wishlistItems.isEmpty
-          ? Center(child: Text("Your wishlist is empty"))
-          : ListView.builder(
-              padding: EdgeInsets.all(16),
-              itemCount: wishlistItems.length,
-              itemBuilder: (context, index) {
-                final item = wishlistItems[index];
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(12),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(item['image'], width: 50, height: 50),
-                    ),
-                    title: Text(item['name'], style: TextStyle(fontSize: 18)),
-                    subtitle: Text("\$${item['price']}",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.shopping_cart, color: Colors.green),
-                          onPressed: () => moveToCart(index),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : wishlistItems.isEmpty
+              ? Center(child: Text("Your wishlist is empty"))
+              : ListView.builder(
+                  padding: EdgeInsets.all(16),
+                  itemCount: wishlistItems.length,
+                  itemBuilder: (context, index) {
+                    final item = wishlistItems[index];
+                    return Card(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        leading: Image.network(
+                          item['image'],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
                         ),
-                        IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => removeFromWishlist(index),
+                        title:
+                            Text(item['name'], style: TextStyle(fontSize: 18)),
+                        subtitle: Text(
+                          "\$${item['price']}",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.shopping_cart,
+                                  color: Colors.green),
+                              onPressed: () => moveToCart(item),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () =>
+                                  removeFromWishlist(item['wishlistId']),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

@@ -88,7 +88,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> wishlistItems = [];
-  bool isLoading = true;
+  bool isLoading = true; 
 
   @override
   void initState() {

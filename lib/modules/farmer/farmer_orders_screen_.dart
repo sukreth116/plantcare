@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plantcare/modules/farmer/farmer_order_edit_screen.dart';
 
-
-class UserOrderScreen extends StatefulWidget {
+class FarmerOrdersScreen extends StatefulWidget {
   @override
-  _UserOrderScreenState createState() => _UserOrderScreenState();
+  _FarmerOrdersScreenState createState() => _FarmerOrdersScreenState();
 }
 
-class _UserOrderScreenState extends State<UserOrderScreen> {
+class _FarmerOrdersScreenState extends State<FarmerOrdersScreen> {
   User? user = FirebaseAuth.instance.currentUser;
 
   @override
@@ -71,17 +71,17 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
                       Text(
                           "Total Quantity: ${data['totalQuantity'] ?? 0} items"),
                       Text("Status: ${(data['status'])}"),
-                      Text("Your Location: ${(data['userLocation'])}"),
-                      Text("Your Phone Number: ${(data['userPhone'])}"),
+                      Text("Your Location: ${(data['farmerLocation'])}"),
+                      Text("Your Phone Number: ${(data['farmerPhone'])}"),
                       TextButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) =>
-                          //         FarmerOrderEditScreen(orderDoc: order),
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  FarmerOrderEditScreen(orderDoc: order),
+                            ),
+                          );
                         },
                         child: Text(
                           'Edit Order',

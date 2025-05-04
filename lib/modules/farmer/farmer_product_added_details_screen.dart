@@ -14,7 +14,7 @@ class FarmerAddProductDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: [ 
             Center(
               child: Image.asset(
                 'asset/image/tomato.png', // Dummy placeholder

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/farmer/farmer_product_details_screen.dart';
+import 'package:plantcare/modules/farmer/farmer_product_added_details_screen.dart';
 
 class ViewProductsScreen extends StatefulWidget {
   @override
@@ -46,7 +46,7 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
                   "Category: ${product['category']}\nPrice: \$${product['price']}\nQuantity: ${product['quantity']}"),
               trailing:
                   Icon(Icons.arrow_forward_ios, size: 16, color: Colors.teal),
-              onTap: () {                Navigator.push(
+              onTap: () {                Navigator.push( 
                   context,
                   MaterialPageRoute(builder: (context) => FarmerAddProductDetailScreen()),
                 );

@@ -9,16 +9,20 @@ class FarmerProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: const Text(
-          'Farmer Profile',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.green,
+      //   title: const Text(
+      //     'Farmer Profile',
+      //     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+      //   ),
+      //   centerTitle: true,
+      //   automaticallyImplyLeading: false,
+      // ),
       body: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance.collection('farmers').doc(farmerId).get(),
+        future: FirebaseFirestore.instance
+            .collection('farmers')
+            .doc(farmerId)
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -34,19 +38,34 @@ class FarmerProfilePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 20),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Profile',
+                  style: TextStyle(
+                      fontFamily: 'Happy Autumn',
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade300),
+                ),
+                const SizedBox(height: 30),
                 CircleAvatar(
                   radius: 50,
                   backgroundImage: farmerData['profilePhoto'] != null
                       ? NetworkImage(farmerData['profilePhoto'])
-                      : const AssetImage('asset/image/profile_placeholder.jpg') as ImageProvider,
+                      : const AssetImage('asset/image/profile_placeholder.jpg')
+                          as ImageProvider,
                 ),
                 const SizedBox(height: 16),
 
                 // Name
                 Text(
                   farmerData['name'] ?? 'Unknown',
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade300),
                 ),
                 const SizedBox(height: 8),
                 Text(

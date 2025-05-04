@@ -120,7 +120,7 @@ class _AddPromoBannerScreenState extends State<AddPromoBannerScreen> {
                               _selectedImage!,
                               width: double.infinity,
                               height: 200,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fitHeight,
                             ),
                           ),
                   ),

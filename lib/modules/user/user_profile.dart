@@ -31,10 +31,12 @@ class UserProfilePage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 50,
-                  backgroundImage:
-                      AssetImage('asset/image/profile_placeholder.jpg'),
+                  backgroundImage: userData['profileImage'] != null
+                      ? NetworkImage(userData['profileImage'])
+                      : AssetImage('asset/image/profile_placeholder.jpg')
+                          as ImageProvider,
                 ),
                 const SizedBox(height: 16),
 

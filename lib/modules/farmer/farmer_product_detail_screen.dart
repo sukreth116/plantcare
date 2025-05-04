@@ -17,7 +17,7 @@ class FarmerProductDetailScreen extends StatelessWidget {
             Center(
               child: Image.asset(
                 'asset/image/plant_sample_1.png',
-                height: 250,
+                height: 250, 
               ),
             ),
             SizedBox(height: 16),
