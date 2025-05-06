@@ -1,11 +1,75 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class MachineryDetailScreen extends StatelessWidget {
+class MachineryDetailScreen extends StatefulWidget {
   final String machineryId;
 
   const MachineryDetailScreen({Key? key, required this.machineryId})
       : super(key: key);
+
+  @override
+  State<MachineryDetailScreen> createState() => _MachineryDetailScreenState();
+}
+
+class _MachineryDetailScreenState extends State<MachineryDetailScreen> {
+  late Razorpay _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear();
+    super.dispose();
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Payment Successful: ${response.paymentId}")),
+    );
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Payment Failed")),
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("External Wallet: ${response.walletName}")),
+    );
+  }
+
+  void _startPayment(int totalPrice) {
+    var options = {
+      'key': 'rzp_test_SzQbItYGKXrpzq', // Replace with your Razorpay Test Key
+      'amount': (totalPrice * 100).toInt(), // Razorpay uses paise
+      'name': 'Greenify Rentals',
+      'description': 'Machinery Rental Payment',
+      'prefill': {
+        'contact': '7510821802',
+        'email': 'test@greenify.com',
+      },
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('Razorpay Error: $e');
+    }
+  }
 
   void _showRentDialog(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -22,65 +86,64 @@ class MachineryDetailScreen extends StatelessWidget {
               title: Text("Rent Machinery"),
               content: Form(
                 key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      initialValue: '1',
-                      decoration: InputDecoration(labelText: "Number of Days"),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null ||
-                            int.tryParse(value) == null ||
-                            int.parse(value) < 1) {
-                          return "Enter a valid number of days";
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        days = int.tryParse(value) ?? 1;
-                      },
-                    ),
-                    TextFormField(
-                      initialValue: '1',
-                      decoration: InputDecoration(labelText: "Quantity"),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null ||
-                            int.tryParse(value) == null ||
-                            int.parse(value) < 1) {
-                          return "Enter a valid quantity";
-                        }
-                        return null;
-                      },
-                      onChanged: (value) {
-                        quantity = int.tryParse(value) ?? 1;
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () => _showAgreementDialog(context),
-                      child: Text("View Agreement"),
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: agreed,
-                          onChanged: (val) {
-                            setState(() {
-                              agreed = val ?? false;
-                            });
-                          },
-                        ),
-                        Flexible(
-                          child: Row(
-                            children: [
-                              Text("I agree to the "),
-                            ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        initialValue: '1',
+                        decoration:
+                            InputDecoration(labelText: "Number of Days"),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null ||
+                              int.tryParse(value) == null ||
+                              int.parse(value) < 1) {
+                            return "Enter a valid number of days";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          days = int.tryParse(value) ?? 1;
+                        },
+                      ),
+                      TextFormField(
+                        initialValue: '1',
+                        decoration: InputDecoration(labelText: "Quantity"),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null ||
+                              int.tryParse(value) == null ||
+                              int.parse(value) < 1) {
+                            return "Enter a valid quantity";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          quantity = int.tryParse(value) ?? 1;
+                        },
+                      ),
+                      TextButton(
+                        onPressed: () => _showAgreementDialog(context),
+                        child: Text("View Agreement"),
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: agreed,
+                            onChanged: (val) {
+                              setState(() {
+                                agreed = val ?? false;
+                              });
+                            },
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Flexible(
+                            child: Text("I agree to the terms"),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: [
@@ -89,7 +152,7 @@ class MachineryDetailScreen extends StatelessWidget {
                   child: Text("Cancel"),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       if (!agreed) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -98,13 +161,65 @@ class MachineryDetailScreen extends StatelessWidget {
                         return;
                       }
 
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) return;
+
+                      final docSnapshot = await FirebaseFirestore.instance
+                          .collection('machinery')
+                          .doc(widget.machineryId)
+                          .get();
+
+                      final farmerSnapshot = await FirebaseFirestore.instance
+                          .collection('farmers')
+                          .doc(user.uid)
+                          .get();
+                      final farmerData = farmerSnapshot.data()!;
+                      final farmerPhone = farmerData['phone'];
+                      final farmerLocation = farmerData['address'];
+
+                      final data = docSnapshot.data()!;
+                      // final price = data['price'];
+                      final price = (data['price'] as num).toInt();
+
+                      final nurseryId = data['nurseryId'];
+
+                      // final rentalCharge = days * 100;
+                      final rentalCharge = days > 1 ? days * 100 : 0;
+                      final itemTotal = quantity * price;
+                      final totalPrice = rentalCharge + itemTotal;
+
+                      // Add rental order to Firestore
+                      await FirebaseFirestore.instance
+                          .collection('rental_orders')
+                          .add({
+                        'machineryId': widget.machineryId,
+                        'farmerId': user.uid,
+                        'nurseryId': nurseryId,
+                        'price': price,
+                        'quantity': quantity,
+                        'days': days,
+                        'rentalCharge': rentalCharge,
+                        'itemTotal': itemTotal,
+                        'totalPrice': totalPrice,
+                        'status': 'pending',
+                        'farmerPhone':farmerPhone,
+                        'farmerLocation':farmerLocation,
+                        'timestamp': FieldValue.serverTimestamp(),
+                      });
+
+                      await FirebaseFirestore.instance
+                          .collection('machinery')
+                          .doc(widget.machineryId)
+                          .update({
+                        'quantity': FieldValue.increment(-quantity),
+                      });
+
                       Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Item rented successfully")),
-                      );
+
+                      _startPayment(totalPrice);
                     }
                   },
-                  child: Text("Confirm"),
+                  child: Text("Confirm & Pay"),
                 ),
               ],
             );
@@ -143,8 +258,9 @@ class MachineryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final machineryRef =
-        FirebaseFirestore.instance.collection('machinery').doc(machineryId);
+    final machineryRef = FirebaseFirestore.instance
+        .collection('machinery')
+        .doc(widget.machineryId);
 
     return Scaffold(
       appBar: AppBar(
@@ -155,17 +271,12 @@ class MachineryDetailScreen extends StatelessWidget {
       body: FutureBuilder<DocumentSnapshot>(
         future: machineryRef.get(),
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
+          if (snapshot.hasError)
             return Center(child: Text('Error fetching details'));
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator());
-          }
-
-          if (!snapshot.data!.exists) {
+          if (!snapshot.data!.exists)
             return Center(child: Text('Machinery not found'));
-          }
 
           final data = snapshot.data!.data() as Map<String, dynamic>;
 
@@ -195,20 +306,11 @@ class MachineryDetailScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10),
-                Text(
-                  data['description'] ?? 'No Description',
-                  style: TextStyle(fontSize: 16),
-                ),
+                Text(data['description'] ?? 'No Description'),
                 SizedBox(height: 10),
-                Text(
-                  'Price: ₹${data['price']}',
-                  style: TextStyle(fontSize: 18),
-                ),
+                Text('Price: ₹${data['price']}'),
                 SizedBox(height: 5),
-                Text(
-                  'Quantity: ${data['quantity']}',
-                  style: TextStyle(fontSize: 16),
-                ),
+                Text('Quantity: ${data['quantity']}'),
                 SizedBox(height: 5),
                 Text(
                   'Availability: ${data['availability']}',
@@ -227,20 +329,15 @@ class MachineryDetailScreen extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
-          onPressed: () {
-            _showRentDialog(context);
-          },
+          onPressed: () => _showRentDialog(context),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             padding: EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           ),
-          child: Text(
-            "Rent this Item",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
+          child: Text("Rent this Item",
+              style: TextStyle(color: Colors.white, fontSize: 16)),
         ),
       ),
     );

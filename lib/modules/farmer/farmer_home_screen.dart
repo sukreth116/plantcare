@@ -1086,7 +1086,7 @@ class _PlantCardState extends State<PlantCard> {
           context,
           MaterialPageRoute(
             builder: (context) => FarmerProductDetailScreen(
-                // productId: widget.productId,
+                productId: widget.productId,
                 ),
           ),
         );

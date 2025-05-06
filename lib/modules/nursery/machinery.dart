@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/nursery/add_product_nursery.dart';
-import 'package:plantcare/modules/nursery/nursery_product_detail.dart';
+import 'package:plantcare/modules/nursery/add_machinery.dart';
 
-class NurseryProductsScreen extends StatelessWidget {
+class MachineryList extends StatelessWidget {
+  const MachineryList({super.key});
+
   @override
   Widget build(BuildContext context) {
     final String nurseryId = FirebaseAuth.instance.currentUser!.uid;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Nursery Products'),
+        title: Text('My Machineries'),
         backgroundColor: Colors.green.shade300,
         foregroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('nursery_products')
+            .collection('machinery')
             .where('nurseryId', isEqualTo: nurseryId)
             .snapshots(),
         builder: (context, snapshot) {
@@ -67,17 +68,13 @@ class NurseryProductsScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProductDetailsScreen(
-                          productId: productId,
-                          productData: {
-                            ...data,
-                          },
-                        ),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => MachineryDetailScreen(
+                    //     ),
+                    //   ),
+                    // );
                     // Handle product click (edit/view details)
                   },
                 ),
@@ -91,8 +88,8 @@ class NurseryProductsScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddNurseryProduct(
-                nurseryId: nurseryId,
+              builder: (context) => AddMachinery(nurseryId: nurseryId,
+                
               ),
             ),
           );

@@ -6,6 +6,7 @@ import 'package:plantcare/about_page.dart';
 import 'package:plantcare/modules/nursery/add_banner.dart';
 import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
+import 'package:plantcare/modules/nursery/machinery.dart';
 import 'package:plantcare/modules/nursery/nursery_prducts.dart';
 import 'package:plantcare/modules/nursery/orders.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
@@ -139,6 +140,14 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 },
               ),
               ListTile(
+                leading: Icon(CupertinoIcons.rectangle_3_offgrid),
+                title: Text("Your Machineries"),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MachineryList()));
+                },
+              ),
+              ListTile(
                 leading: Icon(CupertinoIcons.bag),
                 title: Text("Orders"),
                 onTap: () {
@@ -185,8 +194,13 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 leading: Icon(Icons.add_circle_outline_rounded),
                 title: Text("Add Machinery"),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddMachinery()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddMachinery(
+                                nurseryId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
                 },
               ),
               ListTile(

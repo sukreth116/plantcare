@@ -2,25 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// class ProductDetailScreen extends StatefulWidget {
-//   final String name;
-//   final String imageUrl;
-//   final String price;
-//   final String description;
-//   final String productId;
-
-//   const ProductDetailScreen({
-//     Key? key,
-//     required this.name,
-//     required this.imageUrl,
-//     required this.price,
-//     required this.description,
-//     required this.productId,
-//   }) : super(key: key);
-
-//   @override
-//   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
-// }
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
 
@@ -31,29 +12,6 @@ class ProductDetailScreen extends StatefulWidget {
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
-// class _ProductDetailScreenState extends State<ProductDetailScreen> {
-//   bool isWishlisted = false; // Track if product is wishlisted
-//   String? subCategory;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     checkIfWishlisted();
-//     fetchSubCategory();
-//   }
-
-//   void fetchSubCategory() async {
-//     final docSnapshot = await FirebaseFirestore.instance
-//         .collection('nursery_products')
-//         .doc(widget.productId)
-//         .get();
-
-//     if (docSnapshot.exists) {
-//       setState(() {
-//         subCategory = docSnapshot.data()?['subCategory'];
-//       });
-//     }
-//   }
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool isWishlisted = false;
   Map<String, dynamic>? productData;
@@ -222,9 +180,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Add AR View
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade300,
                   foregroundColor: Colors.white,
@@ -235,8 +191,65 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               SizedBox(height: 12),
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Add to Cart
+                onPressed: () async {
+                  final User? user = FirebaseAuth.instance.currentUser;
+
+                  if (user != null) {
+                    try {
+                      final cartRef = FirebaseFirestore.instance
+                          .collection('user_cart')
+                          .where('productId', isEqualTo: widget.productId)
+                          .where('userId', isEqualTo: user.uid)
+                          .limit(1);
+
+                      final cartSnapshot = await cartRef.get();
+
+                      if (cartSnapshot.docs.isNotEmpty) {
+                        final cartItem = cartSnapshot.docs.first;
+                        final currentQuantity = cartItem['quantity'];
+                        final updatedQuantity = currentQuantity + 1;
+
+                        await cartItem.reference.update({
+                          'quantity': updatedQuantity,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Item Again Added to Cart')),
+                        );
+                      } else {
+                        await FirebaseFirestore.instance
+                            .collection('user_cart')
+                            .add({
+                          'productId': widget.productId,
+                          'name': productData?['name'],
+                          'price': (productData?['price']),
+                          'imageUrl': productData?['imageUrl'],
+                          'nurseryId': productData?['nurseryId'],
+                          'quantity': 1,
+                          'timestamp': FieldValue.serverTimestamp(),
+                          'userId': user.uid,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                            'Added to Cart',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to add to cart: $e')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                              Text('Please log in to add items to your cart')),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade300,

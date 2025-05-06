@@ -1,61 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class ProductDetailsScreen extends StatelessWidget {
-//   final Map<String, dynamic> productData;
-
-//   const ProductDetailsScreen({Key? key, required this.productData})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(productData['name'] ?? 'Product Details'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Center(
-//               child: productData['imageUrl'] != null
-//                   ? Image.network(
-//                       productData['imageUrl'],
-//                       height: 200,
-//                       fit: BoxFit.cover,
-//                     )
-//                   : Container(
-//                       height: 200,
-//                       color: Colors.grey,
-//                       child: Icon(Icons.image, size: 100, color: Colors.white),
-//                     ),
-//             ),
-//             SizedBox(height: 20),
-//             Text(
-//               productData['name'] ?? '',
-//               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 10),
-//             Text(
-//               'Price: ₹${productData['price'] ?? 0}',
-//               style: TextStyle(fontSize: 18, color: Colors.black87),
-//             ),
-//             SizedBox(height: 10),
-//             Text(
-//               'Stock Available: ${productData['quantity'] ?? 0}',
-//               style: TextStyle(fontSize: 18, color: Colors.black87),
-//             ),
-//             SizedBox(height: 20),
-//             Text(
-//               productData['description'] ?? 'No description available.',
-//               style: TextStyle(fontSize: 16),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plantcare/modules/nursery/nursery_edit_product.dart';
@@ -94,13 +36,12 @@ class ProductDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(productData['name'] ?? 'Product Details'),
+        backgroundColor: Colors.green.shade300,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
-              // Navigate to your Edit Product screen
-              // (You can create a separate edit screen and pass productData)
-              // final productId = productData['productId'];
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -178,6 +119,21 @@ class ProductDetailsScreen extends StatelessWidget {
             Text(
               productData['description'] ?? 'No description available.',
               style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+    
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green.shade300,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 12),
+                minimumSize: Size(double.infinity, 48),
+              ),
+              child: Text("Edit Product", style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

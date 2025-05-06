@@ -251,7 +251,7 @@ class _FarmerSearchScreenState extends State<FarmerSearchScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FarmerProductDetailScreen(),
+                              builder: (context) => FarmerProductDetailScreen(productId: productId,),
                             ),
                           );
                         },

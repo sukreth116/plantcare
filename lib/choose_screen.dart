@@ -3,6 +3,7 @@ import 'package:plantcare/modules/admin/admin_login.dart';
 import 'package:plantcare/modules/farmer/farmer_login_screen.dart';
 import 'package:plantcare/modules/laborer/laborer_login.dart';
 import 'package:plantcare/modules/nursery/login_nursery.dart';
+import 'package:plantcare/modules/nursery_worker/login.dart';
 import 'package:plantcare/modules/user/user_login.dart';
 
 class ChooseScreen extends StatelessWidget {
@@ -35,7 +36,7 @@ class ChooseScreen extends StatelessWidget {
       {
         "title": "Worker",
         "icon": Icons.work,
-        "route": const FarmerLoginScreen()
+        "route": const NurseryWorkerLoginScreen()
       },
     ];
 

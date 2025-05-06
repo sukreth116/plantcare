@@ -1,74 +1,257 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FarmerProductDetailScreen extends StatelessWidget {
+class FarmerProductDetailScreen extends StatefulWidget {
+  final String productId;
+
+  const FarmerProductDetailScreen({Key? key, required this.productId})
+      : super(key: key);
+
+  @override
+  State<FarmerProductDetailScreen> createState() =>
+      _FarmerProductDetailScreenState();
+}
+
+class _FarmerProductDetailScreenState extends State<FarmerProductDetailScreen> {
+  bool isWishlisted = false;
+  Map<String, dynamic>? productData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProductDetails();
+    checkIfWishlisted();
+  }
+
+  Future<void> fetchProductDetails() async {
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection('nursery_products')
+        .doc(widget.productId)
+        .get();
+
+    if (docSnapshot.exists) {
+      setState(() {
+        productData = docSnapshot.data();
+      });
+    }
+  }
+
+  void checkIfWishlisted() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('farmer_wishlist')
+          .where('productId', isEqualTo: widget.productId)
+          .where('farmerId', isEqualTo: user.uid)
+          .get();
+
+      if (mounted) {
+        setState(() {
+          isWishlisted = snapshot.docs.isNotEmpty;
+        });
+      }
+    }
+  }
+
+  void toggleWishlist() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final wishlistCollection =
+          FirebaseFirestore.instance.collection('farmer_wishlist');
+
+      if (isWishlisted) {
+        // Remove from wishlist
+        final snapshot = await wishlistCollection
+            .where('productId', isEqualTo: widget.productId)
+            .where('farmerId', isEqualTo: user.uid)
+            .get();
+
+        for (var doc in snapshot.docs) {
+          await doc.reference.delete();
+        }
+
+        if (mounted) {
+          setState(() {
+            isWishlisted = false;
+          });
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Removed from Wishlist')),
+        );
+      } else {
+        // Add to wishlist
+        await wishlistCollection.add({
+          'productId': widget.productId,
+          'farmerId': user.uid,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+
+        if (mounted) {
+          setState(() {
+            isWishlisted = true;
+          });
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Added to Wishlist')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please log in to use wishlist')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (productData == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text("Product Details")),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Product Details"),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.green.shade300,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.asset(
-                'asset/image/plant_sample_1.png',
-                height: 250, 
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.network(
+                  productData!['imageUrl'],
+                  height: 250,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Product Name",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 2),
-            Text(
-              "\$199.99",
-              style: TextStyle(
+              SizedBox(height: 16),
+              Text(
+                productData!['name'],
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "₹ ${productData!['price']}",
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green),
-            ),
-            SizedBox(height: 2),
-            Row(
-              children: [
-                Row(
-                  children: List.generate(5, (index) {
-                    return Icon(Icons.star, color: Colors.amber);
-                  }),
+                  color: Colors.green,
                 ),
-                SizedBox(width: 10),
-                IconButton(
-                  icon: Icon(Icons.favorite_border, color: Colors.black),
-                  onPressed: () {
-                    // Add favorite functionality here
-                  },
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Row(
+                    children: List.generate(5, (index) {
+                      return Icon(Icons.star, color: Colors.amber);
+                    }),
+                  ),
+                  SizedBox(width: 10),
+                  IconButton(
+                    onPressed: toggleWishlist,
+                    icon: Icon(
+                      isWishlisted ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              if (productData!['subCategory'] != null) ...[
+                SizedBox(height: 4),
+                Text(
+                  'Category: ${productData!['subCategory']}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ],
-            ),
-            SizedBox(height: 8),
-            Text(
-              "This is a detailed description of the product. It includes features, specifications, and other details.",
-              style: TextStyle(fontSize: 16),
-            ),
-            Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: Text("Add to Cart",
-                    style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 8),
+              Text(
+                productData!['description'] ?? '',
+                style: TextStyle(fontSize: 16),
               ),
-            ),
-          ],
+              SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: () async {
+                  final User? user = FirebaseAuth.instance.currentUser;
+
+                  if (user != null) {
+                    try {
+                      final cartRef = FirebaseFirestore.instance
+                          .collection('farmer_cart')
+                          .where('productId', isEqualTo: widget.productId)
+                          .where('farmerId', isEqualTo: user.uid)
+                          .limit(1);
+
+                      final cartSnapshot = await cartRef.get();
+
+                      if (cartSnapshot.docs.isNotEmpty) {
+                        final cartItem = cartSnapshot.docs.first;
+                        final currentQuantity = cartItem['quantity'];
+                        final updatedQuantity = currentQuantity + 1;
+
+                        await cartItem.reference.update({
+                          'quantity': updatedQuantity,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Item Again Added to Cart')),
+                        );
+                      } else {
+                        await FirebaseFirestore.instance
+                            .collection('farmer_cart')
+                            .add({
+                          'productId': widget.productId,
+                          'name': productData?['name'],
+                          'price': (productData?['price']),
+                          'imageUrl': productData?['imageUrl'],
+                          'nurseryId': productData?['nurseryId'],
+                          'quantity': 1,
+                          'timestamp': FieldValue.serverTimestamp(),
+                          'farmerId': user.uid,
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                            'Added to Cart',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to add to cart: $e')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                              Text('Please log in to add items to your cart')),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green.shade300,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  minimumSize: Size(double.infinity, 48),
+                ),
+                child: Text("Add to Cart", style: TextStyle(fontSize: 18)),
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

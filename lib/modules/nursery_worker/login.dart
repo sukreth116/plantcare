@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/modules/nursery/home_nursery.dart';
-import 'package:plantcare/modules/nursery/signup_nursery.dart';
+import 'package:plantcare/modules/nursery_worker/home.dart';
+import 'package:plantcare/modules/nursery_worker/signup.dart';
 
-class NurseryLoginScreen extends StatefulWidget {
-  const NurseryLoginScreen({super.key});
+class NurseryWorkerLoginScreen extends StatefulWidget {
+  const NurseryWorkerLoginScreen({super.key});
 
   @override
-  _NurseryLoginScreenState createState() => _NurseryLoginScreenState();
+  _NurseryWorkerLoginScreenState createState() =>
+      _NurseryWorkerLoginScreenState();
 }
 
-class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
+class _NurseryWorkerLoginScreenState extends State<NurseryWorkerLoginScreen> {
   bool _obscurePassword = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -34,22 +35,22 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
 
       String uid = userCredential.user!.uid;
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('nurseries')
+          .collection('nursery_workers')
           .doc(uid)
           .get();
 
       if (!userDoc.exists) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Nursery data not found in records.')),
+          const SnackBar(content: Text('User data not found in records.')),
         );
         return;
       }
 
-      // Navigate to Farmer Home Page
+      // Navigate to User Home Page
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => NurseryHomeScreen(),
+          builder: (context) => NurseryWorkerHomeScreen(),
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -84,14 +85,14 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
                 const Text(
                   "Login",
                   style: TextStyle(
-                    color: Colors.orange,
+                    color: Colors.green,
                     fontFamily: 'Milky',
                     fontSize: 50,
                   ),
                 ),
                 const SizedBox(height: 20),
                 Image.asset(
-                  'asset/image/Blooming-cuate.png',
+                  'asset/image/personal growth-bro.png',
                   height: 250,
                 ),
                 const SizedBox(height: 20),
@@ -178,6 +179,23 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
                     ],
                   ),
                 ),
+                Row(
+                  children: [
+                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "OR",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                  ],
+                ),
                 const SizedBox(height: 10),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -192,7 +210,8 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const NurserySignupScreen(),
+                          builder: (context) =>
+                              const NurseryWorkerSignupScreen(),
                         ),
                       );
                     },

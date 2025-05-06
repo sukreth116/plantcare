@@ -1,205 +1,4 @@
-// import 'package:flutter/material.dart';
-
-// class AddMachinery extends StatefulWidget {
-//   @override
-//   _AddMachineryState createState() => _AddMachineryState();
-// }
-
-// class _AddMachineryState extends State<AddMachinery> {
-//   final _formKey = GlobalKey<FormState>();
-//   String machineryName = '';
-//   String machineryDescription = '';
-//   double machineryPrice = 0.0;
-//   String? imagePath;
-//   int machineryQuantity = 0;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: Text('Add Machinery'),
-//           foregroundColor: Colors.white,
-//           backgroundColor: Colors.green.shade300,
-//         ),
-//         backgroundColor: Colors.white,
-//         body: SingleChildScrollView(
-//           child: Padding(
-//             padding: EdgeInsets.all(16.0),
-//             child: Form(
-//               key: _formKey,
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   // Center(
-//                   //   child: Text(
-//                   //     'Add Machinery',
-//                   //     style: TextStyle(
-//                   //       fontSize: 20,
-//                   //       fontFamily: 'Poppins',
-//                   //       color: Colors.green,
-//                   //     ),
-//                   //   ),
-//                   // ),
-//                   SizedBox(
-//                     height: 10,
-//                   ),
-//                   Center(
-//                     child: Text(
-//                       'Add machinery like Tractors, Tools, Irrigation Equipment, etc. for rental',
-//                       textAlign: TextAlign.center,
-//                     ),
-//                   ),
-//                   TextFormField(
-//                     decoration: InputDecoration(
-//                       labelText: "Machinery Name",
-//                     ),
-//                     validator: (value) {
-//                       if (value == null || value.isEmpty) {
-//                         return 'Please enter a machinery name';
-//                       }
-//                       return null;
-//                     },
-//                     onChanged: (value) {
-//                       setState(() {
-//                         machineryName = value;
-//                       });
-//                     },
-//                   ),
-//                   SizedBox(height: 10),
-//                   TextFormField(
-//                     decoration: InputDecoration(
-//                       labelText: "Description",
-//                     ),
-//                     maxLines: 3,
-//                     validator: (value) {
-//                       if (value == null || value.isEmpty) {
-//                         return 'Please enter a description';
-//                       }
-//                       return null;
-//                     },
-//                     onChanged: (value) {
-//                       setState(() {
-//                         machineryDescription = value;
-//                       });
-//                     },
-//                   ),
-//                   SizedBox(height: 10),
-//                   TextFormField(
-//                     decoration: InputDecoration(
-//                       labelText: "Price",
-//                     ),
-//                     keyboardType: TextInputType.number,
-//                     validator: (value) {
-//                       if (value == null || value.isEmpty) {
-//                         return 'Please enter a price';
-//                       }
-//                       if (double.tryParse(value) == null) {
-//                         return 'Enter a valid number';
-//                       }
-//                       return null;
-//                     },
-//                     onChanged: (value) {
-//                       setState(() {
-//                         machineryPrice = double.tryParse(value) ?? 0.0;
-//                       });
-//                     },
-//                   ),
-//                   SizedBox(height: 10),
-//                   TextFormField(
-//                     decoration: InputDecoration(
-//                       labelText: "Quantity",
-//                     ),
-//                     keyboardType: TextInputType.number,
-//                     validator: (value) {
-//                       if (value == null || value.isEmpty) {
-//                         return 'Please enter quantity';
-//                       }
-//                       if (int.tryParse(value) == null) {
-//                         return 'Enter a valid number';
-//                       }
-//                       return null;
-//                     },
-//                     onChanged: (value) {
-//                       setState(() {
-//                         machineryQuantity = int.tryParse(value) ?? 0;
-//                       });
-//                     },
-//                   ),
-//                   SizedBox(height: 20),
-//                   // Center(
-//                   //   child: ElevatedButton.icon(
-//                   //     onPressed: () {
-//                   //       // Implement image picker functionality
-//                   //     },
-//                   //     icon: Icon(Icons.image, color: Colors.white),
-//                   //     label: Text("Upload Image"),
-//                   //     style: ElevatedButton.styleFrom(
-//                   //       backgroundColor: Colors.blue[300],
-//                   //       foregroundColor: Colors.white,
-//                   //       minimumSize: Size(180, 50),
-//                   //     ),
-//                   //   ),
-//                   // ),
-//                   SizedBox(height: 10),
-//                   Center(
-//                     child: GestureDetector(
-//                       onTap: () {
-//                         // TODO: Implement image picker functionality
-//                       },
-//                       child: Container(
-//                         width: 350,
-//                         height: 150,
-//                         decoration: BoxDecoration(
-//                           border: Border.all(color: Colors.grey),
-//                           borderRadius: BorderRadius.circular(10),
-//                           color: Colors.grey.shade100,
-//                         ),
-//                         child: Column(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             Icon(Icons.add_a_photo,
-//                                 size: 40, color: Colors.green[300]),
-//                             SizedBox(height: 8),
-//                             Text(
-//                               "Upload Image",
-//                               style: TextStyle(color: Colors.green[500]),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-
-//                   SizedBox(height: 20),
-//                   Center(
-//                     child: ElevatedButton(
-//                       onPressed: () {
-//                         if (_formKey.currentState!.validate()) {
-//                           ScaffoldMessenger.of(context).showSnackBar(
-//                             SnackBar(
-//                                 content: Text("Machinery Added Successfully!")),
-//                           );
-//                         }
-//                       },
-//                       child: Text("Add Machinery"),
-//                       style: ElevatedButton.styleFrom(
-//                         backgroundColor: Colors.green[300],
-//                         foregroundColor: Colors.white,
-//                         minimumSize: Size(350, 50),
-//                         padding:
-//                             EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ));
-//   }
-// }
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -207,6 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary/cloudinary.dart';
 
 class AddMachinery extends StatefulWidget {
+  final String nurseryId;
+  const AddMachinery({required this.nurseryId, super.key});
+
   @override
   _AddMachineryState createState() => _AddMachineryState();
 }
@@ -277,6 +79,13 @@ class _AddMachineryState extends State<AddMachinery> {
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('User not logged in')),
+      );
+      return;
+    }
+
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please upload an image')),
       );
       return;
     }
