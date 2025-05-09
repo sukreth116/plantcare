@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-class WorkScheduleScreen extends StatefulWidget {
+class ExtraWorkScheduleScreen extends StatefulWidget {
   final String nurseryId;
 
-  const WorkScheduleScreen({required this.nurseryId, super.key});
+  const ExtraWorkScheduleScreen({required this.nurseryId, super.key});
 
   @override
-  _WorkScheduleScreenState createState() => _WorkScheduleScreenState();
+  _ExtraWorkScheduleScreenState createState() => _ExtraWorkScheduleScreenState();
 }
 
-class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
+class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController taskController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();

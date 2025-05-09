@@ -12,6 +12,7 @@ import 'package:plantcare/modules/nursery/orders.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:plantcare/modules/nursery/rental_orders.dart';
 import 'package:plantcare/modules/nursery/sale_report_nursery.dart';
+import 'package:plantcare/modules/nursery/work_schedule.dart';
 import 'package:plantcare/modules/nursery/work_schedule_mangement.dart';
 import 'package:plantcare/news.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -220,7 +221,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => WorkScheduleScreen(
+                          builder: (context) => WorkScheduleManagementScreen(
                                 nurseryId:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));

@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/modules/nursery_worker/profile.dart';
-import 'package:plantcare/modules/nursery_worker/work_schedule.dart';
+import 'package:plantcare/modules/nursery_worker/work_list.dart';
+import 'package:plantcare/modules/nursery_worker/work_screen.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -45,7 +46,10 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
     final User? user = FirebaseAuth.instance.currentUser;
 
     final List<Widget> _pages = [
-      WorkerJobsScreen(workerId: user?.uid ?? ''), // Pass workerId here
+      WorkerJobListScreen(workerId: user?.uid ?? ''), // Pass workerId here
+      WorkerJobsScreen(
+        workerId: user?.uid ?? '',
+      ),
       AIDetectionScreen(),
       WorkerProfilePage(
         workerId: user?.uid ?? '',
@@ -69,7 +73,13 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
           BottomBarItem(
             icon: const Icon(Icons.schedule),
             selectedIcon: const Icon(Icons.schedule_send),
-            title: const Text('Jobs'),
+            title: const Text('Weak Job List'),
+            backgroundColor: Colors.green,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.schedule),
+            selectedIcon: const Icon(Icons.schedule_send),
+            title: const Text('Job'),
             backgroundColor: Colors.green,
           ),
           BottomBarItem(
