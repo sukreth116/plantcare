@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plantcare/modules/admin/manage_farmer.dart';
+import 'package:plantcare/modules/admin/manage_laborer.dart';
 import 'package:plantcare/modules/admin/manage_nursery.dart';
 import 'package:plantcare/modules/admin/manage_user.dart';
 
@@ -122,7 +123,7 @@ class AdminHomeScreen extends StatelessWidget {
         page = const ManageNurseries();
         break;
       case 'Manage Laborers':
-        page = const ManageLaborersScreen();
+        page = const ManageLaborers();
         break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(

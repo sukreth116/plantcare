@@ -43,6 +43,17 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
         return;
       }
 
+      bool isApproved = userDoc['isApproved'] ?? false;
+
+      if (!isApproved) {
+        // Sign out user if not approved
+        await FirebaseAuth.instance.signOut();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('User account not approved by admin yet')),
+        );
+        return;
+      }
       // Navigate to User Home Page
       Navigator.push(
         context,

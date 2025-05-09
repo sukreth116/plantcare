@@ -154,6 +154,7 @@ class _EditNurseryProductState extends State<EditNurseryProduct> {
       appBar: AppBar(
         title: const Text('Edit Product'),
         backgroundColor: Colors.green.shade300,
+        foregroundColor: Colors.white,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

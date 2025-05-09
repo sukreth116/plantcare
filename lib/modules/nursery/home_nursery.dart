@@ -220,7 +220,10 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => WorkScheduleScreen()));
+                          builder: (context) => WorkScheduleScreen(
+                                nurseryId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
                 },
               ),
               ListTile(
@@ -295,7 +298,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    "Get your 1st plant at 30% off",
+                    "Where every leaf tells a story of care and growth",
                     style: TextStyle(fontSize: 16, color: Colors.green[700]),
                   ),
                 ],

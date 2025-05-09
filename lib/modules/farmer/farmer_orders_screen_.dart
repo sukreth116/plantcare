@@ -58,52 +58,56 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen> {
 
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: ExpansionTile(
-                  title: Text(
-                    "Order ID: ${(data['orderId'])}",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          "Total Amount: ₹${(data['totalAmount'] ?? 0).toStringAsFixed(2)}"),
-                      Text(
-                          "Total Quantity: ${data['totalQuantity'] ?? 0} items"),
-                      Text("Status: ${(data['status'])}"),
-                      Text("Your Location: ${(data['farmerLocation'])}"),
-                      Text("Your Phone Number: ${(data['farmerPhone'])}"),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  FarmerOrderEditScreen(orderDoc: order),
+                child: Theme(
+                  data: Theme.of(context)
+                      .copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    title: Text(
+                      "Order ID: ${(data['orderId'])}",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            "Total Amount: ₹${(data['totalAmount'] ?? 0).toStringAsFixed(2)}"),
+                        Text(
+                            "Total Quantity: ${data['totalQuantity'] ?? 0} items"),
+                        Text("Status: ${(data['status'])}"),
+                        Text("Your Location: ${(data['farmerLocation'])}"),
+                        Text("Your Phone Number: ${(data['farmerPhone'])}"),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    FarmerOrderEditScreen(orderDoc: order),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Edit Order',
+                            style: TextStyle(
+                              color: Colors.green,
                             ),
-                          );
-                        },
-                        child: Text(
-                          'Edit Order',
-                          style: TextStyle(
-                            color: Colors.green,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    children: products.map((product) {
+                      return ListTile(
+                        leading: product['imageUrl'] != null
+                            ? Image.network(product['imageUrl'],
+                                width: 50, height: 50, fit: BoxFit.cover)
+                            : Icon(Icons.image, size: 50),
+                        title: Text(product['name'] ?? ''),
+                        subtitle: Text(
+                          "₹${(product['price'] ?? 0).toStringAsFixed(2)} x ${product['quantity']} pcs",
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  children: products.map((product) {
-                    return ListTile(
-                      leading: product['imageUrl'] != null
-                          ? Image.network(product['imageUrl'],
-                              width: 50, height: 50, fit: BoxFit.cover)
-                          : Icon(Icons.image, size: 50),
-                      title: Text(product['name'] ?? ''),
-                      subtitle: Text(
-                        "₹${(product['price'] ?? 0).toStringAsFixed(2)} x ${product['quantity']} pcs",
-                      ),
-                    );
-                  }).toList(),
                 ),
               );
             },

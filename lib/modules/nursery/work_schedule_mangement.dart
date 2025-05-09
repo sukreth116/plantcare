@@ -1,58 +1,141 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class WorkScheduleScreen extends StatefulWidget {
+  final String nurseryId;
+
+  const WorkScheduleScreen({required this.nurseryId, super.key});
+
   @override
   _WorkScheduleScreenState createState() => _WorkScheduleScreenState();
 }
 
 class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController taskController = TextEditingController();
-  TextEditingController workerController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  DateTime? selectedDate;
-  List<Map<String, dynamic>> workTasks = [];
+  final TextEditingController taskController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
-  void _pickDate() async {
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  String? selectedWorkerId;
+  String? selectedWorkerName;
+
+  List<Map<String, dynamic>> workerList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWorkers();
+  }
+
+  Future<void> fetchWorkers() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('nursery_workers')
+          .where('nurseryId', isEqualTo: widget.nurseryId)
+          .get();
+
+      List<Map<String, dynamic>> workers = snapshot.docs.map((doc) {
+        return {'name': doc['name'], 'id': doc.id};
+      }).toList();
+
+      setState(() => workerList = workers);
+    } catch (e) {
+      print('Error fetching workers: $e');
+    }
+  }
+
+  Future<void> _pickDate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-
     if (pickedDate != null) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
+      setState(() => selectedDate = pickedDate);
     }
   }
 
-  void _addTask() {
-    if (_formKey.currentState!.validate() && selectedDate != null) {
-      setState(() {
-        workTasks.add({
-          "task": taskController.text,
-          "worker": workerController.text,
-          "description": descriptionController.text,
-          "date": DateFormat('yyyy-MM-dd').format(selectedDate!),
-          "status": "Pending",
+  Future<void> _pickTime() async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(() => selectedTime = pickedTime);
+    }
+  }
+
+  Future<void> _addTask() async {
+    if (_formKey.currentState!.validate() &&
+        selectedDate != null &&
+        selectedTime != null &&
+        selectedWorkerId != null &&
+        selectedWorkerName != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate!);
+      String formattedTime = selectedTime!.format(context);
+
+      Map<String, dynamic> taskData = {
+        "task": taskController.text,
+        "worker": selectedWorkerName,
+        "workerId": selectedWorkerId,
+        "description": descriptionController.text,
+        "date": formattedDate,
+        "time": formattedTime,
+        "status": "Pending",
+        "nurseryId": widget.nurseryId,
+        "createdAt": Timestamp.now(),
+      };
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('work_schedule')
+            .add(taskData);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Task Assigned Successfully")),
+        );
+
+        // Reset form
+        setState(() {
+          taskController.clear();
+          descriptionController.clear();
+          selectedDate = null;
+          selectedTime = null;
+          selectedWorkerId = null;
+          selectedWorkerName = null;
         });
-      });
-
-      // Clear fields after adding
-      taskController.clear();
-      workerController.clear();
-      descriptionController.clear();
-      selectedDate = null;
+      } catch (e) {
+        print('Error adding task: $e');
+      }
     }
   }
 
-  void _updateStatus(int index, String status) {
-    setState(() {
-      workTasks[index]["status"] = status;
-    });
+  Future<void> _updateStatus(String docId, String newStatus) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('work_schedule')
+          .doc(docId)
+          .update({'status': newStatus});
+    } catch (e) {
+      print('Error updating status: $e');
+    }
+  }
+
+  Widget _buildStatusChip(String status) {
+    Color color = status == "Pending"
+        ? Colors.orange
+        : status == "In Progress"
+            ? Colors.blue
+            : Colors.green;
+
+    return Chip(
+      label: Text(status),
+      backgroundColor: color.withOpacity(0.2),
+      labelStyle: TextStyle(color: color),
+    );
   }
 
   @override
@@ -60,126 +143,213 @@ class _WorkScheduleScreenState extends State<WorkScheduleScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Work Schedule & Management"),
-        backgroundColor: Colors.green[700],
-        elevation: 3,
+        backgroundColor: Colors.green[300],
+        foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: taskController,
-                    validator: (value) => value!.isEmpty ? "Enter task title" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Task Title',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.task, color: Colors.green),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: workerController,
-                    validator: (value) => value!.isEmpty ? "Enter worker name" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Assigned Worker',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.person, color: Colors.green),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    controller: descriptionController,
-                    validator: (value) => value!.isEmpty ? "Enter task details" : null,
-                    decoration: InputDecoration(
-                      labelText: 'Task Description',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.description, color: Colors.green),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text("Assign New Task",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green[300])),
+              SizedBox(height: 10),
+              SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: Text(
-                          selectedDate == null ? "Select Date" : "Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}",
-                          style: TextStyle(fontSize: 16),
+                      TextFormField(
+                        controller: taskController,
+                        validator: (value) =>
+                            value!.isEmpty ? "Enter task title" : null,
+                        decoration: InputDecoration(
+                          labelText: 'Task Title',
+                          prefixIcon:
+                              Icon(Icons.task_alt, color: Colors.green[300]),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: _pickDate,
-                        child: Text("Pick Date"),
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green[700]),
+                      SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        value: selectedWorkerId,
+                        items: workerList.map((worker) {
+                          final workerName = worker['name']?.toString() ?? '';
+                          final workerId = worker['id']?.toString() ?? '';
+                          return DropdownMenuItem<String>(
+                            value: workerId,
+                            child: Text(workerName),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          final selected = workerList
+                              .firstWhere((worker) => worker['id'] == value);
+                          setState(() {
+                            selectedWorkerId = selected['id'];
+                            selectedWorkerName = selected['name'];
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Assigned Worker',
+                          prefixIcon:
+                              Icon(Icons.person, color: Colors.green[300]),
+                        ),
+                        validator: (value) =>
+                            value == null ? "Please select a worker" : null,
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: descriptionController,
+                        validator: (value) =>
+                            value!.isEmpty ? "Enter task details" : null,
+                        decoration: InputDecoration(
+                          labelText: 'Task Description',
+                          prefixIcon:
+                              Icon(Icons.description, color: Colors.green[300]),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedDate == null
+                                  ? "Select Date"
+                                  : "Date: ${DateFormat('yyyy-MM-dd').format(selectedDate!)}",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: _pickDate,
+                            icon:
+                                Icon(Icons.calendar_today, color: Colors.white),
+                            label: Text("Pick"),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green[300]),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedTime == null
+                                  ? "Select Time"
+                                  : "Time: ${selectedTime!.format(context)}",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: _pickTime,
+                            icon: Icon(Icons.access_time, color: Colors.white),
+                            label: Text("Pick"),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green[300]),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      ElevatedButton.icon(
+                        onPressed: _addTask,
+                        icon: Icon(Icons.add, color: Colors.white),
+                        label: Text("Assign Task",
+                            style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[300],
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
-                  ElevatedButton.icon(
-                    onPressed: _addTask,
-                    icon: Icon(Icons.add, color: Colors.white),
-                    label: Text("Assign Task"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[700],
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: workTasks.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        workTasks[index]["task"],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Worker: ${workTasks[index]["worker"]}"),
-                          Text("Date: ${workTasks[index]["date"]}"),
-                          Text("Status: ${workTasks[index]["status"]}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: workTasks[index]["status"] == "Pending"
-                                      ? Colors.orange
-                                      : workTasks[index]["status"] == "In Progress"
-                                          ? Colors.blue
-                                          : Colors.green)),
-                        ],
-                      ),
-                      trailing: PopupMenuButton<String>(
-                        onSelected: (String newValue) {
-                          _updateStatus(index, newValue);
-                        },
-                        itemBuilder: (BuildContext context) => [
-                          PopupMenuItem(value: "Pending", child: Text("Pending")),
-                          PopupMenuItem(value: "In Progress", child: Text("In Progress")),
-                          PopupMenuItem(value: "Completed", child: Text("Completed")),
-                        ],
-                        icon: Icon(Icons.more_vert),
-                      ),
-                    ),
-                  );
-                },
+              SizedBox(height: 20),
+              Divider(thickness: 1.5),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Scheduled Tasks",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[300])),
               ),
-            ),
-          ],
+              SizedBox(height: 10),
+              SizedBox(
+                height: 400,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('work_schedule')
+                      .where('nurseryId', isEqualTo: widget.nurseryId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    final tasks = snapshot.data?.docs ?? [];
+
+                    if (tasks.isEmpty) {
+                      return Center(child: Text("No tasks scheduled yet."));
+                    }
+
+                    return ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        final doc = tasks[index];
+                        final task = doc.data() as Map<String, dynamic>;
+                        final docId = doc.id;
+
+                        return Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.green[300],
+                              child:
+                                  Icon(Icons.assignment, color: Colors.white),
+                            ),
+                            title: Text(task["task"] ?? "",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Worker: ${task["worker"] ?? ''}"),
+                                Text("Date: ${task["date"] ?? ''}"),
+                                Text("Time: ${task["time"] ?? ''}"),
+                                _buildStatusChip(task["status"] ?? "Pending"),
+                              ],
+                            ),
+                            trailing: PopupMenuButton<String>(
+                              onSelected: (newValue) =>
+                                  _updateStatus(docId, newValue),
+                              itemBuilder: (BuildContext context) => [
+                                PopupMenuItem(
+                                    value: "Pending", child: Text("Pending")),
+                                PopupMenuItem(
+                                    value: "In Progress",
+                                    child: Text("In Progress")),
+                                PopupMenuItem(
+                                    value: "Completed",
+                                    child: Text("Completed")),
+                              ],
+                              icon: Icon(Icons.more_vert),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

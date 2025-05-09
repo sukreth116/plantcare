@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:plantcare/clodinary_upload.dart';
 
 class AddPromoBannerScreen extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _AddPromoBannerScreenState extends State<AddPromoBannerScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController subtitleController = TextEditingController();
   File? _selectedImage;
+  bool isLoading = false;
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -23,14 +26,54 @@ class _AddPromoBannerScreenState extends State<AddPromoBannerScreen> {
     }
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate() && _selectedImage != null) {
-      // Process the banner submission (Upload to database/storage)
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Promo Banner Submitted!")));
+      setState(() {
+        isLoading = true;
+      });
+      final String title = titleController.text.trim();
+      final String subtitle = subtitleController.text.trim();
+
+      try {
+        // Upload image to Cloudinary
+        final String? imageUrl = await getCloudinaryUrl(_selectedImage!.path);
+
+        if (imageUrl == null) {
+          throw Exception("Image upload failed.");
+        }
+
+        // Store data in Firestore
+        await FirebaseFirestore.instance.collection('banners').add({
+          'title': title,
+          'subtitle': subtitle,
+          'imageUrl': imageUrl,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Promo Banner Submitted!")),
+        );
+
+        // Reset form
+        titleController.clear();
+        subtitleController.clear();
+        setState(() {
+          _selectedImage = null;
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${e.toString()}")),
+        );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Please complete the form and upload an image.")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text("Please complete the form and upload an image.")),
+      );
     }
   }
 
@@ -130,10 +173,19 @@ class _AddPromoBannerScreenState extends State<AddPromoBannerScreen> {
                 // Submit Button
                 Center(
                   child: ElevatedButton.icon(
-                    onPressed: _submitForm,
-                    icon: Icon(Icons.send, color: Colors.white),
+                    onPressed: isLoading ? null : _submitForm,
+                    icon: isLoading
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Icon(Icons.send, color: Colors.white),
                     label: Text(
-                      "Upload Promo",
+                      isLoading ? "Uploading..." : "Upload Promo",
                       style: TextStyle(color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(

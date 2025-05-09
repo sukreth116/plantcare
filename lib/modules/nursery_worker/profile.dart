@@ -1,30 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:plantcare/modules/farmer/farmer_profile_edit.dart';
 
-class FarmerProfilePage extends StatelessWidget {
-  final String farmerId;
+class WorkerProfilePage extends StatelessWidget {
+  final String workerId;
 
-  const FarmerProfilePage({Key? key, required this.farmerId}) : super(key: key);
+  const WorkerProfilePage({Key? key, required this.workerId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance
-            .collection('farmers')
-            .doc(farmerId)
+            .collection('nursery_workers')
+            .doc(workerId)
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(child: Text("Farmer not found"));
+            return const Center(child: Text("Worker not found"));
           }
 
-          var farmerData = snapshot.data!.data() as Map<String, dynamic>;
+          var workerData = snapshot.data!.data() as Map<String, dynamic>;
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -46,8 +45,8 @@ class FarmerProfilePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: farmerData['profilePhotoUrl'] != null
-                        ? NetworkImage(farmerData['profilePhotoUrl'])
+                    backgroundImage: workerData['profileImageUrl'] != null
+                        ? NetworkImage(workerData['profileImageUrl'])
                         : const AssetImage(
                                 'asset/image/profile_placeholder.jpg')
                             as ImageProvider,
@@ -59,7 +58,7 @@ class FarmerProfilePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        farmerData['name'] ?? 'Unknown',
+                        workerData['name'] ?? 'Unknown',
                         style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -67,15 +66,7 @@ class FarmerProfilePage extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    FarmerProfileEditScreen(farmerId: farmerId),
-                              ),
-                            );
-                          },
+                          onPressed: () {},
                           icon: Icon(
                             Icons.edit,
                             color: Colors.green.shade300,
@@ -84,7 +75,7 @@ class FarmerProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    farmerData['email'] ?? 'No Email',
+                    workerData['email'] ?? 'No Email',
                     style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
@@ -92,18 +83,18 @@ class FarmerProfilePage extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.phone, color: Colors.green.shade300),
                     title: const Text('Phone'),
-                    subtitle: Text(farmerData['phone'] ?? 'No Phone'),
+                    subtitle: Text(workerData['phone'] ?? 'No Phone'),
                   ),
                   ListTile(
                     leading:
                         Icon(Icons.location_on, color: Colors.green.shade300),
                     title: const Text('Address'),
-                    subtitle: Text(farmerData['address'] ?? 'No Address'),
+                    subtitle: Text(workerData['address'] ?? 'No Address'),
                   ),
                   ListTile(
                     leading: Icon(Icons.badge, color: Colors.green.shade300),
-                    title: const Text('Farmer ID'),
-                    subtitle: Text(farmerData['idCardNumber'] ?? 'No ID'),
+                    title: const Text('Worker ID'),
+                    subtitle: Text(workerData['workerId'] ?? 'No ID'),
                   ),
                   SizedBox(
                     height: 8,
@@ -138,10 +129,10 @@ class FarmerProfilePage extends StatelessWidget {
                                           color: Colors.grey.shade300),
                                       borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
-                                        image: farmerData['idCardImageUrl'] !=
+                                        image: workerData['idProofImageUrl'] !=
                                                 null
                                             ? NetworkImage(
-                                                farmerData['idCardImageUrl'])
+                                                workerData['idProofImageUrl'])
                                             : const AssetImage(
                                                     'assets/id_placeholder.png')
                                                 as ImageProvider,
@@ -206,7 +197,7 @@ class FarmerProfilePage extends StatelessWidget {
                         // Optionally navigate to login page here
                       }
                     },
-                    icon: const Icon(Icons.logout, color: Colors.white),
+                    icon: const Icon(Icons.logout),
                     label: const Text("Logout"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange.shade300,
@@ -244,8 +235,8 @@ class FarmerProfilePage extends StatelessWidget {
                           if (user != null) {
                             // Delete from Firestore
                             await FirebaseFirestore.instance
-                                .collection('farmers')
-                                .doc(farmerId)
+                                .collection('nursery_worker')
+                                .doc(workerId)
                                 .delete();
                             // Delete Firebase user account
                             await user.delete();
@@ -267,10 +258,7 @@ class FarmerProfilePage extends StatelessWidget {
                         }
                       }
                     },
-                    icon: const Icon(
-                      Icons.delete_forever,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.delete_forever),
                     label: const Text("Delete Account"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red.shade400,

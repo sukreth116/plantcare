@@ -282,6 +282,7 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
         'phone': _phoneController.text.trim(),
         'profileImage': imageUrl,
         'createdAt': FieldValue.serverTimestamp(),
+        'isApproved':false,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

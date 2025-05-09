@@ -318,7 +318,7 @@ class _NurseryWorkerSignupScreenState extends State<NurseryWorkerSignupScreen> {
                             child: ElevatedButton(
                               onPressed: _registerWorker,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green[300],
+                                backgroundColor: Colors.green[400],
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),

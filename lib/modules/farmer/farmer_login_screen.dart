@@ -42,6 +42,17 @@ class _FarmerLoginScreenState extends State<FarmerLoginScreen> {
         );
         return;
       }
+      bool isApproved = userDoc['isApproved'] ?? false;
+
+      if (!isApproved) {
+        // Sign out user if not approved
+        await FirebaseAuth.instance.signOut();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Farmer account not approved by admin yet')),
+        );
+        return;
+      }
 
       // Navigate to Farmer Home Page
       Navigator.push(
@@ -175,6 +186,24 @@ class _FarmerLoginScreenState extends State<FarmerLoginScreen> {
                       const SizedBox(height: 10),
                     ],
                   ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "OR",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 SizedBox(

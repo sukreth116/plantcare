@@ -41,6 +41,7 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
 
   Future<void> _signupHandler() async {
     if (!_formKey.currentState!.validate()) return;
+    if (!mounted) return;
     setState(() {
       isLoading = true;
     });
@@ -64,6 +65,7 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
         'phone': _phoneController.text.trim(),
         'location': _locationController.text.trim(),
         'experience': _experienceController.text.trim(),
+        'isApproved': false,
         'skills': _skillsController.text
             .trim()
             .split(',')
@@ -83,13 +85,16 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
             double.tryParse(_pricePerHourController.text.trim()) ?? 0.0,
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Signup Successful!')));
       Navigator.pop(context);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
@@ -102,9 +107,13 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.green.shade100,
         labelText: label,
         prefixIcon: Icon(icon, color: Colors.green),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide.none),
       ),
       obscureText: isPassword,
       validator: (value) =>
@@ -122,27 +131,60 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
       'Saturday',
       'Sunday'
     ];
+    // return Wrap(
+    //   spacing: 8.0,
+    //   children: days
+    //       .map((day) => ChoiceChip(
+    //             label: Text(day),
+    //             selected: selectedDays.contains(day),
+    //             selectedColor: Colors.green.shade200,
+    //             onSelected: (selected) {
+    //               setState(() {
+    //                 if (selected) {
+    //                   selectedDays.add(day);
+    //                   startTimes[day] = TimeOfDay(hour: 9, minute: 0);
+    //                   endTimes[day] = TimeOfDay(hour: 17, minute: 0);
+    //                 } else {
+    //                   selectedDays.remove(day);
+    //                   startTimes.remove(day);
+    //                   endTimes.remove(day);
+    //                 }
+    //               });
+    //             },
+    //           ))
+    //       .toList(),
+    // );
     return Wrap(
       spacing: 8.0,
-      children: days
-          .map((day) => ChoiceChip(
-                label: Text(day),
-                selected: selectedDays.contains(day),
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      selectedDays.add(day);
-                      startTimes[day] = TimeOfDay(hour: 9, minute: 0);
-                      endTimes[day] = TimeOfDay(hour: 17, minute: 0);
-                    } else {
-                      selectedDays.remove(day);
-                      startTimes.remove(day);
-                      endTimes.remove(day);
-                    }
-                  });
-                },
-              ))
-          .toList(),
+      children: days.map((day) {
+        final bool isSelected = selectedDays.contains(day);
+        return ChoiceChip(
+          label: Text(
+            day,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.black,
+            ),
+          ),
+          selected: isSelected,
+          selectedColor: Colors.green.shade400, // Green when selected
+          backgroundColor:
+              Colors.green[100], // Light background when not selected
+          side: BorderSide.none,
+          onSelected: (selected) {
+            setState(() {
+              if (selected) {
+                selectedDays.add(day);
+                startTimes[day] = TimeOfDay(hour: 9, minute: 0);
+                endTimes[day] = TimeOfDay(hour: 17, minute: 0);
+              } else {
+                selectedDays.remove(day);
+                startTimes.remove(day);
+                endTimes.remove(day);
+              }
+            });
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -160,6 +202,7 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
           initialTime: isStart
               ? startTimes[day] ?? TimeOfDay.now()
               : endTimes[day] ?? TimeOfDay.now(),
+          helpText: 'Select ${isStart ? "start" : "end"} time for $day',
         );
         if (pickedTime != null) {
           setState(() {
@@ -178,8 +221,9 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text("Laborer Signup"),
-          backgroundColor: Colors.green.shade700),
+          backgroundColor: Colors.white),
       body: Stack(
         children: [
           Padding(
@@ -188,6 +232,32 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
               key: _formKey,
               child: ListView(
                 children: [
+                  Center(
+                    child: GestureDetector(
+                      onTap: () => _pickImage(true),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.green.shade100,
+                        backgroundImage: _profileImage != null
+                            ? FileImage(_profileImage!)
+                            : null,
+                        child: _profileImage == null
+                            ? Icon(Icons.add_a_photo,
+                                size: 40, color: Colors.green.shade700)
+                            : null,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    _profileImage == null
+                        ? "Tap to upload profile photo"
+                        : "Profile photo selected",
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   _buildTextField(_nameController, "Full Name", Icons.person),
                   const SizedBox(height: 10),
                   _buildTextField(_emailController, "Email", Icons.email),
@@ -209,23 +279,69 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
                   _buildTextField(_skillsController, "Skills (comma separated)",
                       Icons.list),
                   const SizedBox(height: 10),
-                  const Text("Select Available Days"),
-                  _buildDaySelection(),
-                  ...selectedDays.map((day) => Column(children: [
-                        _buildTimePicker(day, true),
-                        _buildTimePicker(day, false)
-                      ])),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => _pickImage(true),
-                    child: Text(_profileImage == null
-                        ? 'Upload Company Logo'
-                        : 'Logo Selected'),
+                  // const Text("Select Available Days"),
+                  // _buildDaySelection(),
+                  // ...selectedDays.map((day) => Column(children: [
+                  //       _buildTimePicker(day, true),
+                  //       _buildTimePicker(day, false)
+                  //     ])),
+                  const Text(
+                    "Select Available Days",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
                   ),
+                  SizedBox(height: 10),
+                  _buildDaySelection(),
+                  const SizedBox(height: 20),
+                  ...selectedDays.map((day) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Text(
+                            day,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.green,
+                            ),
+                          ),
+                          _buildTimePicker(day, true),
+                          _buildTimePicker(day, false),
+                        ],
+                      )),
+
+                  const SizedBox(height: 20),
+                  // ElevatedButton(
+                  //   onPressed: () => _pickImage(true),
+                  //   child: Text(_profileImage == null
+                  //       ? 'Upload Profile Photo'
+                  //       : 'Photo Selected'),
+                  // ),
                   ElevatedButton(
                     onPressed: isLoading ? null : _signupHandler,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.green.shade400, // Button background color
+                      foregroundColor: Colors.white, // Text (and icon) color
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      textStyle: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                     child: isLoading
-                        ? const CircularProgressIndicator()
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
                         : const Text("Signup"),
                   ),
                 ],
