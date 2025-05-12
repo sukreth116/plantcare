@@ -142,7 +142,7 @@ class _NurseryWorkerSignupScreenState extends State<NurseryWorkerSignupScreen> {
         'email': _emailController.text.trim(),
         'address': _addressController.text.trim(),
         'phone': _phoneController.text.trim(),
-        'workerId': _workerIdController.text.trim(),
+        'workerIdNumber': _workerIdController.text.trim(),
         'nurseryId': _selectedNurseryId, // Storing selected nursery ID
         'profileImageUrl': profileImageUrl,
         'idProofImageUrl': idProofImageUrl,

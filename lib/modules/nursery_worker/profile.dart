@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:plantcare/modules/nursery_worker/edit_profile.dart';
 
 class WorkerProfilePage extends StatelessWidget {
   final String workerId;
@@ -66,7 +67,15 @@ class WorkerProfilePage extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    WorkerProfileEditScreen(workerId: workerId),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.edit,
                             color: Colors.green.shade300,
@@ -94,7 +103,7 @@ class WorkerProfilePage extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.badge, color: Colors.green.shade300),
                     title: const Text('Worker ID'),
-                    subtitle: Text(workerData['workerId'] ?? 'No ID'),
+                    subtitle: Text(workerData['workerIdNumber'] ?? 'No ID'),
                   ),
                   SizedBox(
                     height: 8,

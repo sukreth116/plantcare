@@ -47,9 +47,9 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
 
     final List<Widget> _pages = [
       WorkerJobListScreen(workerId: user?.uid ?? ''), // Pass workerId here
-      WorkerJobsScreen(
-        workerId: user?.uid ?? '',
-      ),
+      // WorkerJobsScreen(
+      //   workerId: user?.uid ?? '',
+      // ),
       AIDetectionScreen(),
       WorkerProfilePage(
         workerId: user?.uid ?? '',
@@ -58,6 +58,7 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        title: Text('G R E E N I F Y'),
         backgroundColor: Colors.green.shade300,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -76,12 +77,12 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
             title: const Text('Weak Job List'),
             backgroundColor: Colors.green,
           ),
-          BottomBarItem(
-            icon: const Icon(Icons.schedule),
-            selectedIcon: const Icon(Icons.schedule_send),
-            title: const Text('Job'),
-            backgroundColor: Colors.green,
-          ),
+          // BottomBarItem(
+          //   icon: const Icon(Icons.schedule),
+          //   selectedIcon: const Icon(Icons.schedule_send),
+          //   title: const Text('Other Job'),
+          //   backgroundColor: Colors.green,
+          // ),
           BottomBarItem(
             icon: const Icon(Icons.science_outlined),
             selectedIcon: const Icon(Icons.science),

@@ -13,7 +13,6 @@ import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:plantcare/modules/nursery/rental_orders.dart';
 import 'package:plantcare/modules/nursery/sale_report_nursery.dart';
 import 'package:plantcare/modules/nursery/work_schedule.dart';
-import 'package:plantcare/modules/nursery/work_schedule_mangement.dart';
 import 'package:plantcare/news.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -74,7 +73,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.green[300],
+        backgroundColor: Colors.green.shade300,
         title: Text(
           "G R E E N I F Y",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

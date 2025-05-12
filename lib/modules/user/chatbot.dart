@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MaterialApp(
-    home: PlantChatBot(),
-    debugShowCheckedModeBanner: false,
-  ));
-}
+import 'package:plantcare/modules/user/ai_chatbot.dart';
 
 class PlantChatBot extends StatefulWidget {
   @override
@@ -28,7 +22,8 @@ class _PlantChatBotState extends State<PlantChatBot> {
 
   void _addMessage(String text, bool isUser, {List<String>? options}) {
     setState(() {
-      messages.add(ChatMessage(text: text, isUser: isUser, options: options, message: text));
+      messages.add(ChatMessage(
+          text: text, isUser: isUser, options: options, message: text));
     });
   }
 
@@ -110,7 +105,15 @@ class _PlantChatBotState extends State<PlantChatBot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Plant Shop Assistant")),
+      appBar: AppBar(
+        title: Text("Plant Shop Assistant"),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => GeminiChatPage())),
+              icon: Icon(Icons.chat))
+        ],
+      ),
       body: Column(
         children: [
           Expanded(

@@ -33,8 +33,8 @@ class UserProfilePage extends StatelessWidget {
                 ),
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: userData['profileImage'] != null
-                      ? NetworkImage(userData['profileImage'])
+                  backgroundImage: userData['profileImageUrl'] != null
+                      ? NetworkImage(userData['profileImageUrl'])
                       : AssetImage('asset/image/profile_placeholder.jpg')
                           as ImageProvider,
                 ),

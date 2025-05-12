@@ -280,9 +280,9 @@ class _UserSignupScreenState extends State<UserSignupScreen> {
         'email': _emailController.text.trim(),
         'address': _addressController.text.trim(),
         'phone': _phoneController.text.trim(),
-        'profileImage': imageUrl,
+        'profileImageUrl': imageUrl,
         'createdAt': FieldValue.serverTimestamp(),
-        'isApproved':false,
+        'isApproved': false,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

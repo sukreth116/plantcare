@@ -287,6 +287,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/AI_detection.dart';
+import 'package:plantcare/modules/user/ai_chatbot.dart';
 import 'package:plantcare/modules/user/cart_screen_user.dart';
 import 'package:plantcare/modules/user/chatbot.dart';
 import 'package:plantcare/news.dart';
@@ -421,6 +422,7 @@ class _UserHomePageState extends State<UserHomePage> {
           WishlistScreen(),
           AIDetectionScreen(),
           NewsPage(),
+          GeminiChatPage(),
           UserProfilePage(userId: user?.uid ?? ''),
         ],
       ),
@@ -527,28 +529,6 @@ class _HomePageContentState extends State<_HomePageContent> {
             child: Column(
               children: [
                 BannerCarousel(),
-                // Container(
-                //   padding: EdgeInsets.all(16),
-                //   decoration: BoxDecoration(
-                //     color: Colors.green.shade100,
-                //     borderRadius: BorderRadius.circular(12),
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Column(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           Text('30% OFF',
-                //               style: TextStyle(
-                //                   fontSize: 20, fontWeight: FontWeight.bold)),
-                //           Text('02 - 23 July'),
-                //         ],
-                //       ),
-                //       Image.asset('asset/image/plant_sample_2.png', width: 60),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(
