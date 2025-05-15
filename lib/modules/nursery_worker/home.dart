@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/modules/nursery_worker/profile.dart';
 import 'package:plantcare/modules/nursery_worker/work_list.dart';
-import 'package:plantcare/modules/nursery_worker/work_screen.dart';
+import 'package:plantcare/modules/nursery_worker/extra_work_screen.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -47,9 +47,7 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
 
     final List<Widget> _pages = [
       WorkerJobListScreen(workerId: user?.uid ?? ''), // Pass workerId here
-      // WorkerJobsScreen(
-      //   workerId: user?.uid ?? '',
-      // ),
+      ExtraWorkScreen(),
       AIDetectionScreen(),
       WorkerProfilePage(
         workerId: user?.uid ?? '',
@@ -77,12 +75,12 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
             title: const Text('Weak Job List'),
             backgroundColor: Colors.green,
           ),
-          // BottomBarItem(
-          //   icon: const Icon(Icons.schedule),
-          //   selectedIcon: const Icon(Icons.schedule_send),
-          //   title: const Text('Other Job'),
-          //   backgroundColor: Colors.green,
-          // ),
+          BottomBarItem(
+            icon: const Icon(Icons.schedule),
+            selectedIcon: const Icon(Icons.schedule_send),
+            title: const Text('Other Job'),
+            backgroundColor: Colors.green,
+          ),
           BottomBarItem(
             icon: const Icon(Icons.science_outlined),
             selectedIcon: const Icon(Icons.science),

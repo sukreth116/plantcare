@@ -152,7 +152,7 @@ class _WorkScheduleManagementScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Assign Tasks by Day"),
+        title: Text("Work Schedule & Management"),
         backgroundColor: Colors.green[300],
         foregroundColor: Colors.white,
       ),
@@ -163,6 +163,14 @@ class _WorkScheduleManagementScreenState
             key: _formKey,
             child: Column(
               children: [
+                Text("Assign Fixed Work",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[300])),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
                     Expanded(

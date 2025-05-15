@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class UserOrderScreen extends StatefulWidget {
   @override
   _UserOrderScreenState createState() => _UserOrderScreenState();
@@ -27,8 +26,8 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('farmer_order')
-            .where('farmerId', isEqualTo: user!.uid)
+            .collection('user_order')
+            .where('userId', isEqualTo: user!.uid)
             // latest orders first
             .snapshots(),
         builder: (context, snapshot) {

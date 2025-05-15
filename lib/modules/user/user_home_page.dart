@@ -422,7 +422,6 @@ class _UserHomePageState extends State<UserHomePage> {
           WishlistScreen(),
           AIDetectionScreen(),
           NewsPage(),
-          GeminiChatPage(),
           UserProfilePage(userId: user?.uid ?? ''),
         ],
       ),

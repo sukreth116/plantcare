@@ -8,7 +8,8 @@ class ExtraWorkScheduleScreen extends StatefulWidget {
   const ExtraWorkScheduleScreen({required this.nurseryId, super.key});
 
   @override
-  _ExtraWorkScheduleScreenState createState() => _ExtraWorkScheduleScreenState();
+  _ExtraWorkScheduleScreenState createState() =>
+      _ExtraWorkScheduleScreenState();
 }
 
 class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
@@ -91,7 +92,7 @@ class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
 
       try {
         await FirebaseFirestore.instance
-            .collection('work_schedule')
+            .collection('nursery_works')
             .add(taskData);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -116,7 +117,7 @@ class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
   Future<void> _updateStatus(String docId, String newStatus) async {
     try {
       await FirebaseFirestore.instance
-          .collection('work_schedule')
+          .collection('nursery_works')
           .doc(docId)
           .update({'status': newStatus});
     } catch (e) {
@@ -151,7 +152,7 @@ class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text("Assign New Task",
+              Text("Assign Extra Work",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -285,7 +286,7 @@ class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
                 height: 400,
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('work_schedule')
+                      .collection('nursery_works')
                       .where('nurseryId', isEqualTo: widget.nurseryId)
                       .snapshots(),
                   builder: (context, snapshot) {

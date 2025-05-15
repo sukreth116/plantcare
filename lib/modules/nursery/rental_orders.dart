@@ -1,64 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RentalOrder {
-  final String orderId;
-  final String customerName;
-  final String machineName;
+  final String farmerId;
+  final String farmerLocation;
+  final String farmerPhone;
+  final int days;
   final int quantity;
-  final double rentalPrice;
-  final String rentalPeriod; // Example: "2 Days"
-  String status; // Pending, Ongoing, Completed
+  final double rentalCharge;
+  final double itemTotal;
+  final double totalPrice;
+  final String status;
+  final String machineryId;
+  final DateTime timestamp;
+  final String nurseryId;
 
   RentalOrder({
-    required this.orderId,
-    required this.customerName,
-    required this.machineName,
+    required this.farmerId,
+    required this.farmerLocation,
+    required this.farmerPhone,
+    required this.days,
     required this.quantity,
-    required this.rentalPrice,
-    required this.rentalPeriod,
+    required this.rentalCharge,
+    required this.itemTotal,
+    required this.totalPrice,
     required this.status,
+    required this.machineryId,
+    required this.timestamp,
+    required this.nurseryId,
   });
+
+  factory RentalOrder.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return RentalOrder(
+      farmerId: data['farmerId'] ?? '',
+      farmerLocation: data['farmerLocation'] ?? '',
+      farmerPhone: data['farmerPhone'] ?? '',
+      days: data['days'] ?? 0,
+      quantity: data['quantity'] ?? 0,
+      rentalCharge: (data['rentalCharge'] ?? 0).toDouble(),
+      itemTotal: (data['itemTotal'] ?? 0).toDouble(),
+      totalPrice: (data['totalPrice'] ?? 0).toDouble(),
+      status: data['status'] ?? 'Pending',
+      machineryId: data['machineryId'] ?? '',
+      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      nurseryId: data['nurseryId'] ?? '',
+    );
+  }
 }
 
-class NurseryRentalOrderScreen extends StatefulWidget {
+class RentalOrderScreen extends StatefulWidget {
   @override
-  _NurseryRentalOrderScreenState createState() => _NurseryRentalOrderScreenState();
+  _RentalOrderScreenState createState() => _RentalOrderScreenState();
 }
 
-class _NurseryRentalOrderScreenState extends State<NurseryRentalOrderScreen> {
-  List<RentalOrder> rentalOrders = [
-    RentalOrder(
-      orderId: "#F001",
-      customerName: "John Doe",
-      machineName: "Tractor",
-      quantity: 1,
-      rentalPrice: 1500.0,
-      rentalPeriod: "3 Days",
-      status: "Pending",
-    ),
-    RentalOrder(
-      orderId: "#F002",
-      customerName: "Emma Smith",
-      machineName: "Rotavator",
-      quantity: 1,
-      rentalPrice: 800.0,
-      rentalPeriod: "2 Days",
-      status: "Ongoing",
-    ),
-    RentalOrder(
-      orderId: "#F003",
-      customerName: "David Wilson",
-      machineName: "Seeder Machine",
-      quantity: 2,
-      rentalPrice: 2500.0,
-      rentalPeriod: "5 Days",
-      status: "Completed",
-    ),
-  ];
+class _RentalOrderScreenState extends State<RentalOrderScreen> {
+  List<RentalOrder> rentalOrders = [];
+  Map<String, String> machineryNames = {};
+  bool isLoading = true;
 
-  void updateStatus(int index, String newStatus) {
+  @override
+  void initState() {
+    super.initState();
+    fetchRentalOrders();
+  }
+
+  Future<void> fetchRentalOrders() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('rental_orders')
+        .where('nurseryId', isEqualTo: currentUser.uid)
+        .get();
+
+    final machinerySnapshot =
+        await FirebaseFirestore.instance.collection('machinery').get();
+
+    final machineryMap = {
+      for (var doc in machinerySnapshot.docs)
+        doc.id: (doc.data()['name'] ?? 'Unnamed').toString()
+    };
+
     setState(() {
-      rentalOrders[index].status = newStatus;
+      rentalOrders =
+          snapshot.docs.map((doc) => RentalOrder.fromFirestore(doc)).toList();
+      machineryNames = machineryMap;
+      isLoading = false;
     });
   }
 
@@ -66,57 +95,76 @@ class _NurseryRentalOrderScreenState extends State<NurseryRentalOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Farm Machinery Rentals"),
+        title: Text('Rental Orders'),
         backgroundColor: Colors.green[700],
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: () {
-              // Logic to refresh orders from database (if connected)
-              setState(() {}); // Refresh UI
-            },
+            onPressed: fetchRentalOrders,
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.all(10),
-        itemCount: rentalOrders.length,
-        itemBuilder: (context, index) {
-          final order = rentalOrders[index];
-          return Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              leading: Icon(Icons.agriculture, color: Colors.brown),
-              title: Text(order.machineName, style: TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Customer: ${order.customerName}"),
-                  Text("Rental Period: ${order.rentalPeriod}"),
-                  Text("Quantity: ${order.quantity}"),
-                  Text("Price: ₹${order.rentalPrice}"),
-                ],
-              ),
-              trailing: DropdownButton<String>(
-                value: order.status,
-                icon: Icon(Icons.arrow_drop_down),
-                onChanged: (String? newValue) {
-                  if (newValue != null) updateStatus(index, newValue);
-                },
-                items: ["Pending", "Ongoing", "Completed"]
-                    .map((status) => DropdownMenuItem(
-                          value: status,
-                          child: Text(status),
-                        ))
-                    .toList(),
-              ),
-            ),
-          );
-        },
-      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : rentalOrders.isEmpty
+              ? Center(child: Text('No rental orders found'))
+              : ListView.builder(
+                  itemCount: rentalOrders.length,
+                  padding: EdgeInsets.all(10),
+                  itemBuilder: (context, index) {
+                    final order = rentalOrders[index];
+                    final machineryName =
+                        machineryNames[order.machineryId] ?? 'Unknown';
+
+                    return Card(
+                      elevation: 4,
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Machinery: $machineryName',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            SizedBox(height: 5),
+                            Text('Farmer Phone: ${order.farmerPhone}'),
+                            Text('Location: ${order.farmerLocation}'),
+                            Text('Days: ${order.days}'),
+                            Text('Quantity: ${order.quantity}'),
+                            Text(
+                                'Rental Charge: \$${order.rentalCharge.toStringAsFixed(2)}'),
+                            Text(
+                                'Total Price: \$${order.totalPrice.toStringAsFixed(2)}'),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Status: ${order.status}',
+                                  style: TextStyle(
+                                    color: order.status == "Delivered"
+                                        ? Colors.green
+                                        : (order.status == "Shipped"
+                                            ? Colors.orange
+                                            : Colors.red),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${order.timestamp.toLocal().toString().split(' ')[0]}',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

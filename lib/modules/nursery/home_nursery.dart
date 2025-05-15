@@ -7,12 +7,14 @@ import 'package:plantcare/modules/nursery/add_banner.dart';
 import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
 import 'package:plantcare/modules/nursery/machinery.dart';
+import 'package:plantcare/modules/nursery/manage_workers.dart';
 import 'package:plantcare/modules/nursery/nursery_prducts.dart';
 import 'package:plantcare/modules/nursery/orders.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:plantcare/modules/nursery/rental_orders.dart';
 import 'package:plantcare/modules/nursery/sale_report_nursery.dart';
-import 'package:plantcare/modules/nursery/work_schedule.dart';
+import 'package:plantcare/modules/nursery/work_assign.dart';
+import 'package:plantcare/modules/nursery/works_list.dart';
 import 'package:plantcare/news.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -164,7 +166,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => NurseryRentalOrderScreen()));
+                          builder: (context) => RentalOrderScreen()));
                 },
               ),
               ListTile(
@@ -191,7 +193,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.add_circle_outline_rounded),
+                leading: Icon(Icons.add_to_photos_outlined),
                 title: Text("Add Machinery"),
                 onTap: () {
                   Navigator.push(
@@ -204,7 +206,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 },
               ),
               ListTile(
-                leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
+                leading: Icon(Icons.ad_units_outlined),
                 title: Text("Add Banner"),
                 onTap: () {
                   Navigator.push(
@@ -214,13 +216,39 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                 },
               ),
               ListTile(
+                leading: Icon(CupertinoIcons.person_3),
+                title: Text("Manage Workers"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WorkerManagementScreen(
+                                nurseryId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
+                },
+              ),
+              ListTile(
                 leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
                 title: Text("Work Schedule"),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => WorkScheduleManagementScreen(
+                          builder: (context) => NurseryWorkScreenByDay(
+                                nurseryId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                              )));
+                },
+              ),
+              ListTile(
+                leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
+                title: Text("Work Assign"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExtraWorkScheduleScreen(
                                 nurseryId:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
