@@ -46,8 +46,12 @@ class _UserOrderEditScreenState extends State<UserOrderEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Edit Order")),
-      backgroundColor: Colors.green.shade100,
+      appBar: AppBar(
+        title: Text("Edit Order"),
+        backgroundColor: Colors.green.shade300,
+        foregroundColor: Colors.white,
+      ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

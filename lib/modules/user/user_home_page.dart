@@ -287,6 +287,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/AI_detection.dart';
+import 'package:plantcare/aidetection.dart';
 import 'package:plantcare/modules/user/ai_chatbot.dart';
 import 'package:plantcare/modules/user/cart_screen_user.dart';
 import 'package:plantcare/modules/user/chatbot.dart';
@@ -420,7 +421,7 @@ class _UserHomePageState extends State<UserHomePage> {
         children: [
           _HomePageContent(user: user),
           WishlistScreen(),
-          AIDetectionScreen(),
+          DiseasePredictorScreen(),
           NewsPage(),
           UserProfilePage(userId: user?.uid ?? ''),
         ],
@@ -673,7 +674,103 @@ class _HomePageContentState extends State<_HomePageContent> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('nursery_products')
-                  .where('category', isEqualTo: 'Pots')
+                  .where('category', isEqualTo: 'Fertilizers')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
+
+                final products = snapshot.data!.docs;
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 10),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return PlantCard(
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Pesticides",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 400, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('nursery_products')
+                  .where('category', isEqualTo: 'Fertilizers')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
+
+                final products = snapshot.data!.docs;
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 10),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return PlantCard(
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Seeds",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 400, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('nursery_products')
+                  .where('category', isEqualTo: 'Fertilizers')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

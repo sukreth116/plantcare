@@ -47,6 +47,7 @@ dependencies:
   razorpay_flutter: ^1.4.0
   http: ^1.0.0
   carousel_slider: ^5.0.0
+  url_launcher: ^6.2.5
 
 
 dev_dependencies:
@@ -101,7 +102,6 @@ flutter:
     - family: Delicious
       fonts:
         - asset: asset\fonts\DeliciousHandrawn-Regular.ttf
-
     - family: Milky
       fonts:
         - asset: asset\fonts\Milky Matcha.otf
@@ -117,11 +117,19 @@ flutter:
     - family: Pinkish
       fonts:
         - asset: asset/fonts/PinkishRegular.ttf
-              
     - family: Happy Autumn
       fonts:
         - asset: asset/fonts/HappyAutumn.otf
           weight: 700
+    - family: CrowdGlory
+      fonts:
+        - asset: asset/fonts/CrowdGloryRegular-0v6D4.otf
+    - family: DugiPundi
+      fonts:
+        - asset: asset/fonts/DugiPundi-JpARE.ttf
+    - family: PaintingTheTown
+      fonts:
+        - asset: asset/fonts/PaintingTheTown-6R6YM.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

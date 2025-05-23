@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:plantcare/clodinary_upload.dart'; 
+import 'package:plantcare/clodinary_upload.dart';
 
 class AddNurseryProduct extends StatefulWidget {
   final String nurseryId;
@@ -142,10 +142,23 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Text(
-                    'Add your product like Plants, Seed, Pots, Fertilizer etc.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'asset/image/cute cactus-pana.png', // Replace with your image URL
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                      Text(
+                        'Add your product like Plants Seeds Pots, Fertilizer etc.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'DugiPundi',
+                            color: Colors.green.shade300),
+                      ),
+                    ],
                   ),
                 ),
                 TextFormField(

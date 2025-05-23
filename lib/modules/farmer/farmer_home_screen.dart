@@ -441,6 +441,7 @@ import 'package:plantcare/modules/farmer/farmer_product_detail_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_rental_orders.dart';
 import 'package:plantcare/news.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class FarmerHomePage extends StatefulWidget {
   const FarmerHomePage({super.key});
@@ -740,6 +741,66 @@ class _HomePageContent extends StatefulWidget {
   State<_HomePageContent> createState() => _HomePageContentState();
 }
 
+class BannerCarousel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('banners').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        final bannerDocs = snapshot.data!.docs;
+
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: 110,
+            autoPlay: true,
+            enlargeCenterPage: true,
+          ),
+          items: bannerDocs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final title = data['title'] ?? 'Title';
+            final subtitle = data['subtitle'] ?? 'Subtitle';
+            final imageUrl = data['imageUrl'] ?? '';
+
+            return Container(
+              // margin: EdgeInsets.symmetric(horizontal: 2),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.green.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text(subtitle),
+                    ],
+                  ),
+                  imageUrl.isNotEmpty
+                      ? Image.network(imageUrl, width: 60)
+                      : Icon(Icons.image, size: 60, color: Colors.grey),
+                ],
+              ),
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+
 class _HomePageContentState extends State<_HomePageContent> {
   String selectedCategory = '';
 
@@ -770,28 +831,29 @@ class _HomePageContentState extends State<_HomePageContent> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Column(
               children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.green.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('30% OFF',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold)),
-                          Text('02 - 23 July'),
-                        ],
-                      ),
-                      Image.asset('asset/image/plant_sample_2.png', width: 60),
-                    ],
-                  ),
-                ),
+                BannerCarousel(),
+                // Container(
+                //   padding: EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.green.shade100,
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text('30% OFF',
+                //               style: TextStyle(
+                //                   fontSize: 20, fontWeight: FontWeight.bold)),
+                //           Text('02 - 23 July'),
+                //         ],
+                //       ),
+                //       Image.asset('asset/image/plant_sample_2.png', width: 60),
+                //     ],
+                //   ),
+                // ),
                 SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -1086,8 +1148,8 @@ class _PlantCardState extends State<PlantCard> {
           context,
           MaterialPageRoute(
             builder: (context) => FarmerProductDetailScreen(
-                productId: widget.productId,
-                ),
+              productId: widget.productId,
+            ),
           ),
         );
       },

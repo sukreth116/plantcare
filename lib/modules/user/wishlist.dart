@@ -1,80 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class WishlistScreen extends StatefulWidget {
-//   @override
-//   _WishlistScreenState createState() => _WishlistScreenState();
-// }
-
-// class _WishlistScreenState extends State<WishlistScreen> {
-//   List<Map<String, dynamic>> wishlistItems = [
-//     {
-//       'image': 'asset/image/plant_sample_1.png',
-//       'name': 'Aloe Vera',
-//       'price': 29.99,
-//     },
-//     {
-//       'image': 'asset/image/plant_sample_1.png',
-//       'name': 'Bonsai Tree',
-//       'price': 49.99,
-//     },
-//   ];
-
-//   void removeFromWishlist(int index) {
-//     setState(() {
-//       wishlistItems.removeAt(index);
-//     });
-//   }
-
-//   void moveToCart(int index) {
-//     // Implement logic to add item to cart
-//     setState(() {
-//       wishlistItems.removeAt(index);
-//     });
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(content: Text('Moved to cart')),
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body:
-//       wishlistItems.isEmpty
-//           ? Center(child: Text("Your wishlist is empty"))
-//           : ListView.builder(
-//               padding: EdgeInsets.all(16),
-
-//               itemCount: wishlistItems.length,
-//               itemBuilder: (context, index) {
-//                 final item = wishlistItems[index];
-//                 return Card(
-//                   margin: EdgeInsets.symmetric(vertical: 8),
-//                   child: ListTile(
-//                     leading: Image.asset(item['image'], width: 50, height: 50),
-//                     title: Text(item['name'], style: TextStyle(fontSize: 18)),
-//                     subtitle: Text("\$${item['price']}",
-//                         style: TextStyle(
-//                             fontSize: 16, fontWeight: FontWeight.bold)),
-//                     trailing: Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: [
-//                         IconButton(
-//                           icon: Icon(Icons.shopping_cart, color: Colors.green),
-//                           onPressed: () => moveToCart(index),
-//                         ),
-//                         IconButton(
-//                           icon: Icon(Icons.delete, color: Colors.red),
-//                           onPressed: () => removeFromWishlist(index),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//     );
-//   }
-// }
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +11,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> wishlistItems = [];
-  bool isLoading = true; 
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -165,6 +88,55 @@ class _WishlistScreenState extends State<WishlistScreen> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body: isLoading
+  //         ? Center(child: CircularProgressIndicator())
+  //         : wishlistItems.isEmpty
+  //             ? Center(child: Text("Your wishlist is empty"))
+  //             : ListView.builder(
+  //                 padding: EdgeInsets.all(16),
+  //                 itemCount: wishlistItems.length,
+  //                 itemBuilder: (context, index) {
+  //                   final item = wishlistItems[index];
+  //                   return Card(
+  //                     margin: EdgeInsets.symmetric(vertical: 8),
+  //                     child: ListTile(
+  //                       leading: Image.network(
+  //                         item['image'],
+  //                         width: 50,
+  //                         height: 50,
+  //                         fit: BoxFit.cover,
+  //                       ),
+  //                       title:
+  //                           Text(item['name'], style: TextStyle(fontSize: 18)),
+  //                       subtitle: Text(
+  //                         "\$${item['price']}",
+  //                         style: TextStyle(
+  //                             fontSize: 16, fontWeight: FontWeight.bold),
+  //                       ),
+  //                       trailing: Row(
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         children: [
+  //                           IconButton(
+  //                             icon: Icon(Icons.shopping_cart,
+  //                                 color: Colors.green),
+  //                             onPressed: () => moveToCart(item),
+  //                           ),
+  //                           IconButton(
+  //                             icon: Icon(Icons.delete, color: Colors.red),
+  //                             onPressed: () =>
+  //                                 removeFromWishlist(item['wishlistId']),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,45 +144,75 @@ class _WishlistScreenState extends State<WishlistScreen> {
           ? Center(child: CircularProgressIndicator())
           : wishlistItems.isEmpty
               ? Center(child: Text("Your wishlist is empty"))
-              : ListView.builder(
-                  padding: EdgeInsets.all(16),
-                  itemCount: wishlistItems.length,
-                  itemBuilder: (context, index) {
-                    final item = wishlistItems[index];
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        leading: Image.network(
-                          item['image'],
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                        title:
-                            Text(item['name'], style: TextStyle(fontSize: 18)),
-                        subtitle: Text(
-                          "\$${item['price']}",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.shopping_cart,
-                                  color: Colors.green),
-                              onPressed: () => moveToCart(item),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () =>
-                                  removeFromWishlist(item['wishlistId']),
-                            ),
-                          ],
+              : Column(
+                  children: [
+                    // Header Image
+                    Container(
+                      width: double.infinity,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            'asset/image/Valentines bouquet with a card-pana.png', // Replace with your image URL
+                          ),
+                          fit: BoxFit.fitHeight,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                    Text(
+                      "Your Wishlist",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.redAccent.shade200,
+                          fontFamily: 'DugiPundi'),
+                    ),
+                    // Wishlist List
+                    Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(16),
+                        itemCount: wishlistItems.length,
+                        itemBuilder: (context, index) {
+                          final item = wishlistItems[index];
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              leading: Image.network(
+                                item['image'],
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
+                              title: Text(
+                                item['name'],
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              subtitle: Text(
+                                "\$${item['price']}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.shopping_cart,
+                                        color: Colors.green),
+                                    onPressed: () => moveToCart(item),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () =>
+                                        removeFromWishlist(item['wishlistId']),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
     );
   }

@@ -1,12 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/bottomnavigationbar.dart';
-import 'package:plantcare/choose_screen.dart';
-import 'package:plantcare/login.dart';
-import 'package:plantcare/modules/nursery_worker/signup.dart';
-import 'package:plantcare/modules/user/product_details.dart';
-import 'package:plantcare/modules/user/user_home_page.dart';
-import 'package:plantcare/splash_screen.dart';
+import 'package:plantcare/splash_screen1.dart';
 import 'package:plantcare/firebase_options.dart';
 
 Future<void> main() async {
@@ -34,6 +28,6 @@ class MyApp extends StatelessWidget {
               bodyLarge: TextStyle(fontWeight: FontWeight.w400),
               bodyMedium: TextStyle(fontWeight: FontWeight.w400),
             )),
-        home: ChooseScreen());
+        home: SplashScreen());
   }
 }

@@ -148,9 +148,23 @@ class _AddMachineryState extends State<AddMachinery> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Text(
-                  'Add machinery like Tractors, Tools, Irrigation Equipment, etc. for rental ',
-                  textAlign: TextAlign.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'asset/image/farm tractor-pana.png', // Replace with your image URL
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Text(
+                      'Add machinery like Tractors, Tools, Irrigation Equipment, etc. for rental',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'DugiPundi',
+                          color: Colors.green.shade300),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 10),
