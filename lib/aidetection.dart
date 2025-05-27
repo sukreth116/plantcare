@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
+
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,8 +17,7 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
   bool isLoading = false;
 
   final picker = ImagePicker();
-  final String flaskURL =
-      'https://faf3-117-213-80-223.ngrok-free.app/predict'; // Your Flask URL
+  final String flaskURL = 'http://192.168.1.65:5000/predict';
 
   Future<void> pickImageAndPredict() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -84,8 +83,6 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
         Text("Steps: ${result!['possible_steps']}"),
         SizedBox(height: 8),
         Text("Supplement: ${result!['supplement_name']}"),
-        SizedBox(height: 8),
-        Image.network(result!['disease_image_url'], height: 150),
         SizedBox(height: 8),
         Image.network(result!['supplement_image_url'], height: 150),
         SizedBox(height: 8),

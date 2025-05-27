@@ -103,9 +103,9 @@ class _SplashScreenState extends State<SplashScreen>
               child: const Text(
                 'GREENIFY',
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 80,
                   color: Colors.green,
+                  fontFamily: 'Smile Family',
                 ),
               ),
             ),

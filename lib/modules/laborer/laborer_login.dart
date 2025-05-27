@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:plantcare/forgot_password.dart';
 import 'package:plantcare/modules/laborer/laborer_home.dart';
 import 'package:plantcare/modules/laborer/laborer_signup.dart';
 
@@ -185,6 +186,17 @@ class _LaborerLoginScreenState extends State<LaborerLoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()),
+                          );
+                        },
+                        child: const Text('Forgot Password?'),
+                      ),
                     ],
                   ),
                 ),

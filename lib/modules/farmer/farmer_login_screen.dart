@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plantcare/forgot_password.dart';
 import 'package:plantcare/modules/farmer/farmer_home_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_signup_screen.dart';
 
@@ -184,6 +185,17 @@ class _FarmerLoginScreenState extends State<FarmerLoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()),
+                          );
+                        },
+                        child: const Text('Forgot Password?'),
+                      ),
                     ],
                   ),
                 ),

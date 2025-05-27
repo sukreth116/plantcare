@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:plantcare/forgot_password.dart';
 import 'package:plantcare/modules/admin/admin_home.dart';
 
 class AdminLoginScreen extends StatefulWidget {
@@ -168,6 +169,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()),
+                          );
+                        },
+                        child: const Text('Forgot Password?'),
+                      ),
                     ],
                   ),
                 ),

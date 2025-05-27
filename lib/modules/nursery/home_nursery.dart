@@ -8,6 +8,7 @@ import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
 import 'package:plantcare/modules/nursery/machinery.dart';
 import 'package:plantcare/modules/nursery/manage_workers.dart';
+import 'package:plantcare/modules/nursery/nursery_book_work.dart';
 import 'package:plantcare/modules/nursery/nursery_prducts.dart';
 import 'package:plantcare/modules/nursery/orders.dart';
 import 'package:plantcare/modules/nursery/profile.dart';
@@ -252,6 +253,17 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                                 nurseryId:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.work_outline),
+                title: Text("Book Work"),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NurseryWorkAppointmentScreen()));
                 },
               ),
               ListTile(

@@ -20,6 +20,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
   String productDescription = '';
   double productPrice = 0.0;
   File? _imageFile;
+
   int productQuantity = 0;
   String selectedCategory = 'Plants'; // Default value
 

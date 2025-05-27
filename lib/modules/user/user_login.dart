@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plantcare/forgot_password.dart';
 import 'package:plantcare/modules/user/user_home_page.dart';
 import 'package:plantcare/modules/user/user_signup.dart';
 
@@ -184,6 +185,17 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordScreen()),
+                          );
+                        },
+                        child: const Text('Forgot Password?'),
+                      ),
                     ],
                   ),
                 ),

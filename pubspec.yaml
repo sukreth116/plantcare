@@ -48,6 +48,10 @@ dependencies:
   http: ^1.0.0
   carousel_slider: ^5.0.0
   url_launcher: ^6.2.5
+  fluttertoast: ^8.2.1
+  model_viewer_plus: ^1.9.3
+  augmented_reality_plugin: ^4.0.1
+  file_picker: ^10.1.9
 
 
 dev_dependencies:
@@ -123,13 +127,23 @@ flutter:
           weight: 700
     - family: CrowdGlory
       fonts:
-        - asset: asset/fonts/CrowdGloryRegular-0v6D4.otf
+        - asset: asset/fonts/Crowd Glory Regular.otf
     - family: DugiPundi
       fonts:
-        - asset: asset/fonts/DugiPundi-JpARE.ttf
+        - asset: asset/fonts/Dugi Pundi.ttf
     - family: PaintingTheTown
       fonts:
-        - asset: asset/fonts/PaintingTheTown-6R6YM.ttf
+        - asset: asset/fonts/Painting The Town.ttf
+    - family: Smile Family
+      fonts:
+        - asset: asset/fonts/Smile Family.otf
+    - family: Risperd Marfiel Display
+      fonts:
+        - asset: asset/fonts/Risperd Marfiel Display.otf
+    - family: TClip
+      fonts:
+        - asset: asset/fonts/TClip.ttf
+      
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

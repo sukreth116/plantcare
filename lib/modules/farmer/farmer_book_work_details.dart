@@ -43,10 +43,9 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
         final data = doc.data();
 
         // Fetch price per hour but do NOT store it in appointments
-        if (data!['priceperhour'] != null) {
+        if (data!['pricePerHour'] != null) {
           setState(() {
-            laborerPrice = data['priceperhour']
-            .toDouble();
+            laborerPrice = data['pricePerHour'].toDouble();
           });
         }
 

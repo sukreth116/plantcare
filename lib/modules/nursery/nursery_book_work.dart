@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:plantcare/modules/farmer/farmer_book_work_details.dart';
-import 'package:plantcare/modules/farmer/farmer_book_work_list.dart';
+import 'package:plantcare/modules/nursery/nursery_book_work_details.dart';
+import 'package:plantcare/modules/nursery/nursery_book_work_list.dart';
 
-class FarmerWorkAppointmentScreen extends StatefulWidget {
-  const FarmerWorkAppointmentScreen({super.key});
+class NurseryWorkAppointmentScreen extends StatefulWidget {
+  const NurseryWorkAppointmentScreen({super.key});
 
   @override
-  _FarmerWorkAppointmentScreenState createState() =>
-      _FarmerWorkAppointmentScreenState();
+  _NurseryWorkAppointmentScreenState createState() =>
+      _NurseryWorkAppointmentScreenState();
 }
 
-class _FarmerWorkAppointmentScreenState
-    extends State<FarmerWorkAppointmentScreen> {
-  String? farmerId;
+class _NurseryWorkAppointmentScreenState
+    extends State<NurseryWorkAppointmentScreen> {
+  String? nurseryId;
 
   @override
   void initState() {
@@ -26,18 +26,18 @@ class _FarmerWorkAppointmentScreenState
   Future<void> _fetchFarmerId() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
-      var farmerDoc = await FirebaseFirestore.instance
-          .collection('farmers')
+      var nurseryDoc = await FirebaseFirestore.instance
+          .collection('nurseries')
           .doc(userId)
           .get();
-      if (farmerDoc.exists) {
+      if (nurseryDoc.exists) {
         setState(() {
-          farmerId = farmerDoc.id;
+          nurseryId = nurseryDoc.id;
         });
       }
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,12 +51,12 @@ class _FarmerWorkAppointmentScreenState
             icon: const Icon(Icons.manage_history), // Manage Appointments Icon
             tooltip: "Manage Appointments",
             onPressed: () {
-              if (farmerId != null) {
+              if (nurseryId != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        AppointmentBookingDetails(farmerId: farmerId!),
+                        NurseryAppointmentBookingDetails(nurseryId: nurseryId!),
                   ),
                 );
               } else {
@@ -68,7 +68,7 @@ class _FarmerWorkAppointmentScreenState
           ),
         ],
       ),
-      body: farmerId == null
+      body: nurseryId == null
           ? const Center(child: CircularProgressIndicator())
           : StreamBuilder(
               stream:
@@ -97,17 +97,17 @@ class _FarmerWorkAppointmentScreenState
                           ],
                         ),
                         trailing: ElevatedButton(
-                          onPressed: farmerId == null
+                          onPressed: nurseryId == null
                               ? null
                               : () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          AppointmentDetailsScreen(
+                                          NurseryAppointmentDetailsScreen(
                                         laborerName: laborer['name'],
                                         laborerId: laborer.id,
-                                        farmerId: farmerId!,
+                                        nurseryId: nurseryId!,
                                       ),
                                     ),
                                   );

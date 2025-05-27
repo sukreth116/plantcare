@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AppointmentBookingDetails extends StatelessWidget {
-  final String farmerId;
+class NurseryAppointmentBookingDetails extends StatelessWidget {
+  final String nurseryId;
   final String? laborerId; // Optional laborerId
 
-  const AppointmentBookingDetails({super.key, required this.farmerId, this.laborerId});
- 
+  const NurseryAppointmentBookingDetails(
+      {super.key, required this.nurseryId, this.laborerId});
+
   /// Fetch laborer name using laborerId
   Future<String> getLaborerName(String laborerId) async {
     DocumentSnapshot laborerDoc = await FirebaseFirestore.instance
         .collection('laborers')
         .doc(laborerId)
-        .get(); 
+        .get();
 
     if (laborerDoc.exists) {
       return laborerDoc['name'] ?? "Unknown"; // Return laborer name
@@ -23,11 +24,15 @@ class AppointmentBookingDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Your Appointments")),
+      appBar: AppBar(
+        title: const Text("Appointment History"),
+        backgroundColor: Colors.green.shade300,
+        foregroundColor: Colors.white,
+      ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('appointments')
-            .where('farmerId', isEqualTo: farmerId)
+            .where('nurseryId', isEqualTo: nurseryId)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
