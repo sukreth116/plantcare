@@ -62,17 +62,23 @@ class ChooseScreen extends StatelessWidget {
           // Title and Grid
           Column(
             children: [
-              const SizedBox(height: 60), // Space from top
+              const SizedBox(height: 80),
               Text(
                 "GREENIFY",
                 style: TextStyle(
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 40,
                   color: Colors.green[100],
-                  fontFamily: 'Delicious',
+                  fontFamily: 'Callido',
                 ),
               ),
-              const SizedBox(height: 20), // Space between title and grid
+              Text(
+                "Choose Your Role",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.green[50],
+                ),
+                textAlign: TextAlign.center,
+              ),
               Expanded(
                 child: GridView.builder(
                   padding: const EdgeInsets.all(20),

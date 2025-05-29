@@ -87,7 +87,7 @@ class _ChatScreenState extends State<GeminiChatPage> {
     return Scaffold(
       backgroundColor: Colors.green.shade50,
       appBar: AppBar(
-        title: const Text('Plantcare Chatbot'),
+        title: const Text('AI Plant Care Chatbot'),
         backgroundColor: Colors.green.shade300,
         foregroundColor: Colors.white,
       ),
@@ -112,7 +112,7 @@ class _ChatScreenState extends State<GeminiChatPage> {
                     controller: _controller,
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
-                      hintText: 'Type your message...',
+                      hintText: 'Ask anything you want to know...',
                       hintStyle: TextStyle(color: Colors.white),
                       border: InputBorder.none,
                     ),

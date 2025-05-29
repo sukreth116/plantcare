@@ -103,46 +103,69 @@ flutter:
           weight: 600
         - asset: asset\fonts\Poppins-Light.ttf
           weight: 400
+
     - family: Delicious
       fonts:
         - asset: asset\fonts\DeliciousHandrawn-Regular.ttf
+
     - family: Milky
       fonts:
         - asset: asset\fonts\Milky Matcha.otf
+
     - family: Montserrat
       fonts:
         - asset: asset\fonts\Montserrat-Regular.ttf
           weight: 400
         - asset: asset\fonts\Montserrat-Bold.ttf
           weight: 700
+
     - family: Pacifico
       fonts:
         - asset: asset/fonts/Pacifico-Regular.ttf
+
     - family: Pinkish
       fonts:
         - asset: asset/fonts/PinkishRegular.ttf
+
     - family: Happy Autumn
       fonts:
         - asset: asset/fonts/HappyAutumn.otf
           weight: 700
+
     - family: CrowdGlory
       fonts:
         - asset: asset/fonts/Crowd Glory Regular.otf
+
     - family: DugiPundi
       fonts:
         - asset: asset/fonts/Dugi Pundi.ttf
+
     - family: PaintingTheTown
       fonts:
         - asset: asset/fonts/Painting The Town.ttf
+
     - family: Smile Family
       fonts:
         - asset: asset/fonts/Smile Family.otf
+
     - family: Risperd Marfiel Display
       fonts:
         - asset: asset/fonts/Risperd Marfiel Display.otf
+
     - family: TClip
       fonts:
         - asset: asset/fonts/TClip.ttf
+
+    - family: Playfair Display
+      fonts:
+        - asset: asset/fonts/Playfair Display.ttf
+
+    - family: Libre Baskerville
+      fonts:
+        - asset: asset/fonts/LibreBaskerville-Regular.ttf
+    - family: Callido
+      fonts:
+        - asset: asset/fonts/Callido.otf
       
   #
   # For details regarding fonts from package dependencies,

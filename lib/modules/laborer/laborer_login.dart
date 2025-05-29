@@ -93,7 +93,7 @@ class _LaborerLoginScreenState extends State<LaborerLoginScreen> {
               children: [
                 SizedBox(height: 20),
                 const Text(
-                  "Laborer",
+                  "Login",
                   style: TextStyle(
                     color: Colors.orange,
                     fontFamily: 'Milky',
@@ -185,7 +185,7 @@ class _LaborerLoginScreenState extends State<LaborerLoginScreen> {
                                   style: TextStyle(color: Colors.white)),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -200,7 +200,6 @@ class _LaborerLoginScreenState extends State<LaborerLoginScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(child: Divider(thickness: 1, color: Colors.grey)),

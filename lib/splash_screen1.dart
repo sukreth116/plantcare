@@ -1,54 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:lottie/lottie.dart';
-
-// class SplashScreen extends StatefulWidget {
-//   const SplashScreen({super.key});
-
-//   @override
-//   State<SplashScreen> createState() => _SplashScreenState();
-// }
-
-// class _SplashScreenState extends State<SplashScreen>
-//     with TickerProviderStateMixin {
-//   bool _showText = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Lottie.asset(
-//               'asset/Animation cactus - 1742537329188 .json',
-//               onLoaded: (composition) {
-//                 Future.delayed(composition.duration, () {
-//                   setState(() {
-//                     _showText = true;
-//                   });
-//                 });
-//               },
-//             ),
-//             const SizedBox(height: 20),
-//             AnimatedOpacity(
-//               opacity: _showText ? 1.0 : 0.0,
-//               duration: const Duration(seconds: 1),
-//               child: const Text(
-//                 'GREENIFY',
-//                 style: TextStyle(
-//                   fontSize: 32,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.green,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'onboarding_screen.dart'; // Make sure this path is correct
@@ -76,23 +25,19 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFe8fcec),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'asset/Animation cactus - 1742537329188 .json',
+              'asset/Animation - 1747637919783.json',
               onLoaded: (composition) {
+                setState(() {
+                  _showText = true; // Show text with animation
+                });
                 Future.delayed(composition.duration, () {
-                  setState(() {
-                    _showText = true;
-                  });
-
-                  // Navigate after showing GREENIFY for 1 second
-                  Future.delayed(composition.duration, () {
-                    _navigateToOnboarding();
-                  });
+                  _navigateToOnboarding();
                 });
               },
             ),
@@ -100,13 +45,25 @@ class _SplashScreenState extends State<SplashScreen>
             AnimatedOpacity(
               opacity: _showText ? 1.0 : 0.0,
               duration: const Duration(seconds: 1),
-              child: const Text(
-                'GREENIFY',
-                style: TextStyle(
-                  fontSize: 80,
-                  color: Colors.green,
-                  fontFamily: 'Smile Family',
-                ),
+              child: Column(
+                children: [
+                  Text(
+                    'GREENIFY',
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: const Color(0xFF3b8958),
+                      fontFamily: 'DugiPundi',
+                    ),
+                  ),
+                  Text(
+                    'Every plant has a story. \nLet yours begin with Greenify',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.green.shade200,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           ],

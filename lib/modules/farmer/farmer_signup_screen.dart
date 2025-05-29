@@ -531,12 +531,12 @@ class _FarmerSignupScreenState extends State<FarmerSignupScreen> {
             children: [
               const SizedBox(height: 2),
               Image.asset(
-                'asset/image/Nursery.png',
+                'asset/image/Cactus lover-pana.png',
                 height: 200,
               ),
               const SizedBox(height: 2),
               const Text(
-                "Create Your Account",
+                "Register As Farmer",
                 style: TextStyle(
                   color: Colors.green,
                   fontFamily: 'Milky',

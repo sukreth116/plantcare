@@ -99,7 +99,6 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Plant Disease Detector')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(

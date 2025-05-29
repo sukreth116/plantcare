@@ -50,6 +50,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       appBar: AppBar(
         title: const Text('Forgot Password'),
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -60,7 +61,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             children: [
               const Text(
                 'Enter your email to reset your password',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 15),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -69,13 +70,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(),
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                  ),
                   prefixIcon: Icon(Icons.email),
                 ),
-                validator: (value) =>
-                    value != null && value.contains('@')
-                        ? null
-                        : 'Enter a valid email',
+                validator: (value) => value != null && value.contains('@')
+                    ? null
+                    : 'Enter a valid email',
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -84,6 +87,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   onPressed: _isLoading ? null : _resetPassword,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: _isLoading

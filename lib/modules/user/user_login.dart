@@ -90,7 +90,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 const Text(
                   "Login",
                   style: TextStyle(
@@ -104,7 +104,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                   'asset/image/personal growth-bro.png',
                   height: 250,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Form(
                   key: _formKey,
                   child: Column(

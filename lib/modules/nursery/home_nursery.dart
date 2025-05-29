@@ -100,7 +100,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
           child: Column(
             children: [
               UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.green[200]),
+                decoration: BoxDecoration(color: Colors.green[300]),
                 accountName: Text(nurseryName ?? "Nursery Name"),
                 accountEmail: Text(user?.email ?? "Email not available"),
                 currentAccountPicture: GestureDetector(

@@ -190,12 +190,10 @@ class _NurseryWorkerSignupScreenState extends State<NurseryWorkerSignupScreen> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              const SizedBox(height: 2),
               Image.asset(
-                'asset/image/Nursery.png',
+                'asset/image/Nursery-Worker (2).png',
                 height: 200,
               ),
-              const SizedBox(height: 2),
               const Text(
                 "Create Your Account",
                 style: TextStyle(

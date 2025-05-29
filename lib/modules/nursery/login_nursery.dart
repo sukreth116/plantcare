@@ -90,12 +90,10 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
                     fontSize: 50,
                   ),
                 ),
-                const SizedBox(height: 20),
                 Image.asset(
                   'asset/image/Blooming-cuate.png',
                   height: 250,
                 ),
-                const SizedBox(height: 20),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -190,7 +188,6 @@ class _NurseryLoginScreenState extends State<NurseryLoginScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(child: Divider(thickness: 1, color: Colors.grey)),

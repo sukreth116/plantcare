@@ -107,6 +107,8 @@ class _PlantChatBotState extends State<PlantChatBot> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Plant Shop Assistant"),
+        backgroundColor: Colors.green[300],
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
               onPressed: () => Navigator.push(

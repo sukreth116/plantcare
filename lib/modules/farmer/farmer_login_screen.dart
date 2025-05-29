@@ -99,12 +99,10 @@ class _FarmerLoginScreenState extends State<FarmerLoginScreen> {
                     fontSize: 50,
                   ),
                 ),
-                const SizedBox(height: 20),
                 Image.asset(
                   'asset/image/Farmer-bro.png',
                   height: 250,
                 ),
-                const SizedBox(height: 20),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -199,7 +197,6 @@ class _FarmerLoginScreenState extends State<FarmerLoginScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(child: Divider(thickness: 1, color: Colors.grey)),

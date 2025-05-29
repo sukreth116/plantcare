@@ -91,12 +91,10 @@ class _NurseryWorkerLoginScreenState extends State<NurseryWorkerLoginScreen> {
                     fontSize: 50,
                   ),
                 ),
-                const SizedBox(height: 20),
                 Image.asset(
-                  'asset/image/personal growth-bro.png',
+                  'asset/image/Nursery-Worker (3).png',
                   height: 250,
                 ),
-                const SizedBox(height: 20),
                 Form(
                   key: _formKey,
                   child: Column(

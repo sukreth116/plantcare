@@ -131,29 +131,6 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
       'Saturday',
       'Sunday'
     ];
-    // return Wrap(
-    //   spacing: 8.0,
-    //   children: days
-    //       .map((day) => ChoiceChip(
-    //             label: Text(day),
-    //             selected: selectedDays.contains(day),
-    //             selectedColor: Colors.green.shade200,
-    //             onSelected: (selected) {
-    //               setState(() {
-    //                 if (selected) {
-    //                   selectedDays.add(day);
-    //                   startTimes[day] = TimeOfDay(hour: 9, minute: 0);
-    //                   endTimes[day] = TimeOfDay(hour: 17, minute: 0);
-    //                 } else {
-    //                   selectedDays.remove(day);
-    //                   startTimes.remove(day);
-    //                   endTimes.remove(day);
-    //                 }
-    //               });
-    //             },
-    //           ))
-    //       .toList(),
-    // );
     return Wrap(
       spacing: 8.0,
       children: days.map((day) {
@@ -220,10 +197,6 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text("Laborer Signup"),
-          backgroundColor: Colors.white),
       body: Stack(
         children: [
           Padding(
@@ -232,6 +205,23 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
               key: _formKey,
               child: ListView(
                 children: [
+                  Image.asset(
+                    'asset/image/farm tractor-amico.png',
+                    height: 200,
+                  ),
+                  const SizedBox(height: 2),
+                  const Text(
+                    "Register As Laborer",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 193, 12, 190),
+                      fontFamily: 'Milky',
+                      fontSize: 22,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Center(
                     child: GestureDetector(
                       onTap: () => _pickImage(true),
@@ -248,6 +238,7 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 10),
                   Text(
                     _profileImage == null
@@ -313,12 +304,6 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
                       )),
 
                   const SizedBox(height: 20),
-                  // ElevatedButton(
-                  //   onPressed: () => _pickImage(true),
-                  //   child: Text(_profileImage == null
-                  //       ? 'Upload Profile Photo'
-                  //       : 'Photo Selected'),
-                  // ),
                   ElevatedButton(
                     onPressed: isLoading ? null : _signupHandler,
                     style: ElevatedButton.styleFrom(
@@ -331,7 +316,8 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       textStyle: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 15,
+                      ),
                     ),
                     child: isLoading
                         ? const SizedBox(
@@ -342,7 +328,7 @@ class _LaborerSignupScreenState extends State<LaborerSignupScreen> {
                               strokeWidth: 2,
                             ),
                           )
-                        : const Text("Signup"),
+                        : const Text("SIGN UP"),
                   ),
                 ],
               ),

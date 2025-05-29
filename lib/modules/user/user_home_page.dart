@@ -4,7 +4,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:plantcare/AI_detection.dart';
 // import 'package:plantcare/modules/user/cart_screen_user.dart';
-// import 'package:plantcare/modules/user/news.dart';
+// import 'package:plantcare/news.dart';
 // import 'package:plantcare/modules/user/orders_screen_user.dart';
 // import 'package:plantcare/modules/user/product_details.dart';
 // import 'package:plantcare/modules/user/search_screen.dart';
@@ -89,12 +89,7 @@
 //                       ),
 //                     ),
 //                     IconButton(
-//                       onPressed: () {
-//                         Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                                 builder: (context) => OrdersScreen()));
-//                       },
+//                       onPressed: () {},
 //                       icon: Icon(
 //                         CupertinoIcons.bag,
 //                         size: 22,
@@ -202,14 +197,7 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     return GestureDetector(
-//         onTap: () {
-//           Navigator.push(
-//             context,
-//             MaterialPageRoute(
-//               builder: (context) => ProductDetailScreen(),
-//             ),
-//           );
-//         },
+//         onTap: () {},
 //         child: Container(
 //           width: 200,
 //           margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
@@ -288,7 +276,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/aidetection.dart';
-import 'package:plantcare/modules/user/ai_chatbot.dart';
 import 'package:plantcare/modules/user/cart_screen_user.dart';
 import 'package:plantcare/modules/user/chatbot.dart';
 import 'package:plantcare/news.dart';
@@ -569,7 +556,7 @@ class _HomePageContentState extends State<_HomePageContent> {
           ),
           SizedBox(
             // Added SizedBox to provide some spacing
-            height: 450, // Adjust height as needed
+            height: 400, // Adjust height as needed
             child: StreamBuilder<QuerySnapshot>(
               stream: selectedCategory.isEmpty
                   ? FirebaseFirestore.instance
@@ -958,6 +945,7 @@ class _PlantCardState extends State<PlantCard> {
                   Text(
                     widget.name,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 4),
                   Text(
@@ -1018,7 +1006,9 @@ class _PlantCardState extends State<PlantCard> {
                                   SnackBar(
                                       content: Text(
                                     'Added to Cart',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   )),
                                 );
                               }
@@ -1043,7 +1033,7 @@ class _PlantCardState extends State<PlantCard> {
                         ),
                         child: Text(
                           'Add to Cart',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: Colors.black, fontSize: 14),
                         ),
                       ),
                       IconButton(
