@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:plantcare/splash_screen1.dart';
 import 'package:plantcare/firebase_options.dart';
+import 'package:plantcare/splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,6 @@ class MyApp extends StatelessWidget {
               bodyLarge: TextStyle(fontWeight: FontWeight.w400),
               bodyMedium: TextStyle(fontWeight: FontWeight.w400),
             )),
-        home: SplashScreen());
+        home: SplashScreen1());
   }
 }

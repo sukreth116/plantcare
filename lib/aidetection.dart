@@ -17,7 +17,7 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
   bool isLoading = false;
 
   final picker = ImagePicker();
-  final String flaskURL = 'http://192.168.1.65:5000/predict';
+  final String flaskURL = 'http://192.168.20.9:5000/predict';
 
   Future<void> pickImageAndPredict() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);

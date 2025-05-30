@@ -169,14 +169,14 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:plantcare/choose_screen.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class SplashScreen1 extends StatefulWidget {
+  const SplashScreen1({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashScreen1> createState() => _SplashScreen1State();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreen1State extends State<SplashScreen1>
     with TickerProviderStateMixin {
   late AnimationController _coffeeController;
   bool copAnimated = false;
@@ -223,7 +223,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.blue,
       body: Stack(
         children: [
           // White Container top half
@@ -242,7 +242,7 @@ class _SplashScreenState extends State<SplashScreen>
                 // Only play animation initially
                 if (!copAnimated)
                   Lottie.asset(
-                    'asset/plant_animation.json',
+                    'asset/career.json',
                     controller: _coffeeController,
                     onLoaded: (composition) {
                       _coffeeController
@@ -257,7 +257,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 if (copAnimated)
                   Image.asset(
-                    'asset/image/plant.png',
+                    'asset/image/Screenshot 2025-05-30 153317.png',
                     height: 250.0,
                     width: 250.0,
                   ),
@@ -266,8 +266,8 @@ class _SplashScreenState extends State<SplashScreen>
                     opacity: animateCafeText ? 1 : 0,
                     duration: const Duration(seconds: 2),
                     child: const Text(
-                      'GREENIFY',
-                      style: TextStyle(fontSize: 50.0, color: Colors.green),
+                      'PRO DEV',
+                      style: TextStyle(fontSize: 50.0, color: Colors.blue),
                     ),
                   ),
                 ),
