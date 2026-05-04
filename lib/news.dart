@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:plantcare/news_details.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
@@ -81,52 +82,62 @@ class _NewsPageState extends State<NewsPage> {
 
                   // List of cards
                   ...articles.map((article) {
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          article['urlToImage'] != null
-                              ? Image.network(
-                                  article['urlToImage'],
-                                  width: double.infinity,
-                                  height: 200,
-                                  fit: BoxFit.fitWidth,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'asset/image/no thumbnail.jpg',
-                                      width: double.infinity,
-                                      height: 200,
-                                      fit: BoxFit.fitWidth,
-                                    );
-                                  },
-                                )
-                              : Image.asset(
-                                  'asset/image/no thumbnail.jpg',
-                                  width: double.infinity,
-                                  height: 200,
-                                  fit: BoxFit.fitWidth,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => NewsDetailPage(article: article),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            article['urlToImage'] != null
+                                ? Image.network(
+                                    article['urlToImage'],
+                                    width: double.infinity,
+                                    height: 200,
+                                    fit: BoxFit.fitWidth,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'asset/image/no thumbnail.jpg',
+                                        width: double.infinity,
+                                        height: 200,
+                                        fit: BoxFit.fitWidth,
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    'asset/image/no thumbnail.jpg',
+                                    width: double.infinity,
+                                    height: 200,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                article['title'] ?? 'No Title',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                 ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              article['title'] ?? 'No Title',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
-                            child: Text(
-                              article['source']['name'] ?? '',
-                              style: const TextStyle(color: Colors.grey),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              child: Text(
+                                article['source']['name'] ?? '',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),

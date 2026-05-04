@@ -152,7 +152,7 @@ class _WorkScheduleManagementScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Work Schedule & Management"),
+        title: Text("Work Schedule & Management"), 
         backgroundColor: Colors.green[300],
         foregroundColor: Colors.white,
       ),

@@ -163,8 +163,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                       "Your Wishlist",
                       style: TextStyle(
                           fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.redAccent.shade200,
+                          color: Colors.green,
                           fontFamily: 'DugiPundi'),
                     ),
                     // Wishlist List

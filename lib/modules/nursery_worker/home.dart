@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plantcare/AI_detection.dart';
+import 'package:plantcare/aidetection.dart';
 import 'package:plantcare/modules/nursery_worker/profile.dart';
 import 'package:plantcare/modules/nursery_worker/work_list.dart';
 import 'package:plantcare/modules/nursery_worker/extra_work_screen.dart';
+import 'package:plantcare/modules/user/ai_chatbot.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -48,7 +49,7 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
     final List<Widget> _pages = [
       WorkerJobListScreen(workerId: user?.uid ?? ''), // Pass workerId here
       ExtraWorkScreen(),
-      AIDetectionScreen(),
+      DiseasePredictorScreen(),
       WorkerProfilePage(
         workerId: user?.uid ?? '',
       ),
@@ -62,6 +63,16 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
         automaticallyImplyLeading: false,
       ),
       body: _pages[_selectedIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => GeminiChatPage()));
+        },
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: Icon(Icons.chat, color: Colors.green.shade300),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: StylishBottomBar(
         option: AnimatedBarOptions(
           barAnimation: BarAnimation.fade,

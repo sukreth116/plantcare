@@ -194,7 +194,11 @@ class _LaborerProfileUpdateScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Update Profile')),
+      appBar: AppBar(
+        title: const Text('Update Profile'),
+        backgroundColor: Colors.green[400],
+        foregroundColor: Colors.white,
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

@@ -37,13 +37,13 @@ class _FarmerWorkAppointmentScreenState
       }
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Book Work Appointment'),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.green[400],
         foregroundColor: Colors.white,
         centerTitle: true,
         actions: [
@@ -84,20 +84,17 @@ class _FarmerWorkAppointmentScreenState
                   itemCount: laborers.length,
                   itemBuilder: (context, index) {
                     var laborer = laborers[index];
-                    return Card(
-                      margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(laborer['name']),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Experience: ${laborer['experience']} years'),
-                            Text('Location: ${laborer['location']}'),
-                            Text('Skills: ${laborer['skills']}'),
-                          ],
-                        ),
-                        trailing: ElevatedButton(
-                          onPressed: farmerId == null
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      child: Material(
+                        elevation: 4,
+                        borderRadius: BorderRadius.circular(15),
+                        shadowColor: Colors.green.shade200,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(15),
+                          onTap: farmerId == null
                               ? null
                               : () {
                                   Navigator.push(
@@ -112,7 +109,89 @@ class _FarmerWorkAppointmentScreenState
                                     ),
                                   );
                                 },
-                          child: const Text('Book'),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 35,
+                                  backgroundColor: Colors.grey[300],
+                                  backgroundImage: laborer['profileImageUrl'] !=
+                                          null
+                                      ? NetworkImage(laborer['profileImageUrl'])
+                                      : AssetImage(
+                                              'asset/image/profile_placeholder.jpg')
+                                          as ImageProvider,
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        laborer['name'],
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.green[800],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.workspace_premium,
+                                              size: 16, color: Colors.green),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                              "Experience: ${laborer['experience']} yrs"),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.location_on,
+                                              size: 16, color: Colors.green),
+                                          const SizedBox(width: 6),
+                                          Text("${laborer['location']}"),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.phone,
+                                              size: 16, color: Colors.green),
+                                          const SizedBox(width: 6),
+                                          Text("Phone: ${laborer['phone']}"),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.handyman,
+                                              size: 16, color: Colors.green),
+                                          const SizedBox(width: 6),
+                                          Expanded(
+                                            child: Text(
+                                                "Skills: ${laborer['skills']}"),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Icon(
+                                  Icons.calendar_today,
+                                  color: Colors.green,
+                                  size: 28,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     );

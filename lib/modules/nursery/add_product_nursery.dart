@@ -20,6 +20,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
   String productDescription = '';
   double productPrice = 0.0;
   File? _imageFile;
+  String? arWebLink;
 
   int productQuantity = 0;
   String selectedCategory = 'Plants'; // Default value
@@ -105,6 +106,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
           'nurseryId': nurseryId,
           'imageUrl': imageUrl,
           'createdAt': FieldValue.serverTimestamp(),
+          if (selectedCategory == 'Pots') 'arWebLink': arWebLink ?? '',
         });
 
         if (!mounted) return;
@@ -263,6 +265,36 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
                       });
                     },
                   ),
+                // if (selectedCategory == 'Pots')
+                //   TextFormField(
+                //     decoration: InputDecoration(labelText: "AR Web Link"),
+                //     keyboardType: TextInputType.url,
+                //     validator: (value) {
+                //       if (selectedCategory == 'Pots' &&
+                //           (value == null || value.isEmpty)) {
+                //         return 'Please enter the AR web link';
+                //       }
+                //       return null;
+                //     },
+                //     onChanged: (value) => setState(() => arWebLink = value),
+                //   ),
+                if (selectedCategory == 'Pots')
+                  TextFormField(
+                    decoration:
+                        InputDecoration(labelText: "AR Web Link (optional)"),
+                    keyboardType: TextInputType.url,
+                    validator: (value) {
+                      if (value != null && value.isNotEmpty) {
+                        final uri = Uri.tryParse(value);
+                        if (uri == null || !uri.isAbsolute) {
+                          return 'Please enter a valid URL';
+                        }
+                      }
+                      return null; // no error if empty
+                    },
+                    onChanged: (value) => setState(() => arWebLink = value),
+                  ),
+
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton.icon(

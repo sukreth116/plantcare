@@ -47,7 +47,8 @@ class WorkerManagementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Workers'),
-        backgroundColor: Colors.green[700],
+        backgroundColor: Colors.green[300],
+        foregroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -72,95 +73,101 @@ class WorkerManagementScreen extends StatelessWidget {
               final data = worker.data() as Map<String, dynamic>;
               final bool isApproved = data['isApproved'] ?? false;
 
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ExpansionTile(
-                  leading: data['profileImageUrl'] != null &&
-                          data['profileImageUrl'].toString().isNotEmpty
-                      ? CircleAvatar(
-                          backgroundImage: NetworkImage(data['profileImageUrl']),
-                          radius: 24,
-                        )
-                      : const CircleAvatar(
-                          backgroundColor: Colors.green,
-                          radius: 24,
-                          child: Icon(Icons.person, color: Colors.white),
-                        ),
-                  title: Text(data['name'] ?? 'Unnamed'),
-                  subtitle:
-                      Text('Status: ${isApproved ? 'Approved' : 'Pending'}'),
-                  childrenPadding:
+              return Theme(
+                data: Theme.of(context)
+                    .copyWith(dividerColor: Colors.transparent),
+                child: Card(
+                  margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  children: [
-                    if (data['email'] != null)
-                      Row(
-                        children: [
-                          const Icon(Icons.email, size: 18),
-                          const SizedBox(width: 6),
-                          Expanded(child: Text(data['email'])),
-                        ],
-                      ),
-                    const SizedBox(height: 6),
-                    if (data['phone'] != null)
-                      Row(
-                        children: [
-                          const Icon(Icons.phone, size: 18),
-                          const SizedBox(width: 6),
-                          Text(data['phone']),
-                        ],
-                      ),
-                    const SizedBox(height: 6),
-                    if (data['joinedDate'] != null)
-                      Row(
-                        children: [
-                          const Icon(Icons.calendar_today, size: 18),
-                          const SizedBox(width: 6),
-                          Text("Joined: ${data['joinedDate']}"),
-                        ],
-                      ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () => _toggleApproval(worker),
-                          icon: Icon(
-                            isApproved
-                                ? Icons.undo
-                                : Icons.check_circle_outline,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            isApproved ? 'Set as Pending' : 'Approve',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ExpansionTile(
+                    leading: data['profileImageUrl'] != null &&
+                            data['profileImageUrl'].toString().isNotEmpty
+                        ? CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(data['profileImageUrl']),
+                            radius: 24,
+                          )
+                        : const CircleAvatar(
                             backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                            radius: 24,
+                            child: Icon(Icons.person, color: Colors.white),
+                          ),
+                    title: Text(data['name'] ?? 'Unnamed'),
+                    subtitle:
+                        Text('Status: ${isApproved ? 'Approved' : 'Pending'}'),
+                    childrenPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    children: [
+                      if (data['email'] != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.email, size: 18),
+                            const SizedBox(width: 6),
+                            Expanded(child: Text(data['email'])),
+                          ],
+                        ),
+                      const SizedBox(height: 6),
+                      if (data['phone'] != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.phone, size: 18),
+                            const SizedBox(width: 6),
+                            Text(data['phone']),
+                          ],
+                        ),
+                      const SizedBox(height: 6),
+                      if (data['joinedDate'] != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.calendar_today, size: 18),
+                            const SizedBox(width: 6),
+                            Text("Joined: ${data['joinedDate']}"),
+                          ],
+                        ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () => _toggleApproval(worker),
+                            icon: Icon(
+                              isApproved
+                                  ? Icons.undo
+                                  : Icons.check_circle_outline,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              isApproved ? 'Set Pending' : 'Approve',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        ElevatedButton.icon(
-                          onPressed: () => _deleteWorker(context, worker),
-                          icon: const Icon(Icons.delete, color: Colors.white),
-                          label: const Text('Delete',
-                              style: TextStyle(color: Colors.white)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                          const SizedBox(width: 12),
+                          ElevatedButton.icon(
+                            onPressed: () => _deleteWorker(context, worker),
+                            icon: const Icon(Icons.delete, color: Colors.white),
+                            label: const Text('Delete',
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },

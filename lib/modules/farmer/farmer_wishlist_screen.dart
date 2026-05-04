@@ -61,7 +61,6 @@ class _FarmerWishlistScreenState extends State<FarmerWishlistScreen> {
   }
 
   Future<void> moveToCart(Map<String, dynamic> item) async {
-
     final User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -125,45 +124,70 @@ class _FarmerWishlistScreenState extends State<FarmerWishlistScreen> {
           ? Center(child: CircularProgressIndicator())
           : wishlistItems.isEmpty
               ? Center(child: Text("Your wishlist is empty"))
-              : ListView.builder(
-                  padding: EdgeInsets.all(16),
-                  itemCount: wishlistItems.length,
-                  itemBuilder: (context, index) {
-                    final item = wishlistItems[index];
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        leading: Image.network(
-                          item['image'],
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                        title:
-                            Text(item['name'], style: TextStyle(fontSize: 18)),
-                        subtitle: Text(
-                          "\$${item['price']}",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.shopping_cart,
-                                  color: Colors.green),
-                              onPressed: () => moveToCart(item),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () =>
-                                  removeFromWishlist(item['wishlistId']),
-                            ),
-                          ],
+              : Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                            'asset/image/Valentines bouquet with a card-pana.png', // Replace with your image URL
+                          ),
+                          fit: BoxFit.fitHeight,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                    Text(
+                      "Your Wishlist",
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.green,
+                          fontFamily: 'DugiPundi'),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.all(16),
+                        itemCount: wishlistItems.length,
+                        itemBuilder: (context, index) {
+                          final item = wishlistItems[index];
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              leading: Image.network(
+                                item['image'],
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
+                              title: Text(item['name'],
+                                  style: TextStyle(fontSize: 18)),
+                              subtitle: Text(
+                                "\$${item['price']}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.shopping_cart,
+                                        color: Colors.green),
+                                    onPressed: () => moveToCart(item),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () =>
+                                        removeFromWishlist(item['wishlistId']),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
     );
   }

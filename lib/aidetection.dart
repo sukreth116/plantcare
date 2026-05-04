@@ -17,7 +17,8 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
 
   final picker = ImagePicker();
   // final String flaskURL = 'http://192.168.1.65:5000/predict';
-  final String flaskURL = 'http://192.168.20.9:5000/predict';
+  // final String flaskURL = 'http://192.168.20.9:5000/predict';
+  final String flaskURL = 'http://192.168.20.32:5000/predict';
 
   Future<void> pickImageAndPredict() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -73,7 +74,7 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text("Disease: ${result!['disease_name']}",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -91,6 +92,10 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
             launchUrl(Uri.parse(result!['buy_url']));
           },
           child: Text("Buy Supplement"),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green.shade300,
+            foregroundColor: Colors.white,
+          ),
         ),
       ],
     );
@@ -101,19 +106,48 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (_image != null) Image.file(_image!, height: 200),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: pickImageAndPredict,
-                child: Text("Pick Image & Predict"),
-              ),
-              SizedBox(height: 16),
-              if (isLoading) CircularProgressIndicator(),
-              if (!isLoading) _buildResult(),
-            ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'asset/image/Anxiety-pana1.png',
+                  height: 200,
+                ),
+                Text(
+                  "Detect Plant Species & Diseases",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Curious about a plant? Worried about its health? Simply snap a photo or upload one from your gallery, and let our AI analyze the species and detect any signs of disease. Get instant insights to keep your plants thriving!",
+                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 15),
+                if (_image != null) Image.file(_image!, height: 200),
+                SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: pickImageAndPredict,
+                  icon: Icon(Icons.image_search,
+                      color: Colors.white), // You can change this icon
+                  label: Text("Pick Image & Predict"),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    backgroundColor: Colors.green.shade300,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 16),
+                if (isLoading) CircularProgressIndicator(),
+                if (!isLoading) _buildResult(),
+              ],
+            ),
           ),
         ),
       ),

@@ -61,7 +61,7 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
                 child: Theme(
                   data: Theme.of(context)
                       .copyWith(dividerColor: Colors.transparent),
-                  child: ExpansionTile(
+                  child: ExpansionTile( 
                     title: Text(
                       "Order ID: ${(data['orderId'])}",
                       style: TextStyle(fontWeight: FontWeight.bold),

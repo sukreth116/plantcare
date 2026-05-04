@@ -382,6 +382,18 @@ class _CartScreenState extends State<CartScreen> {
           'quantity': quantity,
           'imageUrl': data['imageUrl'] ?? '',
         });
+        final productRef = FirebaseFirestore.instance
+            .collection('nursery_products')
+            .doc(data['productId']);
+        final productSnapshot = await productRef.get();
+
+        if (productSnapshot.exists) {
+          final productData = productSnapshot.data()!;
+          final currentStock = productData['quantity'] ?? 0;
+          final newStock = (currentStock as int) - quantity;
+
+          await productRef.update({'quantity': newStock < 0 ? 0 : newStock});
+        }
       }
 
       String orderId = 'ORD${DateTime.now().millisecondsSinceEpoch}';

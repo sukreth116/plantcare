@@ -29,6 +29,6 @@ class MyApp extends StatelessWidget {
               bodyLarge: TextStyle(fontWeight: FontWeight.w400),
               bodyMedium: TextStyle(fontWeight: FontWeight.w400),
             )),
-        home: SplashScreen1());
+        home: SplashScreen());
   }
 }

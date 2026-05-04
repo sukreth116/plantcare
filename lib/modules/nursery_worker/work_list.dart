@@ -11,117 +11,6 @@ class WorkerJobListScreen extends StatelessWidget {
     final String currentDay = _getCurrentDay();
 
     return Scaffold(
-      // body: StreamBuilder<QuerySnapshot>(
-      //   stream: FirebaseFirestore.instance
-      //       .collection('work_schedule')
-      //       .where('workerId', isEqualTo: workerId)
-      //       .snapshots(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return const Center(child: CircularProgressIndicator());
-      //     }
-
-      //     final docs = snapshot.data?.docs ?? [];
-
-      //     if (docs.isEmpty) {
-      //       return const Center(child: Text("No tasks assigned yet."));
-      //     }
-
-      //     return ListView.builder(
-      //       itemCount: docs.length,
-      //       itemBuilder: (context, index) {
-      //         final doc = docs[index];
-      //         final data = doc.data() as Map<String, dynamic>;
-      //         final String day = data['day'] ?? '';
-      //         final List<dynamic> taskList = data['tasks'] ?? [];
-      //         final String status = data['status'] ?? 'Pending';
-
-      //         final bool isToday = day == currentDay;
-      //         final bool isCompleted = status == "Completed";
-
-      //         // Check if it is past midnight (12:00 AM) and automatically set status to Pending
-      //         if (isCompleted && _isPastMidnight()) {
-      //           FirebaseFirestore.instance
-      //               .collection('work_schedule')
-      //               .doc(doc.id)
-      //               .update({
-      //             'status': 'Pending',
-      //           });
-      //         }
-
-      //         return Card(
-      //           color: isToday ? Colors.green[100] : null,
-      //           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      //           elevation: 4,
-      //           shape: RoundedRectangleBorder(
-      //             borderRadius: BorderRadius.circular(12),
-      //           ),
-      //           child: ExpansionTile(
-      //             title: Text(
-      //               "$day - $status",
-      //               style: TextStyle(
-      //                 fontWeight: FontWeight.bold,
-      //                 color: isToday ? Colors.green[700] : Colors.black87,
-      //               ),
-      //             ),
-      //             children: [
-      //               ...taskList.map((task) {
-      //                 return ListTile(
-      //                   leading: Icon(Icons.check_circle_outline,
-      //                       color: Colors.green[300]),
-      //                   title: Text(task['title'] ?? ''),
-      //                   subtitle: Column(
-      //                     crossAxisAlignment: CrossAxisAlignment.start,
-      //                     children: [
-      //                       Text("Description: ${task['description'] ?? ''}"),
-      //                       Text("Time: ${task['time'] ?? ''}"),
-      //                       Text("Date: ${data['date'] ?? ''}"),
-      //                     ],
-      //                   ),
-      //                 );
-      //               }).toList(),
-      //               Padding(
-      //                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      //                 child: ElevatedButton.icon(
-      //                   onPressed: () {
-      //                     // Toggle the status between 'Completed' and 'Pending'
-      //                     String newStatus =
-      //                         status == 'Completed' ? 'Pending' : 'Completed';
-      //                     FirebaseFirestore.instance
-      //                         .collection('work_schedule')
-      //                         .doc(doc.id)
-      //                         .update({
-      //                       'status': newStatus,
-      //                     });
-      //                   },
-      //                   icon: Icon(
-      //                     status == 'Completed'
-      //                         ? Icons.undo
-      //                         : Icons.check_circle_outline,
-      //                     color: Colors.white,
-      //                   ),
-      //                   label: Text(
-      //                     status == 'Completed'
-      //                         ? 'Mark as Pending'
-      //                         : 'Mark as Completed',
-      //                     style: TextStyle(color: Colors.white),
-      //                   ),
-      //                   style: ElevatedButton.styleFrom(
-      //                     backgroundColor: Colors.green[400],
-      //                     shape: RoundedRectangleBorder(
-      //                       borderRadius: BorderRadius.circular(30),
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ),
-      //               SizedBox(height: 12),
-      //             ],
-      //           ),
-      //         );
-      //       },
-      //     );
-      //   },
-      // ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -191,66 +80,71 @@ class WorkerJobListScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: ExpansionTile(
-                        title: Text(
-                          "$day - $status",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: isToday ? Colors.green[700] : Colors.black87,
+                      child: Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: Text(
+                            "$day - $status",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  isToday ? Colors.green[700] : Colors.black87,
+                            ),
                           ),
-                        ),
-                        children: [
-                          ...taskList.map((task) {
-                            return ListTile(
-                              leading: Icon(Icons.check_circle_outline,
-                                  color: Colors.green[300]),
-                              title: Text(task['title'] ?? ''),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      "Description: ${task['description'] ?? ''}"),
-                                  Text("Time: ${task['time'] ?? ''}"),
-                                  Text("Date: ${data['date'] ?? ''}"),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                String newStatus = status == 'Completed'
-                                    ? 'Pending'
-                                    : 'Completed';
-                                FirebaseFirestore.instance
-                                    .collection('work_schedule')
-                                    .doc(doc.id)
-                                    .update({'status': newStatus});
-                              },
-                              icon: Icon(
-                                status == 'Completed'
-                                    ? Icons.undo
-                                    : Icons.check_circle_outline,
-                                color: Colors.white,
-                              ),
-                              label: Text(
-                                status == 'Completed'
-                                    ? 'Mark as Pending'
-                                    : 'Mark as Completed',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green[400],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                          children: [
+                            ...taskList.map((task) {
+                              return ListTile(
+                                leading: Icon(Icons.check_circle_outline,
+                                    color: Colors.green[300]),
+                                title: Text(task['title'] ?? ''),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        "Description: ${task['description'] ?? ''}"),
+                                    Text("Time: ${task['time'] ?? ''}"),
+                                    Text("Date: ${data['date'] ?? ''}"),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  String newStatus = status == 'Completed'
+                                      ? 'Pending'
+                                      : 'Completed';
+                                  FirebaseFirestore.instance
+                                      .collection('work_schedule')
+                                      .doc(doc.id)
+                                      .update({'status': newStatus});
+                                },
+                                icon: Icon(
+                                  status == 'Completed'
+                                      ? Icons.undo
+                                      : Icons.check_circle_outline,
+                                  color: Colors.white,
+                                ),
+                                label: Text(
+                                  status == 'Completed'
+                                      ? 'Mark as Pending'
+                                      : 'Mark as Completed',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green[400],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 12),
-                        ],
+                            SizedBox(height: 12),
+                          ],
+                        ),
                       ),
                     );
                   },

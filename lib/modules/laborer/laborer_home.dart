@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plantcare/modules/laborer/laborer_appointment.dart';
+import 'package:plantcare/modules/laborer/laborer_appointment_history.dart';
 import 'package:plantcare/modules/laborer/laborer_profile.dart';
 import 'package:plantcare/modules/laborer/laborer_work.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,7 @@ class _LaborerHomeScreenState extends State<LaborerHomeScreen> {
   static final List<Widget> _pages = <Widget>[
     LaborerWorkScreen(),
     WorkAppointmentScreen(),
+    AppointmentHistoryScreen(),
     LaborerProfileScreen(),
   ];
 
@@ -92,20 +94,28 @@ class _LaborerHomeScreenState extends State<LaborerHomeScreen> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: _selectedIndex == 0
-                ? const Icon(Icons.work, color: Colors.blue, size: 30)
+                ? const Icon(Icons.work, color: Colors.green, size: 30)
                 : const Icon(Icons.work_outline, color: Colors.grey, size: 25),
             label: 'Work',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 1
-                ? const Icon(Icons.calendar_today, color: Colors.blue, size: 30)
-                : const Icon(Icons.calendar_today_outlined,
+                ? const Icon(Icons.calendar_month,
+                    color: Colors.green, size: 30)
+                : const Icon(Icons.calendar_today,
                     color: Colors.grey, size: 25),
             label: 'Appointments',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 2
-                ? const Icon(Icons.person, color: Colors.blue, size: 30)
+                ? const Icon(Icons.history_outlined,
+                    color: Colors.green, size: 30)
+                : const Icon(Icons.history, color: Colors.grey, size: 25),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: _selectedIndex == 3
+                ? const Icon(Icons.person_sharp, color: Colors.green, size: 30)
                 : const Icon(Icons.person_outline,
                     color: Colors.grey, size: 25),
             label: 'Profile',

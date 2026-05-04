@@ -142,7 +142,7 @@ class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar( 
         title: Text("Work Schedule & Management"),
         backgroundColor: Colors.green[300],
         foregroundColor: Colors.white,

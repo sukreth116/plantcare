@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/about_page.dart';
+import 'package:plantcare/aidetection.dart';
 import 'package:plantcare/modules/nursery/add_banner.dart';
 import 'package:plantcare/modules/nursery/add_machinery.dart';
 import 'package:plantcare/modules/nursery/add_product_nursery.dart';
@@ -15,7 +15,9 @@ import 'package:plantcare/modules/nursery/profile.dart';
 import 'package:plantcare/modules/nursery/rental_orders.dart';
 import 'package:plantcare/modules/nursery/sale_report_nursery.dart';
 import 'package:plantcare/modules/nursery/work_assign.dart';
-import 'package:plantcare/modules/nursery/works_list.dart';
+import 'package:plantcare/modules/nursery/worker_select.dart';
+import 'package:plantcare/modules/nursery/nursery_product_detail.dart';
+import 'package:plantcare/modules/user/ai_chatbot.dart';
 import 'package:plantcare/news.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,7 +68,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
     // Ensure user is not null before passing to NurseryProfilePage
     final List<Widget> _screens = [
       HomeScreen(),
-      AIDetectionScreen(),
+      DiseasePredictorScreen(),
       NewsPage(),
       user != null
           ? NurseryProfilePage(nurseryId: user!.uid)
@@ -236,7 +238,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => NurseryWorkScreenByDay(
+                          builder: (context) => SelectWorkerScreen(
                                 nurseryId:
                                     FirebaseAuth.instance.currentUser!.uid,
                               )));
@@ -279,6 +281,16 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
         ),
       ),
       body: _screens[_currentIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => GeminiChatPage()));
+        },
+        backgroundColor: Colors.green[400],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Icon(Icons.chat, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       backgroundColor: Colors.white,
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _currentIndex,
@@ -314,7 +326,42 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> _products = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
+  }
+
+  void fetchProducts() async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('nursery_products').get();
+
+      final products = snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Add document ID
+        return data;
+      }).toList();
+
+      setState(() {
+        _products = products;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching products: $e");
+      setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -358,29 +405,50 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: "Search plant with name, type, etc...",
+                        hintText: "Explore your products",
                         border: InputBorder.none,
                       ),
                     ),
                   ),
-                  Icon(Icons.filter_list, color: Colors.green[700]),
                 ],
               ),
             ),
             SizedBox(height: 20),
-            PlantCard(
-              title: "Kalanchoe - Orange",
-              description:
-                  "An evergreen succulent featuring waxy leaves and striking flame-orange flowers.",
-              imagePath: 'asset/image/plant_sample_1.png',
-            ),
-            SizedBox(height: 10),
-            PlantCard(
-              title: "Ixora - Dark Orange",
-              description:
-                  "Ixoras are small tropical shrubs with vibrant orange-red flower clusters.",
-              imagePath: 'asset/image/plant_sample_1.png',
-            ),
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _products.isEmpty
+                    ? Text("No products available")
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _products.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.75,
+                        ),
+                        itemBuilder: (context, index) {
+                          final product = _products[index];
+                          return PlantCard(
+                            title: product['name'] ?? 'Unknown',
+                            description:
+                                product['description'] ?? 'No description',
+                            imageUrl: product['imageUrl'] ??
+                                'asset/image/plant_sample_1.png',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailsScreen(
+                                      productData: product,
+                                      productId: product['id']),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
           ],
         ),
       ),
@@ -391,44 +459,75 @@ class HomeScreen extends StatelessWidget {
 class PlantCard extends StatelessWidget {
   final String title;
   final String description;
-  final String imagePath;
+  final String imageUrl;
+  final VoidCallback onTap;
 
-  PlantCard(
-      {required this.title,
-      required this.description,
-      required this.imagePath});
+  const PlantCard({
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.green[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.asset(imagePath, width: 80, height: 80, fit: BoxFit.cover),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Text(
-                  description,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 250,
+        decoration: BoxDecoration(
+          color: Colors.green[50],
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              child: Image.network(
+                imageUrl,
+                width: double.infinity,
+                height: 100,
+                fit: BoxFit.fitHeight,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 140,
+                    color: Colors.grey[300],
+                    child: Icon(Icons.image_not_supported, size: 40),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

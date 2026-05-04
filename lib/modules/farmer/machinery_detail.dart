@@ -331,7 +331,7 @@ class _MachineryDetailScreenState extends State<MachineryDetailScreen> {
         child: ElevatedButton(
           onPressed: () => _showRentDialog(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.green[400],
             padding: EdgeInsets.symmetric(vertical: 16),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

@@ -50,7 +50,6 @@ dependencies:
   url_launcher: ^6.2.5
   fluttertoast: ^8.2.1
   model_viewer_plus: ^1.9.3
-  augmented_reality_plugin: ^4.0.1
   file_picker: ^10.1.9
 
 

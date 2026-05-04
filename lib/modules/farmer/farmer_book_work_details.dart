@@ -24,6 +24,8 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
   List<String> availableDays = [];
   bool isLoading = true;
   TextEditingController locationController = TextEditingController();
+  TextEditingController jobtitleController = TextEditingController();
+
   double? laborerPrice;
 
   @override
@@ -214,6 +216,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
       'date': formattedDate,
       'time': "${selectedTime!.hour}:${selectedTime!.minute}",
       'location': locationController.text,
+      'jobTitle': jobtitleController.text,
       'status': 'pending',
     };
 
@@ -241,71 +244,134 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Book Appointment'), backgroundColor: Colors.green),
+        title: const Text('Book Appointment'),
+        backgroundColor: Colors.green.shade400,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Padding(
+          : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Select Date:",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 5),
-                  ElevatedButton(
-                    onPressed: () => _selectDate(context),
-                    child: Text(selectedDate != null
-                        ? "${selectedDate!.toLocal()}".split(' ')[0]
-                        : "Choose Date"),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text("Select Time:",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 5),
-                  ElevatedButton(
-                    onPressed: () => _selectTime(context),
-                    child: Text(selectedTime != null
-                        ? "${selectedTime!.format(context)}"
-                        : "Choose Time"),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text("Laborer's Price Per Hour:",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 5),
-                  Text(
-                    laborerPrice != null
-                        ? "\$${laborerPrice!.toStringAsFixed(2)} per hour"
-                        : "Loading...",
-                    style: const TextStyle(fontSize: 16, color: Colors.blue),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text("Enter Location:",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 5),
-                  TextField(
-                    controller: locationController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Enter appointment location",
+                  _buildSectionTitle("Select Date"),
+                  _buildCard(
+                    child: ListTile(
+                      leading:
+                          const Icon(Icons.calendar_today, color: Colors.green),
+                      title: Text(selectedDate != null
+                          ? "${selectedDate!.toLocal()}".split(' ')[0]
+                          : "Choose Date"),
+                      onTap: () => _selectDate(context),
                     ),
                   ),
                   const SizedBox(height: 20),
+                  _buildSectionTitle("Select Time"),
+                  _buildCard(
+                    child: ListTile(
+                      leading:
+                          const Icon(Icons.access_time, color: Colors.green),
+                      title: Text(selectedTime != null
+                          ? selectedTime!.format(context)
+                          : "Choose Time"),
+                      onTap: () => _selectTime(context),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildSectionTitle("Laborer's Price Per Hour"),
+                  _buildCard(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        laborerPrice != null
+                            ? "\$${laborerPrice!.toStringAsFixed(2)} per hour"
+                            : "Loading...",
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: jobtitleController,
+                    decoration: InputDecoration(
+                      labelText: "Job Title",
+                      labelStyle: const TextStyle(color: Colors.green),
+                      hintText: "Enter a job title",
+                      prefixIcon: const Icon(
+                        Icons.location_on,
+                        color: Colors.green,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.green),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: locationController,
+                    decoration: InputDecoration(
+                      labelText: "Appointment Location",
+                      labelStyle: const TextStyle(color: Colors.green),
+                      hintText: "Enter appointment location",
+                      prefixIcon: const Icon(
+                        Icons.location_on,
+                        color: Colors.green,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.green),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
                   Center(
                     child: ElevatedButton(
                       onPressed: _confirmAppointment,
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
+                        backgroundColor: Colors.green[400],
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
                       child: const Text("Confirm Appointment",
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     ),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildCard({required Widget child}) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 3,
+      child: child,
     );
   }
 }

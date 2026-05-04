@@ -1,433 +1,10 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter/material.dart';
-// import 'package:plantcare/about_page.dart';
-// import 'package:plantcare/modules/farmer/cart_screen_farmer.dart';
-// import 'package:plantcare/modules/farmer/farmer_prduct_list.dart';
-// import 'package:plantcare/modules/farmer/farmer_product_add_screen.dart';
-// import 'package:plantcare/modules/farmer/farmer_book_work.dart';
-// import 'package:plantcare/modules/farmer/farmer_profile.dart';
-// import 'package:plantcare/modules/farmer/farmer_search_screen.dart';
-// import 'package:plantcare/modules/farmer/farmer_wishlist_screen.dart';
-// import 'package:plantcare/modules/farmer/orders_screen_farmer.dart';
-// import 'package:plantcare/modules/farmer/product_detail_screen.dart';
-// import 'package:plantcare/modules/farmer/rental_orders.dart';
-// import 'package:plantcare/AI_detection.dart';
-// import 'package:plantcare/news.dart';
-
-// class FarmerHomePage extends StatefulWidget {
-//   @override
-//   _FarmerHomePageState createState() => _FarmerHomePageState();
-// }
-
-// class _FarmerHomePageState extends State<FarmerHomePage> {
-//   final User? user = FirebaseAuth.instance.currentUser;
-//   String selectedCategory = 'All';
-//   List<String> categories = [
-//     'All',
-//     'Machinery',
-//     'Plants',
-//     'Seeds',
-//     'Fertilizers'
-//   ];
-//   String farmerName = "Loading...";
-//   String farmerImage = "";
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchFarmerDetails();
-//   }
-
-//   Future<void> fetchFarmerDetails() async {
-//     if (user != null) {
-//       DocumentSnapshot snapshot = await FirebaseFirestore.instance
-//           .collection('farmers')
-//           .doc(user!.uid)
-//           .get();
-//       if (snapshot.exists) {
-//         setState(() {
-//           farmerName = snapshot['name'];
-//           // farmerImage = snapshot['imageUrl'] ?? "";
-//         });
-//       }
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       bottomNavigationBar: Container(
-//         padding: EdgeInsets.symmetric(vertical: 10),
-//         color: Colors.white,
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: [
-//             IconButton(onPressed: () {}, icon: Icon(Icons.home_outlined)),
-//             IconButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) => AddProductScreen()));
-//                 },
-//                 icon: Icon(
-//                   CupertinoIcons.plus_square_on_square,
-//                 )),
-//             IconButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) => AIDetectionScreen()));
-//                 },
-//                 icon: Icon(
-//                   Icons.party_mode_outlined,
-//                 )),
-//             IconButton(
-//                 onPressed: () {
-//                   Navigator.push(context,
-//                       MaterialPageRoute(builder: (context) => NewsPage()));
-//                 },
-//                 icon: Icon(
-//                   Icons.newspaper,
-//                 )),
-//             IconButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) =>
-//                               FarmerProfilePage(farmerId: user!.uid)));
-//                 },
-//                 icon: Icon(
-//                   Icons.person_outline,
-//                 )),
-//           ],
-//         ),
-//       ),
-//       appBar: AppBar(
-//         title: Text(
-//           "Manage Your\nFarm Products",
-//           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//         ),
-//         backgroundColor: Colors.white,
-//         automaticallyImplyLeading: false,
-//         actions: [
-//           IconButton(
-//             icon: Icon(CupertinoIcons.search),
-//             onPressed: () {
-//               Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                       builder: (context) => FarmerSearchScreen()));
-//             },
-//           ),
-//           Builder(
-//             builder: (context) => IconButton(
-//               icon: Icon(Icons.menu),
-//               onPressed: () {
-//                 Scaffold.of(context).openEndDrawer();
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//       endDrawer: Drawer(
-//         child: SingleChildScrollView(
-//           child: Column(
-//             children: [
-//               UserAccountsDrawerHeader(
-//                 decoration: BoxDecoration(color: Colors.green[200]),
-//                 accountName: Text(farmerName),
-//                 accountEmail: Text(user?.email ?? ""),
-//                 currentAccountPicture: GestureDetector(
-//                   onTap: () {
-//                     Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) =>
-//                               FarmerProfilePage(farmerId: user!.uid)),
-//                     );
-//                   },
-//                   child: CircleAvatar(
-//                     backgroundImage: farmerImage.isNotEmpty
-//                         ? NetworkImage(farmerImage)
-//                         : AssetImage('asset/image/profile_placeholder.jpg')
-//                             as ImageProvider,
-//                   ),
-//                 ),
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.person),
-//                 title: Text("Profile"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => FarmerProfilePage(
-//                               farmerId: user!.uid,
-//                             )),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.rectangle_3_offgrid),
-//                 title: Text("All Products"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => FarmerSearchScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.heart),
-//                 title: Text("Wishlist"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => FarmerWishlistScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.cart),
-//                 title: Text("Cart"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => FarmerCartScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.bag),
-//                 title: Text("Orders"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => FarmerOrdersScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.bag_badge_plus),
-//                 title: Text("Rental Orders"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => RentalOrdersScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(Icons.work),
-//                 title: Text("Book a Work"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => FarmerWorkAppointmentScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(Icons.add_circle_outline_rounded),
-//                 title: Text("Add Product"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => AddProductScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
-//                 title: Text("Your Products"),
-//                 onTap: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => ViewProductsScreen()),
-//                   );
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(Icons.party_mode_outlined),
-//                 title: Text("AI Detection"),
-//                 onTap: () {
-//                   Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) => AIDetectionScreen()));
-//                 },
-//               ),
-
-//               ListTile(
-//                 leading: Icon(Icons.newspaper),
-//                 title: Text("News"),
-//                 onTap: () {
-//                   Navigator.push(context,
-//                       MaterialPageRoute(builder: (context) => NewsPage()));
-//                 },
-//               ),
-//               ListTile(
-//                 leading: Icon(Icons.info_outline),
-//                 title: Text("About Us"),
-//                 onTap: () {
-//                   Navigator.push(context,
-//                       MaterialPageRoute(builder: (context) => AboutPage()));
-//                 },
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Container(
-//               padding: EdgeInsets.all(16),
-//               decoration: BoxDecoration(
-//                 color: Colors.green.shade100,
-//                 borderRadius: BorderRadius.circular(12),
-//               ),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         'Special Offer',
-//                         style: TextStyle(
-//                             fontSize: 20, fontWeight: FontWeight.bold),
-//                       ),
-//                       Text('Sell more, Earn more!'),
-//                     ],
-//                   ),
-//                   Image.asset('asset/image/machinery.png', width: 70),
-//                 ],
-//               ),
-//             ),
-//             SizedBox(
-//               height: 10,
-//             ),
-//             SingleChildScrollView(
-//               scrollDirection: Axis.horizontal,
-//               child: Row(
-//                 children: categories.map((category) {
-//                   return Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
-//                     child: ChoiceChip(
-//                       label: Text(category),
-//                       selected: selectedCategory == category,
-//                       onSelected: (selected) {
-//                         setState(() {
-//                           selectedCategory = category;
-//                         });
-//                       },
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(25),
-//                       ),
-//                     ),
-//                   );
-//                 }).toList(),
-//               ),
-//             ),
-//             SizedBox(height: 5),
-//             Expanded(
-//               child: ListView.builder(
-//                 scrollDirection: Axis.horizontal,
-//                 itemCount: 4,
-//                 itemBuilder: (context, index) {
-//                   return ProductCard();
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class ProductCard extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//         onTap: () {
-//           // Navigate to product details
-//         },
-//         child: Container(
-//           width: 230,
-//           margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-//           decoration: BoxDecoration(
-//             color: Colors.grey[300],
-//             borderRadius: BorderRadius.circular(25),
-//           ),
-//           child: Column(
-//             children: [
-//               Expanded(
-//                 flex: 2,
-//                 child: ClipRRect(
-//                   borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-//                   child: Image.asset(
-//                     'asset/image/plant_sample_1.png',
-//                     fit: BoxFit.cover,
-//                     width: double.infinity,
-//                   ),
-//                 ),
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.all(12.0),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   children: [
-//                     Text('Fresh Apples',
-//                         style: TextStyle(
-//                             fontSize: 18, fontWeight: FontWeight.bold)),
-//                     Text('\$15 per kg',
-//                         style: TextStyle(
-//                             fontSize: 16,
-//                             fontWeight: FontWeight.bold,
-//                             color: Colors.green)),
-//                     ElevatedButton(
-//                       onPressed: () {
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                               builder: (context) =>
-//                                   FarmerProductDetailScreen()),
-//                         );
-//                       },
-//                       child: Text(
-//                         'View Details',
-//                         style: TextStyle(color: Colors.black, fontSize: 12),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ));
-//   }
-// }
-
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:plantcare/AI_detection.dart';
 import 'package:plantcare/about_page.dart';
+import 'package:plantcare/aidetection.dart';
+import 'package:plantcare/modules/farmer/chatbot_farmer.dart';
 import 'package:plantcare/modules/farmer/farmer_cart_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_book_work.dart';
 import 'package:plantcare/modules/farmer/farmer_prduct_list.dart';
@@ -630,27 +207,27 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
                   );
                 },
               ),
-              ListTile(
-                leading: Icon(Icons.add_circle_outline_rounded),
-                title: Text("Add Product"),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddProductScreen()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
-                title: Text("Your Products"),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ViewProductsScreen()),
-                  );
-                },
-              ),
+              // ListTile(
+              //   leading: Icon(Icons.add_circle_outline_rounded),
+              //   title: Text("Add Product"),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => AddProductScreen()),
+              //     );
+              //   },
+              // ),
+              // ListTile(
+              //   leading: Icon(CupertinoIcons.rectangle_stack_badge_person_crop),
+              //   title: Text("Your Products"),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //           builder: (context) => ViewProductsScreen()),
+              //     );
+              //   },
+              // ),
               ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text("About Us"),
@@ -707,24 +284,24 @@ class _FarmerHomePageState extends State<FarmerHomePage> {
           }
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //         context, MaterialPageRoute(builder: (context) => PlantChatBot()));
-      //   },
-      //   backgroundColor: Colors.white,
-      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      //   child: Icon(heart ? Icons.party_mode : Icons.chat,
-      //       color: Colors.green.shade300),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => PlantChatBotFarmer()));
+        },
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: Icon(heart ? Icons.party_mode : Icons.chat,
+            color: Colors.green.shade300),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: PageView(
         controller: controller,
         physics: NeverScrollableScrollPhysics(),
         children: [
           _HomePageContent(user: user),
           FarmerWishlistScreen(),
-          AIDetectionScreen(),
+          DiseasePredictorScreen(),
           NewsPage(),
           FarmerProfilePage(farmerId: user?.uid ?? ''),
         ],
@@ -824,7 +401,6 @@ class _HomePageContentState extends State<_HomePageContent> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      // Added SingleChildScrollView here
       child: Column(
         children: [
           Padding(
@@ -832,28 +408,6 @@ class _HomePageContentState extends State<_HomePageContent> {
             child: Column(
               children: [
                 BannerCarousel(),
-                // Container(
-                //   padding: EdgeInsets.all(16),
-                //   decoration: BoxDecoration(
-                //     color: Colors.green.shade100,
-                //     borderRadius: BorderRadius.circular(12),
-                //   ),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Column(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           Text('30% OFF',
-                //               style: TextStyle(
-                //                   fontSize: 20, fontWeight: FontWeight.bold)),
-                //           Text('02 - 23 July'),
-                //         ],
-                //       ),
-                //       Image.asset('asset/image/plant_sample_2.png', width: 60),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -893,8 +447,7 @@ class _HomePageContentState extends State<_HomePageContent> {
             ),
           ),
           SizedBox(
-            // Added SizedBox to provide some spacing
-            height: 450, // Adjust height as needed
+            height: 400,
             child: StreamBuilder<QuerySnapshot>(
               stream: selectedCategory.isEmpty
                   ? FirebaseFirestore.instance
@@ -946,8 +499,7 @@ class _HomePageContentState extends State<_HomePageContent> {
             ),
           ),
           SizedBox(
-            // Added SizedBox to provide some spacing
-            height: 400, // Adjust height as needed
+            height: 400,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('nursery_products')
@@ -999,7 +551,103 @@ class _HomePageContentState extends State<_HomePageContent> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('nursery_products')
-                  .where('category', isEqualTo: 'Pots')
+                  .where('category', isEqualTo: 'Fertilizers')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
+
+                final products = snapshot.data!.docs;
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 10),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return PlantCard(
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Pesticides",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 400, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('nursery_products')
+                  .where('category', isEqualTo: 'Pesticide')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No Products Found'));
+                }
+
+                final products = snapshot.data!.docs;
+
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.only(left: 10),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    return PlantCard(
+                      productId: product.id,
+                      nurseryId: product['nurseryId'],
+                      name: product['name'] ?? 'Unknown',
+                      price: product['price'].toString(),
+                      imageUrl: product['imageUrl'] ?? '',
+                      description: product['description'] ?? '',
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text("Seeds",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          SizedBox(
+            // Added SizedBox to provide some spacing
+            height: 400, // Adjust height as needed
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('nursery_products')
+                  .where('category', isEqualTo: 'Seeds')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1168,8 +816,9 @@ class _PlantCardState extends State<PlantCard> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                 child: Image.network(
                   widget.imageUrl,
-                  fit: BoxFit.fill,
-                  width: double.infinity,
+                  // height: 100,
+                  fit: BoxFit.values[1],
+                  // width: double.infinity,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset(
                       'asset/image/plant_sample_1.png',

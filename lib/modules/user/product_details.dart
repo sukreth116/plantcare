@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:plantcare/arscreen.dart';
+import 'package:plantcare/modules/user/arscreen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
@@ -181,16 +182,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ARViewScreen(
-                        imageUrl: productData!['imageUrl'] ?? '',
-                      ),
-                    ),
-                  );
+                onPressed: () async {
+                  final arLink = productData?['arWebLink'];
+
+                  if (arLink != null && arLink.toString().isNotEmpty) {
+                    final Uri url = Uri.parse(arLink);
+
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Could not open AR link')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                              Text('No AR link available for this product')),
+                    );
+                  }
                 },
+
+                // onPressed: () {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => ARViewScreen(
+                //         imageUrl: productData!['imageUrl'] ?? '',
+                //       ),
+                //     ),
+                //   );
+                // },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade300,
                   foregroundColor: Colors.white,

@@ -149,7 +149,8 @@ class _FarmerSearchScreenState extends State<FarmerSearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Products'),
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[400],
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -251,7 +252,9 @@ class _FarmerSearchScreenState extends State<FarmerSearchScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FarmerProductDetailScreen(productId: productId,),
+                              builder: (context) => FarmerProductDetailScreen(
+                                productId: productId,
+                              ),
                             ),
                           );
                         },
