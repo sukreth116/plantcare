@@ -108,7 +108,7 @@ class WorkerJobListScreen extends StatelessWidget {
                                   ],
                                 ),
                               );
-                            }).toList(),
+                            }),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 16.0),

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plantcare/modules/farmer/farmer_order_edit_screen.dart';
 
 class FarmerOrdersScreen extends StatefulWidget {
+  const FarmerOrdersScreen({super.key});
+
   @override
   _FarmerOrdersScreenState createState() => _FarmerOrdersScreenState();
 }

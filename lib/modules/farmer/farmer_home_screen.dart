@@ -319,6 +319,8 @@ class _HomePageContent extends StatefulWidget {
 }
 
 class BannerCarousel extends StatelessWidget {
+  const BannerCarousel({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -693,7 +695,7 @@ class PlantCard extends StatefulWidget {
   final String nurseryId;
   final String description;
 
-  PlantCard({
+  const PlantCard({super.key, 
     required this.name,
     required this.price,
     required this.imageUrl,
@@ -839,7 +841,7 @@ class _PlantCardState extends State<PlantCard> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    '\₹${widget.price}',
+                    '₹${widget.price}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

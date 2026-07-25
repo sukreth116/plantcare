@@ -89,6 +89,8 @@ class Order {
 }
 
 class SaleOrderScreen extends StatefulWidget {
+  const SaleOrderScreen({super.key});
+
   @override
   _SaleOrderScreenState createState() => _SaleOrderScreenState();
 }

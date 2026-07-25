@@ -23,6 +23,8 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NurseryHomeScreen extends StatefulWidget {
+  const NurseryHomeScreen({super.key});
+
   @override
   _NurseryHomeScreenState createState() => _NurseryHomeScreenState();
 }
@@ -66,7 +68,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Ensure user is not null before passing to NurseryProfilePage
-    final List<Widget> _screens = [
+    final List<Widget> screens = [
       HomeScreen(),
       DiseasePredictorScreen(),
       NewsPage(),
@@ -280,7 +282,7 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
           ),
         ),
       ),
-      body: _screens[_currentIndex],
+      body: screens[_currentIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
@@ -327,6 +329,8 @@ class _NurseryHomeScreenState extends State<NurseryHomeScreen> {
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -347,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
           await FirebaseFirestore.instance.collection('nursery_products').get();
 
       final products = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         data['id'] = doc.id; // Add document ID
         return data;
       }).toList();
@@ -462,7 +466,7 @@ class PlantCard extends StatelessWidget {
   final String imageUrl;
   final VoidCallback onTap;
 
-  const PlantCard({
+  const PlantCard({super.key, 
     required this.title,
     required this.description,
     required this.imageUrl,

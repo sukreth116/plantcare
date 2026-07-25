@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FarmerWishlistScreen extends StatefulWidget {
+  const FarmerWishlistScreen({super.key});
+
   @override
   _FarmerWishlistScreenState createState() => _FarmerWishlistScreenState();
 }

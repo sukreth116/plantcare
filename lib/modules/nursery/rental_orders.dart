@@ -51,6 +51,8 @@ class RentalOrder {
 }
 
 class RentalOrderScreen extends StatefulWidget {
+  const RentalOrderScreen({super.key});
+
   @override
   _RentalOrderScreenState createState() => _RentalOrderScreenState();
 }
@@ -154,7 +156,7 @@ class _RentalOrderScreenState extends State<RentalOrderScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.timestamp.toLocal().toString().split(' ')[0]}',
+                                  order.timestamp.toLocal().toString().split(' ')[0],
                                   style: TextStyle(color: Colors.grey),
                                 ),
                               ],

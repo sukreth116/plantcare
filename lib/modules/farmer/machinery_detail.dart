@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 class MachineryDetailScreen extends StatefulWidget {
   final String machineryId;
 
-  const MachineryDetailScreen({Key? key, required this.machineryId})
-      : super(key: key);
+  const MachineryDetailScreen({super.key, required this.machineryId});
 
   @override
   State<MachineryDetailScreen> createState() => _MachineryDetailScreenState();
@@ -72,7 +71,7 @@ class _MachineryDetailScreenState extends State<MachineryDetailScreen> {
   }
 
   void _showRentDialog(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     int days = 1;
     int quantity = 1;
     bool agreed = false;
@@ -85,7 +84,7 @@ class _MachineryDetailScreenState extends State<MachineryDetailScreen> {
             return AlertDialog(
               title: Text("Rent Machinery"),
               content: Form(
-                key: _formKey,
+                key: formKey,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -153,7 +152,7 @@ class _MachineryDetailScreenState extends State<MachineryDetailScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
+                    if (formKey.currentState!.validate()) {
                       if (!agreed) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Please agree to the terms")),
@@ -271,12 +270,15 @@ class _MachineryDetailScreenState extends State<MachineryDetailScreen> {
       body: FutureBuilder<DocumentSnapshot>(
         future: machineryRef.get(),
         builder: (context, snapshot) {
-          if (snapshot.hasError)
+          if (snapshot.hasError) {
             return Center(child: Text('Error fetching details'));
-          if (snapshot.connectionState == ConnectionState.waiting)
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
-          if (!snapshot.data!.exists)
+          }
+          if (!snapshot.data!.exists) {
             return Center(child: Text('Machinery not found'));
+          }
 
           final data = snapshot.data!.data() as Map<String, dynamic>;
 

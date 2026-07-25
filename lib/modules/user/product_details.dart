@@ -7,8 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
 
-  const ProductDetailScreen({Key? key, required this.productId})
-      : super(key: key);
+  const ProductDetailScreen({super.key, required this.productId});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -204,17 +203,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     );
                   }
                 },
-
-                // onPressed: () {
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => ARViewScreen(
-                //         imageUrl: productData!['imageUrl'] ?? '',
-                //       ),
-                //     ),
-                //   );
-                // },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade300,
                   foregroundColor: Colors.white,

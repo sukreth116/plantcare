@@ -6,7 +6,7 @@ import 'package:plantcare/modules/nursery_worker/edit_profile.dart';
 class WorkerProfilePage extends StatelessWidget {
   final String workerId;
 
-  const WorkerProfilePage({Key? key, required this.workerId}) : super(key: key);
+  const WorkerProfilePage({super.key, required this.workerId});
 
   @override
   Widget build(BuildContext context) {

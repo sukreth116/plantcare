@@ -140,7 +140,7 @@ class _NewsPageState extends State<NewsPage> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
       ),

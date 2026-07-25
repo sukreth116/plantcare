@@ -3,12 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/modules/user/product_details.dart';
 
 class UserSearchScreen extends StatefulWidget {
+  const UserSearchScreen({super.key});
+
   @override
   _UserSearchScreenState createState() => _UserSearchScreenState();
 }
 
 class _UserSearchScreenState extends State<UserSearchScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   List<Map<String, dynamic>> products = [];
   List<Map<String, dynamic>> filteredProducts = [];

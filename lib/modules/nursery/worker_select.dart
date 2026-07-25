@@ -78,8 +78,7 @@ import 'package:plantcare/modules/nursery/work_schedule.dart';
 class SelectWorkerScreen extends StatelessWidget {
   final String nurseryId;
 
-  const SelectWorkerScreen({Key? key, required this.nurseryId})
-      : super(key: key);
+  const SelectWorkerScreen({super.key, required this.nurseryId});
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +109,12 @@ class SelectWorkerScreen extends StatelessWidget {
             .where('nurseryId', isEqualTo: nurseryId)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasError)
+          if (snapshot.hasError) {
             return Center(child: Text('Error loading workers'));
-          if (!snapshot.hasData)
+          }
+          if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
+          }
 
           final workers = snapshot.data!.docs;
 

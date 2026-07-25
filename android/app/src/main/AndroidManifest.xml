@@ -4,7 +4,7 @@
     <!--  -->
 
     <application
-        android:label="plantcare"
+        android:label="Greenify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

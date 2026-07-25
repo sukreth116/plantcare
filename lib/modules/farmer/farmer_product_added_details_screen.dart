@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/farmer_prduct_edit_screen.dart';
 
 class FarmerAddProductDetailScreen extends StatelessWidget {
+  const FarmerAddProductDetailScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

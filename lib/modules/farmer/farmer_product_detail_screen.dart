@@ -5,8 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FarmerProductDetailScreen extends StatefulWidget {
   final String productId;
 
-  const FarmerProductDetailScreen({Key? key, required this.productId})
-      : super(key: key);
+  const FarmerProductDetailScreen({super.key, required this.productId});
 
   @override
   State<FarmerProductDetailScreen> createState() =>

@@ -8,8 +8,7 @@ import 'package:plantcare/clodinary_upload.dart';
 class FarmerProfileEditScreen extends StatefulWidget {
   final String farmerId;
 
-  const FarmerProfileEditScreen({Key? key, required this.farmerId})
-      : super(key: key);
+  const FarmerProfileEditScreen({super.key, required this.farmerId});
 
   @override
   _FarmerProfileEditScreenState createState() =>

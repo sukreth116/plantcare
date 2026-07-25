@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/clodinary_upload.dart';
 
 class AddPromoBannerScreen extends StatefulWidget {
+  const AddPromoBannerScreen({super.key});
+
   @override
   _AddPromoBannerScreenState createState() => _AddPromoBannerScreenState();
 }

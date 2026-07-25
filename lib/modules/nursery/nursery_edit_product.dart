@@ -11,8 +11,8 @@ class EditNurseryProduct extends StatefulWidget {
   const EditNurseryProduct({
     required this.productId,
     required this.productData,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<EditNurseryProduct> createState() => _EditNurseryProductState();
@@ -80,8 +80,8 @@ class _EditNurseryProductState extends State<EditNurseryProduct> {
 
   // Function to pick an image
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _imageFile = image;
@@ -202,7 +202,7 @@ class _EditNurseryProductState extends State<EditNurseryProduct> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        value: _category.isNotEmpty ? _category : null,
+                        initialValue: _category.isNotEmpty ? _category : null,
                         items: _categories.map((category) {
                           return DropdownMenuItem(
                             value: category,
@@ -225,7 +225,7 @@ class _EditNurseryProductState extends State<EditNurseryProduct> {
                       const SizedBox(height: 16),
                       if (_category == 'Plants')
                         DropdownButtonFormField<String>(
-                          value: _subCategory.isNotEmpty ? _subCategory : null,
+                          initialValue: _subCategory.isNotEmpty ? _subCategory : null,
                           items: _subCategories.map((subCategory) {
                             return DropdownMenuItem(
                               value: subCategory,

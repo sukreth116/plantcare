@@ -390,7 +390,7 @@ import 'dart:io';
 import 'package:plantcare/clodinary_upload.dart'; // Import your Cloudinary function
 
 class FarmerSignupScreen extends StatefulWidget {
-  const FarmerSignupScreen({Key? key}) : super(key: key);
+  const FarmerSignupScreen({super.key});
 
   @override
   State<FarmerSignupScreen> createState() => _FarmerSignupScreenState();

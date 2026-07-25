@@ -190,10 +190,12 @@ class _AddMachineryState extends State<AddMachinery> {
                 decoration: InputDecoration(labelText: "Price"),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Please enter a price';
-                  if (double.tryParse(value) == null)
+                  }
+                  if (double.tryParse(value) == null) {
                     return 'Enter a valid number';
+                  }
                   return null;
                 },
                 onChanged: (value) => setState(
@@ -204,10 +206,12 @@ class _AddMachineryState extends State<AddMachinery> {
                 decoration: InputDecoration(labelText: "Quantity"),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Please enter quantity';
-                  if (int.tryParse(value) == null)
+                  }
+                  if (int.tryParse(value) == null) {
                     return 'Enter a valid number';
+                  }
                   return null;
                 },
                 onChanged: (value) => setState(
@@ -216,7 +220,7 @@ class _AddMachineryState extends State<AddMachinery> {
               SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Availability"),
-                value: availability,
+                initialValue: availability,
                 items: ['Available', 'Not Available']
                     .map(
                         (val) => DropdownMenuItem(value: val, child: Text(val)))

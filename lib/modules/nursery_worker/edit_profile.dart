@@ -8,8 +8,7 @@ import 'package:plantcare/clodinary_upload.dart';
 class WorkerProfileEditScreen extends StatefulWidget {
   final String workerId;
 
-  const WorkerProfileEditScreen({Key? key, required this.workerId})
-      : super(key: key);
+  const WorkerProfileEditScreen({super.key, required this.workerId});
 
   @override
   _WorkerProfileEditScreenState createState() =>

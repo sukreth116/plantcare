@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:plantcare/clodinary_upload.dart'; // Cloudinary upload
 
 class NurseryWorkerSignupScreen extends StatefulWidget {
-  const NurseryWorkerSignupScreen({Key? key}) : super(key: key);
+  const NurseryWorkerSignupScreen({super.key});
 
   @override
   _NurseryWorkerSignupScreenState createState() =>
@@ -242,7 +242,7 @@ class _NurseryWorkerSignupScreenState extends State<NurseryWorkerSignupScreen> {
 
                     // Nursery Selection Dropdown
                     DropdownButtonFormField<String>(
-                      value: _selectedNurseryId,
+                      initialValue: _selectedNurseryId,
                       hint: Text('Select Nursery'),
                       items: _nurseries.map((nursery) {
                         return DropdownMenuItem<String>(

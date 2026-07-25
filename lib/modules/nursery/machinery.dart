@@ -37,7 +37,7 @@ class MachineryList extends StatelessWidget {
             itemBuilder: (context, index) {
               final product = products[index];
               final data = product.data() as Map<String, dynamic>;
-              final productId = product.id;
+              // final productId = product.id;
 
               return Card(
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -94,8 +94,8 @@ class MachineryList extends StatelessWidget {
             ),
           );
         },
-        child: Icon(Icons.add),
         backgroundColor: Colors.green,
+        child: Icon(Icons.add),
       ),
     );
   }

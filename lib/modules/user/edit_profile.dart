@@ -194,7 +194,7 @@ import 'package:plantcare/clodinary_upload.dart';
 class EditProfilePage extends StatefulWidget {
   final String userId;
 
-  const EditProfilePage({Key? key, required this.userId}) : super(key: key);
+  const EditProfilePage({super.key, required this.userId});
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();

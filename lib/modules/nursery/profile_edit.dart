@@ -9,8 +9,7 @@ import 'package:plantcare/clodinary_upload.dart';
 class NurseryProfileEditScreen extends StatefulWidget {
   final String nurseryId;
 
-  const NurseryProfileEditScreen({Key? key, required this.nurseryId})
-      : super(key: key);
+  const NurseryProfileEditScreen({super.key, required this.nurseryId});
 
   @override
   _NurseryProfileEditScreenState createState() =>

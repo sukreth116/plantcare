@@ -6,7 +6,7 @@ import 'package:plantcare/modules/farmer/farmer_profile_edit.dart';
 class FarmerProfilePage extends StatelessWidget {
   final String farmerId;
 
-  const FarmerProfilePage({Key? key, required this.farmerId}) : super(key: key);
+  const FarmerProfilePage({super.key, required this.farmerId});
 
   @override
   Widget build(BuildContext context) {

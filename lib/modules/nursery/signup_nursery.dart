@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:plantcare/clodinary_upload.dart';
 
 class NurserySignupScreen extends StatefulWidget {
-  const NurserySignupScreen({Key? key}) : super(key: key);
+  const NurserySignupScreen({super.key});
 
   @override
   State<NurserySignupScreen> createState() => _NurserySignupScreenState();
@@ -278,10 +278,12 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
         ),
         validator: (value) {
           if (value == null || value.trim().isEmpty) return '$hint is required';
-          if (hint == 'Email' && !value.contains('@'))
+          if (hint == 'Email' && !value.contains('@')) {
             return 'Enter a valid email';
-          if (hint == 'Phone Number' && value.length < 10)
+          }
+          if (hint == 'Phone Number' && value.length < 10) {
             return 'Enter a valid phone number';
+          }
           return null;
         },
       ),
@@ -353,10 +355,12 @@ class _NurserySignupScreenState extends State<NurserySignupScreen> {
           ),
         ),
         validator: (value) {
-          if (value == null || value.isEmpty)
+          if (value == null || value.isEmpty) {
             return 'Please confirm your password';
-          if (value != _passwordController.text)
+          }
+          if (value != _passwordController.text) {
             return 'Passwords do not match';
+          }
           return null;
         },
       ),

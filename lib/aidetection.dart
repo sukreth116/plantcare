@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiseasePredictorScreen extends StatefulWidget {
+  const DiseasePredictorScreen({super.key});
+
   @override
   _DiseasePredictorScreenState createState() => _DiseasePredictorScreenState();
 }
@@ -91,11 +93,11 @@ class _DiseasePredictorScreenState extends State<DiseasePredictorScreen> {
           onPressed: () {
             launchUrl(Uri.parse(result!['buy_url']));
           },
-          child: Text("Buy Supplement"),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green.shade300,
             foregroundColor: Colors.white,
           ),
+          child: Text("Buy Supplement"),
         ),
       ],
     );

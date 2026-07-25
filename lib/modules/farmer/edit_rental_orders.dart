@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 class RentalOrderEditScreen extends StatefulWidget {
   final String rentalOrderId;
 
-  const RentalOrderEditScreen({Key? key, required this.rentalOrderId})
-      : super(key: key);
+  const RentalOrderEditScreen({super.key, required this.rentalOrderId});
 
   @override
   State<RentalOrderEditScreen> createState() => _RentalOrderEditScreenState();

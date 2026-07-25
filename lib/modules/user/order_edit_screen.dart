@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserOrderEditScreen extends StatefulWidget {
   final DocumentSnapshot orderDoc;
 
-  UserOrderEditScreen({required this.orderDoc});
+  const UserOrderEditScreen({super.key, required this.orderDoc});
 
   @override
   _UserOrderEditScreenState createState() => _UserOrderEditScreenState();
@@ -69,17 +69,17 @@ class _UserOrderEditScreenState extends State<UserOrderEditScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: updateOrder,
-              child: Text("Update Order"),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green.shade300,
                   foregroundColor: Colors.white),
+              child: Text("Update Order"),
             ),
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: cancelOrder,
-              child: Text("Cancel Order"),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red, foregroundColor: Colors.white),
+              child: Text("Cancel Order"),
             ),
           ],
         ),

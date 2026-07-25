@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class GeminiChatPage extends StatefulWidget {
+  const GeminiChatPage({super.key});
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }

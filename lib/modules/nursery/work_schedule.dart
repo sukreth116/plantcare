@@ -193,7 +193,7 @@ class _WorkScheduleManagementScreenState
                 ),
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  value: selectedDay,
+                  initialValue: selectedDay,
                   items: daysOfWeek.map((day) {
                     return DropdownMenuItem<String>(
                       value: day,
@@ -211,7 +211,7 @@ class _WorkScheduleManagementScreenState
                 ),
                 SizedBox(height: 10),
                 DropdownButtonFormField<String>(
-                  value: selectedWorkerId,
+                  initialValue: selectedWorkerId,
                   items: workerList.map((worker) {
                     return DropdownMenuItem<String>(
                       value: worker['id'],

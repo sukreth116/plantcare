@@ -9,6 +9,8 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NurseryWorkerHomeScreen extends StatefulWidget {
+  const NurseryWorkerHomeScreen({super.key});
+
   @override
   _NurseryWorkerHomeScreenState createState() =>
       _NurseryWorkerHomeScreenState();
@@ -46,7 +48,7 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
 
     final User? user = FirebaseAuth.instance.currentUser;
 
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       WorkerJobListScreen(workerId: user?.uid ?? ''), // Pass workerId here
       ExtraWorkScreen(),
       DiseasePredictorScreen(),
@@ -62,7 +64,7 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,

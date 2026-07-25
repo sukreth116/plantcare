@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/machinery_detail.dart';
 
 class FarmerMachineryScreen extends StatelessWidget {
-  const FarmerMachineryScreen({Key? key}) : super(key: key);
+  const FarmerMachineryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

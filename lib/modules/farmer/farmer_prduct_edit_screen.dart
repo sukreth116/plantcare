@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class FarmerEditProductScreen extends StatefulWidget {
+  const FarmerEditProductScreen({super.key});
+
   @override
   _FarmerEditProductScreenState createState() =>
       _FarmerEditProductScreenState();
@@ -62,7 +64,7 @@ class _FarmerEditProductScreenState extends State<FarmerEditProductScreen> {
 
               // Category Dropdown
               DropdownButtonFormField(
-                value: selectedCategory,
+                initialValue: selectedCategory,
                 decoration: InputDecoration(labelText: "Category"),
                 items: categories.map((category) {
                   return DropdownMenuItem(

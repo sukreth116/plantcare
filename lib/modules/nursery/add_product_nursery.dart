@@ -7,8 +7,7 @@ import 'package:plantcare/clodinary_upload.dart';
 
 class AddNurseryProduct extends StatefulWidget {
   final String nurseryId;
-  const AddNurseryProduct({required this.nurseryId, Key? key})
-      : super(key: key);
+  const AddNurseryProduct({required this.nurseryId, super.key});
 
   @override
   _AddNurseryProductState createState() => _AddNurseryProductState();
@@ -130,11 +129,11 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Product'),
-        backgroundColor: Colors.green.shade300,
-        foregroundColor: Colors.white,
-      ),
+      // appBar: AppBar(
+      //   title: Text('Add Product'),
+      //   backgroundColor: Colors.green.shade300,
+      //   foregroundColor: Colors.white,
+      // ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -224,7 +223,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
                 ),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Category"),
-                  value: selectedCategory,
+                  initialValue: selectedCategory,
                   items: categories.map((category) {
                     return DropdownMenuItem(
                       value: category,
@@ -245,7 +244,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
                 if (selectedCategory == 'Plants')
                   DropdownButtonFormField<String>(
                     decoration: InputDecoration(labelText: "Sub Category"),
-                    value: selectedSubCategory,
+                    initialValue: selectedSubCategory,
                     items: plantSubCategories.map((subCat) {
                       return DropdownMenuItem(
                         value: subCat,
@@ -322,7 +321,6 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
                 Center(
                   child: ElevatedButton(
                     onPressed: _uploadProduct,
-                    child: Text("Add Product"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green[300],
                       foregroundColor: Colors.white,
@@ -330,6 +328,7 @@ class _AddNurseryProductState extends State<AddNurseryProduct> {
                           EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                       minimumSize: Size(180, 50),
                     ),
+                    child: Text("Add Product"),
                   ),
                 ),
               ],

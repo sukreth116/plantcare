@@ -103,7 +103,7 @@ import 'package:plantcare/modules/user/user_login.dart'; // Replace with your lo
 class UserProfilePage extends StatelessWidget {
   final String userId;
 
-  const UserProfilePage({Key? key, required this.userId}) : super(key: key);
+  const UserProfilePage({super.key, required this.userId});
 
   void _logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();

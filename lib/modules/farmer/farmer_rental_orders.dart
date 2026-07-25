@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/edit_rental_orders.dart';
 
 class RentalOrdersScreen extends StatelessWidget {
+  const RentalOrdersScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;

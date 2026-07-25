@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plantcare/modules/user/order_edit_screen.dart';
 
 class UserOrderScreen extends StatefulWidget {
+  const UserOrderScreen({super.key});
+
   @override
   _UserOrderScreenState createState() => _UserOrderScreenState();
 }

@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 class AIDetectionScreen extends StatelessWidget {
   final ImagePicker _picker = ImagePicker();
 
+  AIDetectionScreen({super.key});
+
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {

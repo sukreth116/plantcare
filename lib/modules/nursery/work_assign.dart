@@ -175,7 +175,7 @@ class _ExtraWorkScheduleScreenState extends State<ExtraWorkScheduleScreen> {
                       ),
                       SizedBox(height: 10),
                       DropdownButtonFormField<String>(
-                        value: selectedWorkerId,
+                        initialValue: selectedWorkerId,
                         items: workerList.map((worker) {
                           final workerName = worker['name']?.toString() ?? '';
                           final workerId = worker['id']?.toString() ?? '';

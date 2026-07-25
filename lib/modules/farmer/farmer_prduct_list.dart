@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:plantcare/modules/farmer/farmer_product_added_details_screen.dart';
 
 class ViewProductsScreen extends StatefulWidget {
+  const ViewProductsScreen({super.key});
+
   @override
   _ViewProductsScreenState createState() => _ViewProductsScreenState();
 }

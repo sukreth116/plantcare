@@ -260,6 +260,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
   @override
   _CartScreenState createState() => _CartScreenState();
 }
@@ -477,7 +479,7 @@ class _CartScreenState extends State<CartScreen> {
                             : Icon(Icons.image, size: 50),
                         title: Text(data['name'] ?? ''),
                         subtitle: Text(
-                          "\₹${(double.tryParse(data['price'].toString()) ?? 0.0).toStringAsFixed(2)}",
+                          "₹${(double.tryParse(data['price'].toString()) ?? 0.0).toStringAsFixed(2)}",
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -509,7 +511,7 @@ class _CartScreenState extends State<CartScreen> {
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
                         Text(
-                          "\₹${getTotalPrice(cartItems).toStringAsFixed(2)}",
+                          "₹${getTotalPrice(cartItems).toStringAsFixed(2)}",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),

@@ -5,6 +5,8 @@ import 'package:plantcare/modules/nursery/add_product_nursery.dart';
 import 'package:plantcare/modules/nursery/nursery_product_detail.dart';
 
 class NurseryProductsScreen extends StatelessWidget {
+  const NurseryProductsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final String nurseryId = FirebaseAuth.instance.currentUser!.uid;
@@ -97,8 +99,8 @@ class NurseryProductsScreen extends StatelessWidget {
             ),
           );
         },
-        child: Icon(Icons.add),
         backgroundColor: Colors.green,
+        child: Icon(Icons.add),
       ),
     );
   }

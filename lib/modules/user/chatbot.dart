@@ -4,6 +4,8 @@ import 'package:plantcare/modules/user/ai_chatbot.dart'; // your existing Gemini
 import 'package:plantcare/modules/user/product_details.dart';
 
 class PlantChatBot extends StatefulWidget {
+  const PlantChatBot({super.key});
+
   @override
   _PlantChatBotState createState() => _PlantChatBotState();
 }
@@ -206,11 +208,11 @@ class _PlantChatBotState extends State<PlantChatBot> {
                                 return ElevatedButton(
                                   onPressed: () =>
                                       _handleOptionSelected(option),
-                                  child: Text(option),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
                                     foregroundColor: Colors.white,
                                   ),
+                                  child: Text(option),
                                 );
                               }).toList(),
                             ),

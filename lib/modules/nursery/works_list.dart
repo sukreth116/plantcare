@@ -6,8 +6,7 @@ class NurseryWorkScreenByDay extends StatelessWidget {
   final String workerId;
 
   const NurseryWorkScreenByDay(
-      {Key? key, required this.nurseryId, required this.workerId})
-      : super(key: key);
+      {super.key, required this.nurseryId, required this.workerId});
 
   void _editTask(BuildContext context, String docId, Map task, int index) {
     final titleController = TextEditingController(text: task['title']);
@@ -102,10 +101,12 @@ class NurseryWorkScreenByDay extends StatelessWidget {
             // Sort alphabetically by day
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasError)
+          if (snapshot.hasError) {
             return Center(child: Text('Error loading work'));
-          if (snapshot.connectionState == ConnectionState.waiting)
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
+          }
 
           final docs = snapshot.data!.docs;
 
@@ -114,8 +115,9 @@ class NurseryWorkScreenByDay extends StatelessWidget {
           Map<String, List<MapEntry<DocumentSnapshot, Map>>> groupedByDay = {};
 
           for (var doc in docs) {
-            if (doc['workerId'] != workerId)
+            if (doc['workerId'] != workerId) {
               continue; // ✅ Only consider this doc
+            }
 
             final day = doc['day'];
             final taskList = List.from(doc['tasks']);

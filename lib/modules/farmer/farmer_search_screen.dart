@@ -129,6 +129,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:plantcare/modules/farmer/farmer_product_detail_screen.dart';
 
 class FarmerSearchScreen extends StatefulWidget {
+  const FarmerSearchScreen({super.key});
+
   @override
   _FarmerSearchScreenState createState() => _FarmerSearchScreenState();
 }
@@ -206,7 +208,7 @@ class _FarmerSearchScreenState extends State<FarmerSearchScreen> {
                             .where('name',
                                 isGreaterThanOrEqualTo: _searchController.text)
                             .where('name',
-                                isLessThan: _searchController.text + 'z')
+                                isLessThan: '${_searchController.text}z')
                             .snapshots()
                     : _searchController.text.isEmpty
                         ? FirebaseFirestore.instance
@@ -219,7 +221,7 @@ class _FarmerSearchScreenState extends State<FarmerSearchScreen> {
                             .where('name',
                                 isGreaterThanOrEqualTo: _searchController.text)
                             .where('name',
-                                isLessThan: _searchController.text + 'z')
+                                isLessThan: '${_searchController.text}z')
                             .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

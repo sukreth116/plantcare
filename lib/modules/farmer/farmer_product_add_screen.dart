@@ -6,6 +6,8 @@ import 'package:plantcare/clodinary_upload.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AddProductScreen extends StatefulWidget {
+  const AddProductScreen({super.key});
+
   @override
   _AddProductScreenState createState() => _AddProductScreenState();
 }
@@ -113,7 +115,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 SizedBox(height: 10),
                 DropdownButtonFormField<String>(
-                  value: selectedCategory,
+                  initialValue: selectedCategory,
                   decoration: InputDecoration(labelText: "Category"),
                   items: categories.map((category) {
                     return DropdownMenuItem(
@@ -166,9 +168,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _submitForm,
-                    child: Text("Submit"),
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+                    child: Text("Submit"),
                   ),
                 ),
               ],

@@ -51,7 +51,7 @@ dependencies:
   fluttertoast: ^8.2.1
   model_viewer_plus: ^1.9.3
   file_picker: ^10.1.9
-
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -80,8 +80,6 @@ flutter:
     - asset/
     - asset/fonts/
     - asset/image/
-
-    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -169,3 +167,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "asset/image/logo.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: 'asset/image/logo.png'
+  remove_alpha_ios: true
+  assets:
+    - asset/image/logo.png

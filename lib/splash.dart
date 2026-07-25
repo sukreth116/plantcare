@@ -170,7 +170,7 @@ import 'package:lottie/lottie.dart';
 import 'package:plantcare/choose_screen.dart';
 
 class SplashScreen1 extends StatefulWidget {
-  const SplashScreen1({Key? key}) : super(key: key);
+  const SplashScreen1({super.key});
 
   @override
   State<SplashScreen1> createState() => _SplashScreen1State();
@@ -284,7 +284,7 @@ class _SplashScreen1State extends State<SplashScreen1>
 }
 
 class _BottomPart extends StatelessWidget {
-  const _BottomPart({Key? key}) : super(key: key);
+  const _BottomPart({super.key});
 
   @override
   Widget build(BuildContext context) {

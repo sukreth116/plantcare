@@ -7,8 +7,7 @@ class ProductDetailsScreen extends StatelessWidget {
   final String productId; // <-- Add this
 
   const ProductDetailsScreen(
-      {Key? key, required this.productData, required this.productId})
-      : super(key: key);
+      {super.key, required this.productData, required this.productId});
 
   void _deleteProduct(BuildContext context) async {
     try {

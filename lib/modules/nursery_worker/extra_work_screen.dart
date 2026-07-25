@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ExtraWorkScreen extends StatefulWidget {
+  const ExtraWorkScreen({super.key});
+
   @override
   _ExtraWorkScreenState createState() => _ExtraWorkScreenState();
 }
@@ -59,10 +61,12 @@ class _ExtraWorkScreenState extends State<ExtraWorkScreen> {
                   .where('workerId', isEqualTo: currentWorkerId)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.hasError)
+                if (snapshot.hasError) {
                   return Center(child: Text('Error fetching tasks'));
-                if (snapshot.connectionState == ConnectionState.waiting)
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
+                }
 
                 final tasks = snapshot.data!.docs;
 
