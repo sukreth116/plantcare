@@ -46,7 +46,7 @@ class _LaborerHomeScreenState extends State<LaborerHomeScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              bool confirmLogout = await showDialog(
+              await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(

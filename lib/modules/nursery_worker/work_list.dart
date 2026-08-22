@@ -8,7 +8,7 @@ class WorkerJobListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String currentDay = _getCurrentDay();
+    _getCurrentDay();
 
     return Scaffold(
       body: Column(

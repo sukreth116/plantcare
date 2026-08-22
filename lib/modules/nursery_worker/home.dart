@@ -18,7 +18,6 @@ class NurseryWorkerHomeScreen extends StatefulWidget {
 
 class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
   int _selectedIndex = 0;
-  String? _workerId;
 
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _NurseryWorkerHomeScreenState extends State<NurseryWorkerHomeScreen> {
           .get();
       if (snapshot.docs.isNotEmpty) {
         setState(() {
-          _workerId = snapshot.docs.first.id;
         });
       }
     }

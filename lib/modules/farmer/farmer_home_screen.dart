@@ -7,8 +7,6 @@ import 'package:plantcare/aidetection.dart';
 import 'package:plantcare/modules/farmer/chatbot_farmer.dart';
 import 'package:plantcare/modules/farmer/farmer_cart_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_book_work.dart';
-import 'package:plantcare/modules/farmer/farmer_prduct_list.dart';
-import 'package:plantcare/modules/farmer/farmer_product_add_screen.dart';
 import 'package:plantcare/modules/farmer/farmer_profile.dart';
 import 'package:plantcare/modules/farmer/farmer_search_screen.dart';
 import 'package:plantcare/modules/farmer/machinery_list.dart';
