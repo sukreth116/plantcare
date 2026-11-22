@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Greenify',
+        title: 'Greenify - Ai Powered Plant Care Mobile App',
         theme: ThemeData(
             fontFamily: 'Montserrat',
             primaryColor: Colors.green,
