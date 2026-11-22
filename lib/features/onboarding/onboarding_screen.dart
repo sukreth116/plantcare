@@ -19,7 +19,7 @@ class OnboardingScreen extends StatelessWidget {
               height: 300,
               width: 300,
               child: Lottie.asset(
-                'asset/Animation seed - 1742537287919.json',
+                'asset/animation/Animation seed - 1742537287919.json',
                 repeat: true,
                 reverse: false,
                 animate: true,

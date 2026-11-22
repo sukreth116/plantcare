@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'asset/Animation - 1747637919783.json',
+              'asset/animation/Animation - 1747637919783.json',
               onLoaded: (composition) {
                 setState(() {
                   _showText = true; // Show text with animation
